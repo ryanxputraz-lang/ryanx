@@ -1,94 +1,520 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
+ <head>
   <meta charset="UTF-8" />
-  <!-- Viewport wajib untuk tampilan mobile yang rapi -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <!-- GANTI: judul tab browser -->
-  <title>Ryan X - Home</title>
-  <meta name="description" content="Website pribadi Ryan X" />
+  <title>XAU/USD Robot Analisis Sederhana</title>
+  <!-- TradingView Lightweight Charts -->
+  <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+  <!-- Technical Indicators Library -->
+  <script src="https://cdn.jsdelivr.net/npm/technicalindicators@3.1.0/dist/browser.js"></script>
+  <style>
+   body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #131722;
+    color: #d1d4dc;
+   }
+   .container {
+    max-width: 1200px;
+    margin: 0 auto;
+   }
+   header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #2a2e39;
+    padding-bottom: 10px;
+   }
+   h1 {
+    color: #f0b90b;
+    margin: 0;
+   }
+   #status {
+    font-size: 0.9em;
+    color: #787b86;
+   }
+   .dashboard {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+   }
+   .chart-panel {
+    background: #1e222d;
+    border-radius: 8px;
+    padding: 15px;
+    height: 500px;
+   }
+   .signal-panel {
+    background: #1e222d;
+    border-radius: 8px;
+    padding: 15px;
+   }
+   #chart {
+    width: 100%;
+    height: 100%;
+   }
+   .signal-box {
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+   }
+   .signal-buy {
+    background: rgba(0, 230, 118, 0.2);
+    border: 1px solid #00e676;
+   }
+   .signal-sell {
+    background: rgba(255, 82, 82, 0.2);
+    border: 1px solid #ff5252;
+   }
+   .signal-neutral {
+    background: rgba(255, 193, 7, 0.2);
+    border: 1px solid #ffc107;
+   }
+   .signal-text {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin: 0;
+   }
+   .signal-buy .signal-text {
+    color: #00e676;
+   }
+   .signal-sell .signal-text {
+    color: #ff5252;
+   }
+   .signal-neutral .signal-text {
+    color: #ffc107;
+   }
+   .details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 15px;
+   }
+   .detail-item {
+    background: #2a2e39;
+    padding: 10px;
+    border-radius: 4px;
+   }
+   .detail-label {
+    font-size: 0.8em;
+    color: #787b86;
+   }
+   .detail-value {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-top: 4px;
+   }
+   .news-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 15px;
+   }
+   .news-item {
+    background: #2a2e39;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+   }
+   .news-item a {
+    color: #2962ff;
+    text-decoration: none;
+   }
+   .indicator-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid #2a2e39;
+    font-size: 0.9em;
+   }
+   .indicator-bullish {
+    color: #00e676;
+   }
+   .indicator-bearish {
+    color: #ff5252;
+   }
+   .loading {
+    text-align: center;
+    padding: 20px;
+    color: #787b86;
+   }
+  </style>
+ </head>
+ <body>
+  <div class="container">
+   <header>
+    <h1>🥇 XAU/USD Robot Analisis</h1>
+    <div id="status">Memuat data...</div>
+   </header>
 
-  <!-- Hubungkan file CSS eksternal (jangan taruh CSS di sini) -->
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-
-  <!-- ============ HEADER / NAVBAR ============ -->
-  <header class="navbar">
-    <!-- GANTI: nama brand/logo kamu -->
-    <div class="brand">ryanx<span>.my.id</span></div>
-
-    <!-- Tombol hamburger untuk menu mobile -->
-    <button id="menuBtn" class="menu-btn" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-  </header>
-
-  <!-- Menu navigasi (muncul saat hamburger diklik) -->
-  <nav id="navMenu" class="nav-menu">
-    <!-- GANTI: link dan teks menu sesuai kebutuhan -->
-    <a href="#home">Home</a>
-    <a href="#about">Tentang</a>
-    <a href="#services">Layanan</a>
-    <a href="#contact">Kontak</a>
-  </nav>
-
-  <!-- ============ HERO SECTION ============ -->
-  <section id="home" class="hero">
-    <!-- GANTI: sapaan dan deskripsi -->
-    <h1>Halo, saya <span>Ryan</span> 👋</h1>
-    <p>Selamat datang di website pribadi saya. Saya suka membuat sesuatu yang simpel dan berguna.</p>
-    <button id="ctaBtn" class="btn-primary">Klik Saya</button>
-    <!-- Pesan interaktif akan muncul di sini -->
-    <p id="ctaMessage" class="cta-message"></p>
-  </section>
-
-  <!-- ============ ABOUT SECTION ============ -->
-  <section id="about" class="section">
-    <h2>Tentang</h2>
-    <p>
-      <!-- GANTI: deskripsi tentang kamu -->
-      Saya seorang developer yang senang belajar hal baru. Website ini dibuat
-      sebagai template dasar yang mudah diedit.
-    </p>
-  </section>
-
-  <!-- ============ SERVICES / KARTU ============ -->
-  <section id="services" class="section">
-    <h2>Layanan</h2>
-    <div class="cards">
-      <!-- GANTI: tambah/hapus kartu sesuai kebutuhan -->
-      <div class="card">
-        <h3>Web Design</h3>
-        <p>Desain website modern & responsif.</p>
-      </div>
-      <div class="card">
-        <h3>Development</h3>
-        <p>Pembuatan website cepat & rapi.</p>
-      </div>
-      <div class="card">
-        <h3>Konsultasi</h3>
-        <p>Diskusi santai soal teknologi.</p>
-      </div>
+   <div class="dashboard">
+    <!-- Chart Panel -->
+    <div class="chart-panel">
+     <div style="display: flex; gap: 10px; margin-bottom: 10px">
+      <button onclick="changeTimeframe('1m')" class="tf-btn">M1</button>
+      <button onclick="changeTimeframe('5m')" class="tf-btn">M5</button>
+      <button onclick="changeTimeframe('15m')" class="tf-btn">M15</button>
+      <button onclick="changeTimeframe('1h')" class="tf-btn">H1</button>
+      <button onclick="changeTimeframe('4h')" class="tf-btn">H4</button>
+      <button onclick="changeTimeframe('1d')" class="tf-btn">D1</button>
+     </div>
+     <div id="chart"></div>
     </div>
-  </section>
 
-  <!-- ============ CONTACT ============ -->
-  <section id="contact" class="section">
-    <h2>Kontak</h2>
-    <!-- GANTI: email atau link sosial media -->
-    <p>Email: <a href="mailto:hello@ryanx.my.id">hello@ryanx.my.id</a></p>
-    <p>Website: <a href="https://ryanx.my.id">ryanx.my.id</a></p>
-  </section>
+    <!-- Signal Panel -->
+    <div class="signal-panel">
+     <div id="signalBox" class="signal-box signal-neutral">
+      <p class="signal-text" id="signalText">NEUTRAL</p>
+     </div>
 
-  <!-- ============ FOOTER ============ -->
-  <footer class="footer">
-    <!-- GANTI: tahun bisa otomatis pakai JS, atau tulis manual -->
-    <p>&copy; <span id="year"></span> Ryan X. All rights reserved.</p>
-  </footer>
+     <div class="details-grid">
+      <div class="detail-item">
+       <div class="detail-label">Harga Saat Ini</div>
+       <div class="detail-value" id="currentPrice">-</div>
+      </div>
+      <div class="detail-item">
+       <div class="detail-label">Entry</div>
+       <div class="detail-value" id="entryPrice">-</div>
+      </div>
+      <div class="detail-item">
+       <div class="detail-label">Stop Loss</div>
+       <div class="detail-value" id="stopLoss">-</div>
+      </div>
+      <div class="detail-item">
+       <div class="detail-label">Take Profit</div>
+       <div class="detail-value" id="takeProfit">-</div>
+      </div>
+     </div>
 
-  <!-- Hubungkan file JavaScript di paling bawah agar HTML selesai dimuat dulu -->
-  <script src="script.js"></script>
-</body>
+     <h3 style="margin-top: 20px; color: #f0b90b">📊 Indikator Teknikal</h3>
+     <div id="indicators">
+      <div class="indicator-row">
+       <span>RSI (M15)</span><span id="rsiValue">-</span>
+      </div>
+      <div class="indicator-row">
+       <span>MACD (H1)</span><span id="macdValue">-</span>
+      </div>
+      <div class="indicator-row">
+       <span>SMA 50 (H4)</span><span id="smaValue">-</span>
+      </div>
+     </div>
+
+     <h3 style="margin-top: 20px; color: #f0b90b">📰 Berita Terbaru</h3>
+     <div class="news-list" id="newsList">
+      <div class="loading">Memuat berita...</div>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <script>
+   // --- Konfigurasi ---
+   const CONFIG = {
+    // Gunakan API key gratis dari goldprice.dev atau layanan serupa
+    PRICE_API: "https://api.goldprice.dev/v1/spot?symbol=XAUUSD",
+    NEWS_API: "https://public-api.etoro.com/api/v1/feeds/news?take=10",
+    REFRESH_INTERVAL: 60000, // 60 detik
+    INDICATOR_PERIODS: {
+     RSI: 14,
+     MACD: { fast: 12, slow: 26, signal: 9 },
+     SMA: 50,
+    },
+   };
+
+   // --- Variabel Global ---
+   let chart,
+    candlestickSeries,
+    currentTimeframe = "1h";
+   let marketData = {};
+
+   // --- Inisialisasi Chart ---
+   function initChart() {
+    const chartContainer = document.getElementById("chart");
+    chart = LightweightCharts.createChart(chartContainer, {
+     width: chartContainer.clientWidth,
+     height: chartContainer.clientHeight,
+     layout: { background: { color: "#1e222d" }, textColor: "#d1d4dc" },
+     grid: { vertLines: { color: "#2a2e39" }, horzLines: { color: "#2a2e39" } },
+     timeScale: { borderColor: "#2a2e39" },
+    });
+
+    candlestickSeries = chart.addCandlestickSeries({
+     upColor: "#00e676",
+     downColor: "#ff5252",
+     borderVisible: false,
+     wickUpColor: "#00e676",
+     wickDownColor: "#ff5252",
+    });
+
+    window.addEventListener("resize", () => {
+     chart.applyOptions({
+      width: chartContainer.clientWidth,
+      height: chartContainer.clientHeight,
+     });
+    });
+   }
+
+   // --- Mengambil Data Harga (Simulasi & API) ---
+   async function fetchPriceData(timeframe) {
+    // Dalam produksi, ganti dengan panggilan API nyata.
+    // Contoh: const response = await fetch(`${CONFIG.PRICE_API}&interval=${timeframe}`);
+    // const data = await response.json();
+
+    // Simulasi data candlestick untuk demonstrasi
+    const now = Math.floor(Date.now() / 1000);
+    const intervalSeconds = {
+     "1m": 60,
+     "5m": 300,
+     "15m": 900,
+     "1h": 3600,
+     "4h": 14400,
+     "1d": 86400,
+    };
+    const interval = intervalSeconds[timeframe] || 3600;
+    const basePrice = 4200; // Harga dasar simulasi
+
+    return Array.from({ length: 100 }, (_, i) => {
+     const time = now - (100 - i) * interval;
+     const open = basePrice + Math.random() * 20 - 10;
+     const close = open + Math.random() * 10 - 5;
+     const high = Math.max(open, close) + Math.random() * 5;
+     const low = Math.min(open, close) - Math.random() * 5;
+     return { time, open, high, low, close };
+    });
+   }
+
+   // --- Analisis Teknikal ---
+   function calculateIndicators(data) {
+    const closes = data.map((d) => d.close);
+    const volumes = data.map((d) => d.volume || 0); // Volume mungkin tidak tersedia
+
+    // RSI
+    const rsiInput = { values: closes, period: CONFIG.INDICATOR_PERIODS.RSI };
+    const rsiResult = technicalindicators.RSI.calculate(rsiInput);
+    const currentRSI = rsiResult[rsiResult.length - 1] || 50;
+
+    // MACD
+    const macdInput = {
+     values: closes,
+     fastPeriod: CONFIG.INDICATOR_PERIODS.MACD.fast,
+     slowPeriod: CONFIG.INDICATOR_PERIODS.MACD.slow,
+     signalPeriod: CONFIG.INDICATOR_PERIODS.MACD.signal,
+     SimpleMAOscillator: false,
+     SimpleMASignal: false,
+    };
+    const macdResult = technicalindicators.MACD.calculate(macdInput);
+    const currentMACD = macdResult[macdResult.length - 1] || {
+     MACD: 0,
+     signal: 0,
+     histogram: 0,
+    };
+
+    // SMA
+    const smaInput = { values: closes, period: CONFIG.INDICATOR_PERIODS.SMA };
+    const smaResult = technicalindicators.SMA.calculate(smaInput);
+    const currentSMA =
+     smaResult[smaResult.length - 1] || closes[closes.length - 1];
+
+    return {
+     rsi: currentRSI,
+     macd: currentMACD,
+     sma: currentSMA,
+     lastClose: closes[closes.length - 1],
+    };
+   }
+
+   // --- Mengambil Berita ---
+   async function fetchNews() {
+    try {
+     const response = await fetch(CONFIG.NEWS_API);
+     const data = await response.json();
+     return data.items || data.news || data.slice(0, 5);
+    } catch (error) {
+     console.error("Gagal mengambil berita:", error);
+     return [];
+    }
+   }
+
+   // --- Menghasilkan Sinyal ---
+   function generateSignal(indicators, news) {
+    let score = 0;
+    let reasons = [];
+
+    // Sinyal dari RSI
+    if (indicators.rsi < 30) {
+     score += 2;
+     reasons.push("RSI oversold (Bullish)");
+    } else if (indicators.rsi > 70) {
+     score -= 2;
+     reasons.push("RSI overbought (Bearish)");
+    }
+
+    // Sinyal dari MACD
+    if (indicators.macd.histogram > 0) {
+     score += 1;
+     reasons.push("MACD histogram positif (Bullish)");
+    } else {
+     score -= 1;
+     reasons.push("MACD histogram negatif (Bearish)");
+    }
+
+    // Sinyal dari SMA
+    if (indicators.lastClose > indicators.sma) {
+     score += 1;
+     reasons.push("Harga di atas SMA50 (Bullish)");
+    } else {
+     score -= 1;
+     reasons.push("Harga di bawah SMA50 (Bearish)");
+    }
+
+    // Sederhana: Analisis sentimen berita (mencari kata kunci)
+    const bullishKeywords = ["rise", "gain", "bullish", "surge", "up"];
+    const bearishKeywords = ["fall", "drop", "bearish", "plunge", "down"];
+    let newsSentiment = 0;
+    news.forEach((item) => {
+     const text = (item.title || item.headline || "").toLowerCase();
+     if (bullishKeywords.some((k) => text.includes(k))) newsSentiment += 1;
+     if (bearishKeywords.some((k) => text.includes(k))) newsSentiment -= 1;
+    });
+    if (newsSentiment > 0) {
+     score += 1;
+     reasons.push("Sentimen berita positif");
+    } else if (newsSentiment < 0) {
+     score -= 1;
+     reasons.push("Sentimen berita negatif");
+    }
+
+    // Keputusan Akhir
+    let signal = "NEUTRAL";
+    if (score >= 3) signal = "BUY";
+    else if (score <= -3) signal = "SELL";
+
+    return { signal, score, reasons };
+   }
+
+   // --- Memperbarui UI ---
+   function updateUI(data, indicators, signalData, news) {
+    // Update Chart
+    candlestickSeries.setData(data);
+
+    // Update Sinyal
+    const signalBox = document.getElementById("signalBox");
+    const signalText = document.getElementById("signalText");
+    signalBox.className = `signal-box signal-${signalData.signal.toLowerCase()}`;
+    signalText.textContent = signalData.signal;
+
+    // Update Detail Harga
+    const lastClose = indicators.lastClose;
+    document.getElementById("currentPrice").textContent =
+     `$${lastClose.toFixed(2)}`;
+
+    if (signalData.signal === "BUY") {
+     document.getElementById("entryPrice").textContent =
+      `$${lastClose.toFixed(2)}`;
+     document.getElementById("stopLoss").textContent =
+      `$${(lastClose * 0.99).toFixed(2)}`;
+     document.getElementById("takeProfit").textContent =
+      `$${(lastClose * 1.02).toFixed(2)}`;
+    } else if (signalData.signal === "SELL") {
+     document.getElementById("entryPrice").textContent =
+      `$${lastClose.toFixed(2)}`;
+     document.getElementById("stopLoss").textContent =
+      `$${(lastClose * 1.01).toFixed(2)}`;
+     document.getElementById("takeProfit").textContent =
+      `$${(lastClose * 0.98).toFixed(2)}`;
+    } else {
+     document.getElementById("entryPrice").textContent = "-";
+     document.getElementById("stopLoss").textContent = "-";
+     document.getElementById("takeProfit").textContent = "-";
+    }
+
+    // Update Indikator
+    document.getElementById("rsiValue").textContent = indicators.rsi.toFixed(1);
+    document.getElementById("rsiValue").className =
+     indicators.rsi < 30
+      ? "indicator-bullish"
+      : indicators.rsi > 70
+        ? "indicator-bearish"
+        : "";
+
+    document.getElementById("macdValue").textContent =
+     indicators.macd.histogram.toFixed(2);
+    document.getElementById("macdValue").className =
+     indicators.macd.histogram > 0 ? "indicator-bullish" : "indicator-bearish";
+
+    document.getElementById("smaValue").textContent =
+     `$${indicators.sma.toFixed(2)}`;
+    document.getElementById("smaValue").className =
+     indicators.lastClose > indicators.sma
+      ? "indicator-bullish"
+      : "indicator-bearish";
+
+    // Update Berita
+    const newsList = document.getElementById("newsList");
+    if (news.length === 0) {
+     newsList.innerHTML =
+      '<div class="loading">Tidak ada berita terbaru.</div>';
+    } else {
+     newsList.innerHTML = news
+      .map(
+       (item) => `
+                    <div class="news-item">
+                        <a href="${item.url || "#"}" target="_blank">${item.title || item.headline || "Berita Emas"}</a>
+                    </div>
+                `,
+      )
+      .join("");
+    }
+
+    // Update Status
+    document.getElementById("status").textContent =
+     `Terakhir diperbarui: ${new Date().toLocaleTimeString()}`;
+   }
+
+   // --- Fungsi Utama untuk Memperbarui Semua Data ---
+   async function refreshAllData() {
+    try {
+     document.getElementById("status").textContent = "Memperbarui data...";
+
+     // 1. Ambil data harga untuk timeframe saat ini
+     const priceData = await fetchPriceData(currentTimeframe);
+
+     // 2. Hitung indikator (menggunakan data dari timeframe yang lebih tinggi untuk sinyal)
+     const higherTfData = await fetchPriceData("1h"); // Contoh: gunakan H1 untuk sinyal
+     const indicators = calculateIndicators(higherTfData);
+
+     // 3. Ambil berita
+     const news = await fetchNews();
+
+     // 4. Hasilkan sinyal
+     const signalData = generateSignal(indicators, news);
+
+     // 5. Perbarui UI
+     updateUI(priceData, indicators, signalData, news);
+    } catch (error) {
+     console.error("Error refreshing data:", error);
+     document.getElementById("status").textContent = `Error: ${error.message}`;
+    }
+   }
+
+   // --- Mengubah Timeframe ---
+   async function changeTimeframe(tf) {
+    currentTimeframe = tf;
+    const data = await fetchPriceData(tf);
+    candlestickSeries.setData(data);
+    // Perbarui juga indikator untuk timeframe ini (opsional)
+   }
+
+   // --- Inisialisasi Aplikasi ---
+   window.onload = () => {
+    initChart();
+    refreshAllData();
+    // setInterval(refreshAllData, CONFIG.REFRESH_INTERVAL); // Nonaktifkan auto-refresh untuk demo
+   };
+  </script>
+ </body>
 </html>
