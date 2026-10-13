@@ -1,181 +1,374 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-  <!-- ============================================= -->
-  <!-- BAGIAN HEAD: pengaturan dasar & judul website -->
-  <!-- ============================================= -->
+ <head>
+  <!-- ============================================
+       PANDUAN CEPAT:
+       1. Ganti JUDUL & DESKRIPSI di <title> dan <meta>
+       2. Tambah/ubah TOOLS di bagian <div class="grid"> bawah
+       3. Ubah WARNA UTAMA di :root (--accent)
+       ============================================ -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RyanX — Tools & Utilities</title>
+  <meta
+   name="description"
+   content="Kumpulan tools web client-side: sinyal trading, kalkulator, dan lainnya."
+  />
 
-  <!-- GANTI judul ini sesuai nama website kamu -->
-  <title>RyanX — Home</title>
-
-  <!-- GANTI deskripsi ini untuk SEO / preview link -->
-  <meta name="description" content="Website pribadi RyanX" />
-
-  <!-- ============================================= -->
-  <!-- BAGIAN STYLE: semua tampilan diatur di sini    -->
-  <!-- ============================================= -->
   <style>
-    /* --- Variabel warna biar gampang ganti tema --- */
+   /* ============================================
+       VARIABEL WARNA — ubah di sini biar konsisten
+       ============================================ */
+   :root {
+    --bg: #0f1115;
+    --card: #171a21;
+    --card-hover: #1e2229;
+    --border: #262b34;
+    --text: #e6e8ec;
+    --muted: #8b94a3;
+    --accent: #4f8cff; /* warna utama (biru) */
+    --radius: 14px; /* radius sudut card */
+   }
+
+   /* Light mode otomatis (opsional) */
+   @media (prefers-color-scheme: light) {
     :root {
-      --bg: #0f1115;          /* warna background halaman */
-      --card: #1a1d24;        /* warna kotak konten */
-      --border: #2a2f3a;      /* warna garis border */
-      --text: #e6e8ee;        /* warna teks utama */
-      --muted: #9aa1b1;       /* warna teks sekunder */
-      --accent: #4f8cff;      /* warna aksen / tombol */
-      --radius: 16px;         /* ukuran lengkung sudut */
+     --bg: #f5f6f8;
+     --card: #ffffff;
+     --card-hover: #f0f2f5;
+     --border: #e2e5ea;
+     --text: #1a1d23;
+     --muted: #6b7280;
     }
+   }
 
-    /* --- Reset dasar --- */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+   * {
+    box-sizing: border-box;
+   }
 
-    body {
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 24px 16px;
-      gap: 20px;
-    }
+   body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family:
+     system-ui,
+     -apple-system,
+     "Segoe UI",
+     Roboto,
+     sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 28px 16px;
+   }
 
-    /* --- Kotak utama dengan border rounded --- */
-    .card {
-      width: 100%;
-      max-width: 640px;              /* GANTI lebar maksimal kalau perlu */
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 28px;
-    }
+   .container {
+    width: 100%;
+    max-width: 780px;
+   }
 
-    /* --- Header / judul --- */
-    header h1 {
-      font-size: 1.6rem;
-      margin-bottom: 4px;
-    }
-    header p {
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
+   /* ===== HEADER ===== */
+   header {
+    margin-bottom: 16px;
+   }
+   header h1 {
+    margin: 0 0 6px;
+    font-size: 1.6rem;
+    letter-spacing: -0.02em;
+   }
+   header h1 span {
+    color: var(--accent);
+   }
+   header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.92rem;
+   }
 
-    /* --- Navigasi --- */
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
+   /* ===== DISCLAIMER BANNER ===== */
+   .notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 16px 0;
+    padding: 12px 14px;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: var(--text);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    border-radius: var(--radius);
+   }
+   .notice .dot {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    margin-top: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 1.8s ease-in-out infinite;
+   }
+   @keyframes pulse {
+    0%,
+    100% {
+     opacity: 1;
+     transform: scale(1);
     }
-    nav a {
-      color: var(--text);
-      text-decoration: none;
-      font-size: 0.9rem;
-      padding: 6px 14px;
-      border: 1px solid var(--border);
-      border-radius: 999px;          /* bentuk pill */
-      transition: 0.2s;
+    50% {
+     opacity: 0.4;
+     transform: scale(0.7);
     }
-    nav a:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
+   }
 
-    /* --- Tombol utama (opsional) --- */
-    .btn {
-      display: inline-block;
-      margin-top: 12px;
-      padding: 10px 20px;
-      background: var(--accent);
-      color: #fff;
-      border-radius: 999px;
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-    .btn:hover { opacity: 0.85; }
+   /* ===== SEARCH (interaktif) ===== */
+   .search {
+    width: 100%;
+    margin-bottom: 14px;
+    padding: 11px 14px;
+    font-size: 0.9rem;
+    color: var(--text);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    outline: none;
+    transition:
+     border-color 0.2s,
+     box-shadow 0.2s;
+   }
+   .search:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+   }
 
-    /* --- Disclaimer --- */
-    .disclaimer {
-      font-size: 0.8rem;
-      color: var(--muted);
-      border: 1px dashed var(--border);
-      border-radius: var(--radius);
-      padding: 14px 18px;
-      width: 100%;
-      max-width: 640px;
-      text-align: center;
-    }
+   /* ===== GRID CARD — gap rapat ===== */
+   .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+    gap: 10px; /* <-- ubah angka ini kalau mau lebih rapat/renggang */
+   }
 
-    /* --- Footer --- */
-    footer {
-      font-size: 0.8rem;
-      color: var(--muted);
-      text-align: center;
-      padding-bottom: 12px;
-    }
+   /* ===== CARD ===== */
+   .card {
+    position: relative;
+    display: block;
+    padding: 14px 15px;
+    text-decoration: none;
+    color: var(--text);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition:
+     transform 0.18s ease,
+     background 0.18s ease,
+     border-color 0.18s ease;
+   }
+   .card:hover {
+    background: var(--card-hover);
+    border-color: var(--accent);
+    transform: translateY(-3px);
+   }
+   .card:active {
+    transform: translateY(-1px) scale(0.99);
+   }
+
+   .card .icon {
+    font-size: 1.25rem;
+    margin-bottom: 6px;
+    display: block;
+   }
+   .card .title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 3px;
+   }
+   .card .desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.4;
+   }
+
+   /* badge "Soon" untuk tools yang belum jadi */
+   .card .badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    border-radius: 999px;
+   }
+
+   /* ===== FOOTER ===== */
+   footer {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--muted);
+   }
+   footer a {
+    color: var(--accent);
+    text-decoration: none;
+   }
+   footer a:hover {
+    text-decoration: underline;
+   }
   </style>
-</head>
+ </head>
 
-<body>
+ <body>
+  <div class="container">
+   <!-- ============================================
+         HEADER — ganti nama & tagline di sini
+         ============================================ -->
+   <header>
+    <h1>Ryan<span>X</span></h1>
+    <p>Kumpulan tools web ringan — semua diproses di sisi klien.</p>
+   </header>
 
-  <!-- ============================================= -->
-  <!-- HEADER: judul & deskripsi website             -->
-  <!-- GANTI teks di dalam h1 dan p                 -->
-  <!-- ============================================= -->
-  <header class="card">
-    <h1>RyanX</h1>
-    <p>Selamat datang di website pribadi saya.</p>
+   <!-- ============================================
+         DISCLAIMER — hapus/hilangkan kalau web sudah live
+         ============================================ -->
+   <div class="notice">
+    <span class="dot"></span>
+    <span>
+     <strong>Website masih dalam pengembangan.</strong>
+     Beberapa tools mungkin belum berfungsi atau masih tahap uji coba. Konten
+     dapat berubah sewaktu-waktu.
+    </span>
+   </div>
 
-    <!-- NAVIGASI: tambah/hapus link sesuai kebutuhan -->
-    <nav>
-      <a href="/">Home</a>
-      <a href="/about">About</a>
-      <a href="/blog">Blog</a>
-      <a href="/contact">Contact</a>
-    </nav>
-  </header>
+   <!-- ============================================
+         SEARCH BOX — filter card otomatis (JS di bawah)
+         ============================================ -->
+   <input
+    type="text"
+    class="search"
+    id="searchInput"
+    placeholder="Cari tools..."
+    autocomplete="off"
+   />
 
-  <!-- ============================================= -->
-  <!-- KONTEN UTAMA: isi konten di sini              -->
-  <!-- Bisa ditambah banyak <section class="card">   -->
-  <!-- ============================================= -->
-  <main class="card">
-    <h2>Tentang</h2>
-    <p style="color: var(--muted); margin-top: 8px;">
-      Ini contoh paragraf. Ganti teks ini dengan konten kamu sendiri.
-      Kamu bisa menambahkan gambar, list, atau elemen lain di sini.
-    </p>
+   <!-- ============================================
+         DAFTAR TOOLS
+         Cara nambah tool baru: copy 1 blok <a class="card">...</a>
+         Lalu ubah: href, icon, title, desc.
+         - icon: pakai emoji apa saja
+         - badge "Soon": hapus <span class="badge"> kalau sudah jadi
+         ============================================ -->
+   <div class="grid" id="toolGrid">
+    <!-- Tool 1 -->
+    <a class="card" href="/sinyal">
+     <span class="icon">📈</span>
+     <p class="title">Sinyal Trading</p>
+     <p class="desc">Sinyal entry/exit sederhana berbasis indikator.</p>
+     <span class="badge">Soon</span>
+    </a>
 
-    <!-- Contoh tombol — hapus kalau tidak perlu -->
-    <a href="#" class="btn">Selengkapnya</a>
-  </main>
+    <!-- Tool 2 -->
+    <a class="card" href="/kalkulator">
+     <span class="icon">🧮</span>
+     <p class="title">Kalkulator Lot</p>
+     <p class="desc">Hitung ukuran posisi & risiko dengan cepat.</p>
+     <span class="badge">Soon</span>
+    </a>
 
-  <!-- ============================================= -->
-  <!-- DISCLAIMER: jangan dihapus kalau memang wajib -->
-  <!-- GANTI teks sesuai kebutuhan                   -->
-  <!-- ============================================= -->
-  <div class="disclaimer">
-    <strong>Disclaimer:</strong> Semua konten di website ini disediakan
-    hanya untuk tujuan informasi. Penulis tidak bertanggung jawab atas
-    segala kerugian yang timbul dari penggunaan informasi di situs ini.
+    <!-- Tool 3 -->
+    <a class="card" href="/konverter">
+     <span class="icon">🔄</span>
+     <p class="title">Konverter</p>
+     <p class="desc">Konversi angka, satuan, dan format data.</p>
+    </a>
+
+    <!-- Tool 4 -->
+    <a class="card" href="/generator">
+     <span class="icon">🎲</span>
+     <p class="title">Generator</p>
+     <p class="desc">Generate password, token, dan string acak.</p>
+     <span class="badge">Soon</span>
+    </a>
+
+    <!--
+        TAMBAH TOOL BARU DI SINI:
+        <a class="card" href="/nama-tool">
+          <span class="icon">🚀</span>
+          <p class="title">Nama Tool</p>
+          <p class="desc">Deskripsi singkat tool kamu.</p>
+        </a>
+      -->
+   </div>
+
+   <!-- ============================================
+         FOOTER
+         ============================================ -->
+   <footer>
+    © <span id="year"></span> RyanX.my.id — Semua proses berjalan di browser
+    kamu.
+   </footer>
   </div>
 
-  <!-- ============================================= -->
-  <!-- FOOTER: copyright & tahun                     -->
-  <!-- ============================================= -->
-  <footer>
-    &copy; <span id="year"></span> RyanX. All rights reserved.
-  </footer>
-
-  <!-- Script kecil: otomatis isi tahun berjalan -->
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+   // ============================================
+   // 1. Tahun otomatis di footer
+   // ============================================
+   document.getElementById("year").textContent = new Date().getFullYear();
+
+   // ============================================
+   // 2. Filter card berdasarkan pencarian
+   // ============================================
+   const searchInput = document.getElementById("searchInput");
+   const cards = document.querySelectorAll("#toolGrid .card");
+
+   searchInput.addEventListener("input", (e) => {
+    const keyword = e.target.value.toLowerCase().trim();
+
+    cards.forEach((card) => {
+     const text = card.textContent.toLowerCase();
+     const cocok = text.includes(keyword);
+     card.style.display = cocok ? "" : "none";
+    });
+   });
+
+   // ============================================
+   // 3. Efek ripple saat card diklik (interaktif)
+   // ============================================
+   cards.forEach((card) => {
+    card.addEventListener("click", (e) => {
+     const ripple = document.createElement("span");
+     const rect = card.getBoundingClientRect();
+
+     ripple.style.cssText = `
+          position:absolute;
+          left:${e.clientX - rect.left}px;
+          top:${e.clientY - rect.top}px;
+          width:0; height:0;
+          border-radius:50%;
+          background:color-mix(in srgb, var(--accent) 40%, transparent);
+          transform:translate(-50%,-50%);
+          pointer-events:none;
+          animation:ripple .5s ease-out forwards;
+        `;
+
+     card.appendChild(ripple);
+     setTimeout(() => ripple.remove(), 500);
+    });
+   });
   </script>
 
-</body>
+  <!-- animasi ripple (dipindah ke CSS global) -->
+  <style>
+   @keyframes ripple {
+    to {
+     width: 260px;
+     height: 260px;
+     opacity: 0;
+    }
+   }
+  </style>
+ </body>
 </html>
