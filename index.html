@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RyanX — ryanx.my.id</title>
+  <meta name="description" content="Blog personal RyanX">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --bg: #f4f5fb;
+      --card: #ffffff;
+      --text: #1f2333;
+      --muted: #6b7280;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 6px 20px rgba(31, 35, 51, 0.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 24px 16px 60px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: linear-gradient(135deg, var(--primary), #7c3aed);
+      color: #fff;
+      padding: 36px 32px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      letter-spacing: -0.5px;
+    }
+
+    .header p {
+      opacity: 0.9;
+      margin-top: 6px;
+      font-size: 0.95rem;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 10px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      position: sticky;
+      top: 12px;
+      z-index: 10;
+    }
+
+    .navbar a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      font-size: 0.92rem;
+      padding: 10px 18px;
+      border-radius: 999px;
+      transition: all 0.2s ease;
+    }
+
+    .navbar a:hover {
+      background: #eef0ff;
+      color: var(--primary);
+    }
+
+    .navbar a.active {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    /* ===== ARTIKEL ===== */
+    .artikel {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      margin-bottom: 20px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .artikel:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(31, 35, 51, 0.12);
+    }
+
+    .artikel .kategori {
+      display: inline-block;
+      background: #eef0ff;
+      color: var(--primary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .artikel h2 {
+      font-size: 1.35rem;
+      margin-bottom: 8px;
+    }
+
+    .artikel h2 a {
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .artikel h2 a:hover { color: var(--primary); }
+
+    .artikel .meta {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .artikel p {
+      color: #4b5563;
+      font-size: 0.95rem;
+    }
+
+    .artikel .baca {
+      display: inline-block;
+      margin-top: 16px;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      padding: 8px 18px;
+      border: 2px solid var(--primary);
+      border-radius: 999px;
+      transition: all 0.2s ease;
+    }
+
+    .artikel .baca:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 40px;
+      padding: 20px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 600px) {
+      .header { padding: 28px 20px; }
+      .header h1 { font-size: 1.5rem; }
+      .artikel { padding: 20px; }
+      .navbar { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- HEADER -->
+    <header class="header">
+      <h1>RyanX</h1>
+      <p>Catatan, tutorial, dan pemikiran random dari ryanx.my.id</p>
+    </header>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <a href="/" class="active">Home</a>
+      <a href="/artikel">Artikel</a>
+      <a href="/tutorial">Tutorial</a>
+      <a href="/tentang">Tentang</a>
+      <a href="/kontak">Kontak</a>
+    </nav>
+
+    <!-- DAFTAR ARTIKEL -->
+    <main>
+
+      <article class="artikel">
+        <span class="kategori">Tutorial</span>
+        <h2><a href="#">Cara Membuat Website Sendiri dari Nol</a></h2>
+        <div class="meta">12 Mei 2025 · 5 menit baca</div>
+        <p>Panduan lengkap untuk kamu yang ingin mulai membangun website pribadi, mulai dari memilih domain, hosting, hingga deploy pertama kali.</p>
+        <a href="#" class="baca">Baca Selengkapnya →</a>
+      </article>
+
+      <article class="artikel">
+        <span class="kategori">Teknologi</span>
+        <h2><a href="#">Kenapa Saya Pindah ke Static Site Generator</a></h2>
+        <div class="meta">8 Mei 2025 · 4 menit baca</div>
+        <p>Alasan di balik keputusan migrasi dari WordPress ke static site generator, plus perbandingan performa dan biaya yang saya rasakan.</p>
+        <a href="#" class="baca">Baca Selengkapnya →</a>
+      </article>
+
+      <article class="artikel">
+        <span class="kategori">Catatan</span>
+        <h2><a href="#">Belajar Konsisten Menulis di Blog</a></h2>
+        <div class="meta">1 Mei 2025 · 3 menit baca</div>
+        <p>Menulis itu susah kalau tidak ada sistem. Ini beberapa trik sederhana yang membantu saya tetap produktif menulis setiap minggu.</p>
+        <a href="#" class="baca">Baca Selengkapnya →</a>
+      </article>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      &copy; 2025 RyanX · ryanx.my.id — Dibuat dengan ☕ dan sedikit kopi.
+    </footer>
+
+  </div>
+
+</body>
+</html>
