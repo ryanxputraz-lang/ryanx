@@ -261,8 +261,8 @@
    // --- Mengambil Data Harga (Simulasi & API) ---
    async function fetchPriceData(timeframe) {
     // Dalam produksi, ganti dengan panggilan API nyata.
-    // Contoh: const response = await fetch(`${CONFIG.PRICE_API}&interval=${timeframe}`);
-    // const data = await response.json();
+    const response = await fetch(`${ga_live_J7Ky_UWTihKsNHdunl-I5LnpMRey2DS044Tbr1cs}&interval=${timeframe}`);
+    const data = await response.json();
 
     // Simulasi data candlestick untuk demonstrasi
     const now = Math.floor(Date.now() / 1000);
