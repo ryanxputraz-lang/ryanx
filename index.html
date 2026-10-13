@@ -1,240 +1,310 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RyanX — ryanx.my.id</title>
-  <meta name="description" content="Blog personal RyanX">
-  <style>
-    :root {
-      --primary: #4f46e5;
-      --primary-dark: #4338ca;
-      --bg: #f4f5fb;
-      --card: #ffffff;
-      --text: #1f2333;
-      --muted: #6b7280;
-      --radius: 16px;
-      --radius-sm: 10px;
-      --shadow: 0 6px 20px rgba(31, 35, 51, 0.08);
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ryanx.my.id — Forex Tools & Notes</title>
+<style>
+  :root{
+    --matrix-green:#00ff9c;
+    --matrix-dim:#0a3d2a;
+    --matrix-glow:rgba(0,255,156,0.35);
+    --bg-dark:#030a06;
+    --card-bg:rgba(6,20,14,0.85);
+  }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+  *{margin:0;padding:0;box-sizing:border-box;}
 
-    body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.7;
-      padding: 24px 16px 60px;
-    }
+  body{
+    font-family:'Courier New', monospace;
+    background:var(--bg-dark);
+    color:var(--matrix-green);
+    min-height:100vh;
+    overflow-x:hidden;
+    position:relative;
+  }
 
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-    }
+  /* Matrix rain background */
+  #matrix-canvas{
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    z-index:0;
+    opacity:0.18;
+  }
 
-    /* ===== HEADER ===== */
-    .header {
-      background: linear-gradient(135deg, var(--primary), #7c3aed);
-      color: #fff;
-      padding: 36px 32px;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      margin-bottom: 20px;
-      text-align: center;
-    }
+  .wrapper{
+    position:relative;
+    z-index:1;
+    max-width:1100px;
+    margin:0 auto;
+    padding:40px 20px;
+  }
 
-    .header h1 {
-      font-size: 2rem;
-      letter-spacing: -0.5px;
-    }
+  /* Header */
+  header{
+    text-align:center;
+    margin-bottom:50px;
+    padding:30px 20px;
+    border:2px solid var(--matrix-green);
+    border-radius:24px;
+    background:var(--card-bg);
+    box-shadow:0 0 20px var(--matrix-glow), inset 0 0 20px rgba(0,255,156,0.05);
+    backdrop-filter:blur(4px);
+  }
 
-    .header p {
-      opacity: 0.9;
-      margin-top: 6px;
-      font-size: 0.95rem;
-    }
+  header h1{
+    font-size:2rem;
+    letter-spacing:3px;
+    text-shadow:0 0 10px var(--matrix-green);
+  }
 
-    /* ===== NAVBAR ===== */
-    .navbar {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 10px;
-      margin-bottom: 24px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      position: sticky;
-      top: 12px;
-      z-index: 10;
-    }
+  header p{
+    margin-top:10px;
+    color:#7fffc7;
+    font-size:0.9rem;
+    letter-spacing:2px;
+  }
 
-    .navbar a {
-      text-decoration: none;
-      color: var(--text);
-      font-weight: 500;
-      font-size: 0.92rem;
-      padding: 10px 18px;
-      border-radius: 999px;
-      transition: all 0.2s ease;
-    }
+  .status-dot{
+    display:inline-block;
+    width:8px;height:8px;
+    background:var(--matrix-green);
+    border-radius:50%;
+    margin-right:6px;
+    box-shadow:0 0 8px var(--matrix-green);
+    animation:pulse 1.5s infinite;
+  }
 
-    .navbar a:hover {
-      background: #eef0ff;
-      color: var(--primary);
-    }
+  @keyframes pulse{
+    0%,100%{opacity:1;}
+    50%{opacity:0.3;}
+  }
 
-    .navbar a.active {
-      background: var(--primary);
-      color: #fff;
-    }
+  /* Grid layout */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:24px;
+  }
 
-    /* ===== ARTIKEL ===== */
-    .artikel {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 28px;
-      margin-bottom: 20px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
+  /* Card / rounded border */
+  .card{
+    border:2px solid var(--matrix-green);
+    border-radius:20px;
+    padding:22px;
+    background:var(--card-bg);
+    box-shadow:0 0 15px var(--matrix-glow);
+    transition:transform .25s ease, box-shadow .25s ease;
+    position:relative;
+    overflow:hidden;
+  }
 
-    .artikel:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 28px rgba(31, 35, 51, 0.12);
-    }
+  .card::before{
+    content:'';
+    position:absolute;
+    top:0;left:-100%;
+    width:100%;height:100%;
+    background:linear-gradient(90deg,transparent,rgba(0,255,156,0.08),transparent);
+    transition:left .6s ease;
+  }
 
-    .artikel .kategori {
-      display: inline-block;
-      background: #eef0ff;
-      color: var(--primary);
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 4px 12px;
-      border-radius: 999px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 12px;
-    }
+  .card:hover::before{left:100%;}
 
-    .artikel h2 {
-      font-size: 1.35rem;
-      margin-bottom: 8px;
-    }
+  .card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 0 28px var(--matrix-glow);
+  }
 
-    .artikel h2 a {
-      color: var(--text);
-      text-decoration: none;
-    }
+  .card h2{
+    font-size:1.1rem;
+    margin-bottom:14px;
+    letter-spacing:2px;
+    border-bottom:1px dashed var(--matrix-dim);
+    padding-bottom:10px;
+  }
 
-    .artikel h2 a:hover { color: var(--primary); }
+  .card h2 span{color:#7fffc7;font-size:0.8rem;}
 
-    .artikel .meta {
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-bottom: 12px;
-    }
+  /* List items */
+  .card ul{list-style:none;}
 
-    .artikel p {
-      color: #4b5563;
-      font-size: 0.95rem;
-    }
+  .card ul li{
+    padding:10px 0;
+    font-size:0.9rem;
+    border-bottom:1px solid rgba(0,255,156,0.08);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
 
-    .artikel .baca {
-      display: inline-block;
-      margin-top: 16px;
-      color: var(--primary);
-      font-weight: 600;
-      font-size: 0.9rem;
-      text-decoration: none;
-      padding: 8px 18px;
-      border: 2px solid var(--primary);
-      border-radius: 999px;
-      transition: all 0.2s ease;
-    }
+  .card ul li:last-child{border-bottom:none;}
 
-    .artikel .baca:hover {
-      background: var(--primary);
-      color: #fff;
-    }
+  .card ul li a{
+    color:var(--matrix-green);
+    text-decoration:none;
+    transition:color .2s;
+  }
 
-    /* ===== FOOTER ===== */
-    .footer {
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.85rem;
-      margin-top: 40px;
-      padding: 20px;
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
+  .card ul li a:hover{color:#fff;text-shadow:0 0 8px var(--matrix-green);}
 
-    /* ===== RESPONSIF ===== */
-    @media (max-width: 600px) {
-      .header { padding: 28px 20px; }
-      .header h1 { font-size: 1.5rem; }
-      .artikel { padding: 20px; }
-      .navbar { position: static; }
-    }
-  </style>
+  .badge{
+    font-size:0.7rem;
+    padding:2px 8px;
+    border:1px solid var(--matrix-green);
+    border-radius:10px;
+    color:#7fffc7;
+  }
+
+  /* Note box */
+  .note{
+    font-size:0.85rem;
+    line-height:1.7;
+    color:#9dffd0;
+    padding:8px 0;
+  }
+
+  .note strong{color:var(--matrix-green);}
+
+  /* Pair ticker style */
+  .pair{
+    display:flex;
+    justify-content:space-between;
+    font-size:0.9rem;
+    padding:8px 0;
+    border-bottom:1px solid rgba(0,255,156,0.08);
+  }
+
+  .up{color:#00ff9c;}
+  .down{color:#ff5c5c;}
+
+  /* Footer */
+  footer{
+    margin-top:50px;
+    text-align:center;
+    padding:22px;
+    border:2px solid var(--matrix-green);
+    border-radius:20px;
+    background:var(--card-bg);
+    font-size:0.8rem;
+    color:#7fffc7;
+    box-shadow:0 0 15px var(--matrix-glow);
+    letter-spacing:1px;
+  }
+
+  footer a{color:var(--matrix-green);text-decoration:none;}
+  footer a:hover{text-shadow:0 0 8px var(--matrix-green);}
+
+  @media(max-width:480px){
+    header h1{font-size:1.4rem;}
+    .wrapper{padding:20px 12px;}
+  }
+</style>
 </head>
 <body>
 
-  <div class="container">
+<canvas id="matrix-canvas"></canvas>
 
-    <!-- HEADER -->
-    <header class="header">
-      <h1>RyanX</h1>
-      <p>Catatan, tutorial, dan pemikiran random dari ryanx.my.id</p>
-    </header>
+<div class="wrapper">
 
-    <!-- NAVBAR -->
-    <nav class="navbar">
-      <a href="/" class="active">Home</a>
-      <a href="/artikel">Artikel</a>
-      <a href="/tutorial">Tutorial</a>
-      <a href="/tentang">Tentang</a>
-      <a href="/kontak">Kontak</a>
-    </nav>
+  <header>
+    <h1>ryanx.my.id</h1>
+    <p><span class="status-dot"></span>FOREX TOOLS &amp; NOTES — ONLINE</p>
+  </header>
 
-    <!-- DAFTAR ARTIKEL -->
-    <main>
+  <div class="grid">
 
-      <article class="artikel">
-        <span class="kategori">Tutorial</span>
-        <h2><a href="#">Cara Membuat Website Sendiri dari Nol</a></h2>
-        <div class="meta">12 Mei 2025 · 5 menit baca</div>
-        <p>Panduan lengkap untuk kamu yang ingin mulai membangun website pribadi, mulai dari memilih domain, hosting, hingga deploy pertama kali.</p>
-        <a href="#" class="baca">Baca Selengkapnya →</a>
-      </article>
+    <!-- Alat / Tools -->
+    <section class="card">
+      <h2>⚙️ ALAT <span>[TOOLS]</span></h2>
+      <ul>
+        <li><a href="#">📊 Kalkulator</a><span class="badge">pips</span></li>
+        <li><a href="#">💰 Kalkulator Lot</a><span class="badge">lot</span></li>
+        <li><a href="#">📈 Risk/Reward</a><span class="badge">R:R</span></li>
+        <li><a href="#">🔔 Alert Harga</a><span class="badge">alert</span></li>
+        <li><a href="#">📓 Jurnal Trading</a><span class="badge">log</span></li>
+      </ul>
+    </section>
 
-      <article class="artikel">
-        <span class="kategori">Teknologi</span>
-        <h2><a href="#">Kenapa Saya Pindah ke Static Site Generator</a></h2>
-        <div class="meta">8 Mei 2025 · 4 menit baca</div>
-        <p>Alasan di balik keputusan migrasi dari WordPress ke static site generator, plus perbandingan performa dan biaya yang saya rasakan.</p>
-        <a href="#" class="baca">Baca Selengkapnya →</a>
-      </article>
+    <!-- Market Watch -->
+    <section class="card">
+      <h2>📡 MARKET WATCH <span>[LIVE]</span></h2>
+      <div class="pair"><span>EUR/USD</span><span class="up">1.0842 ▲</span></div>
+      <div class="pair"><span>GBP/USD</span><span class="down">1.2634 ▼</span></div>
+      <div class="pair"><span>USD/JPY</span><span class="up">149.82 ▲</span></div>
+      <div class="pair"><span>XAU/USD</span><span class="up">2034.5 ▲</span></div>
+      <div class="pair"><span>BTC/USD</span><span class="down">42,180 ▼</span></div>
+    </section>
 
-      <article class="artikel">
-        <span class="kategori">Catatan</span>
-        <h2><a href="#">Belajar Konsisten Menulis di Blog</a></h2>
-        <div class="meta">1 Mei 2025 · 3 menit baca</div>
-        <p>Menulis itu susah kalau tidak ada sistem. Ini beberapa trik sederhana yang membantu saya tetap produktif menulis setiap minggu.</p>
-        <a href="#" class="baca">Baca Selengkapnya →</a>
-      </article>
+    <!-- Catatan -->
+    <section class="card">
+      <h2>📝 CATATAN <span>[NOTES]</span></h2>
+      <div class="note">
+        <strong>• Money Management:</strong> Risiko maks 1–2% per trade.<br>
+        <strong>• Sesi Terbaik:</strong> London &amp; New York overlap.<br>
+        <strong>• Hindari:</strong> News high impact tanpa SL.<br>
+        <strong>• Disiplin:</strong> Ikuti plan, jangan revenge trading.
+      </div>
+    </section>
 
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="footer">
-      &copy; 2025 RyanX · ryanx.my.id — Dibuat dengan ☕ dan sedikit kopi.
-    </footer>
+    <!-- Checklist -->
+    <section class="card">
+      <h2>✅ CHECKLIST <span>[PRE-TRADE]</span></h2>
+      <ul>
+        <li><a href="#">Trend sudah jelas?</a><span class="badge">TF H4</span></li>
+        <li><a href="#">Support/Resistance valid?</a><span class="badge">S/R</span></li>
+        <li><a href="#">Risk sudah dihitung?</a><span class="badge">1%</span></li>
+        <li><a href="#">SL &amp; TP sudah pasang?</a><span class="badge">SL/TP</span></li>
+        <li><a href="#">Emosi stabil?</a><span class="badge">calm</span></li>
+      </ul>
+    </section>
 
   </div>
+
+  <footer>
+    © 2025 <a href="https://ryanx.my.id">ryanx.my.id</a> — Trade Safe. Manage Risk.
+  </footer>
+
+</div>
+
+<script>
+/* Matrix rain effect */
+const canvas = document.getElementById('matrix-canvas');
+const ctx = canvas.getContext('2d');
+
+let w, h, cols, yPositions;
+const chars = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ$€£¥₿#@%&*'.split('');
+const fontSize = 14;
+
+function initMatrix(){
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+  cols = Math.floor(w / fontSize);
+  yPositions = Array(cols).fill(1);
+}
+
+function drawMatrix(){
+  ctx.fillStyle = 'rgba(3,10,6,0.08)';
+  ctx.fillRect(0,0,w,h);
+
+  ctx.fillStyle = '#00ff9c';
+  ctx.font = fontSize + 'px monospace';
+
+  for(let i=0;i<cols;i++){
+    const text = chars[Math.floor(Math.random()*chars.length)];
+    ctx.fillText(text, i*fontSize, yPositions[i]*fontSize);
+
+    if(yPositions[i]*fontSize > h && Math.random() > 0.975){
+      yPositions[i] = 0;
+    }
+    yPositions[i]++;
+  }
+}
+
+initMatrix();
+setInterval(drawMatrix, 60);
+window.addEventListener('resize', initMatrix);
+</script>
 
 </body>
 </html>
