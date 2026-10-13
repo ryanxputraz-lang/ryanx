@@ -1,71 +1,181 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RYANX.MY.ID • FOREX MATRIX</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <!-- ============================================= -->
+  <!-- BAGIAN HEAD: pengaturan dasar & judul website -->
+  <!-- ============================================= -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- GANTI judul ini sesuai nama website kamu -->
+  <title>RyanX — Home</title>
+
+  <!-- GANTI deskripsi ini untuk SEO / preview link -->
+  <meta name="description" content="Website pribadi RyanX" />
+
+  <!-- ============================================= -->
+  <!-- BAGIAN STYLE: semua tampilan diatur di sini    -->
+  <!-- ============================================= -->
+  <style>
+    /* --- Variabel warna biar gampang ganti tema --- */
+    :root {
+      --bg: #0f1115;          /* warna background halaman */
+      --card: #1a1d24;        /* warna kotak konten */
+      --border: #2a2f3a;      /* warna garis border */
+      --text: #e6e8ee;        /* warna teks utama */
+      --muted: #9aa1b1;       /* warna teks sekunder */
+      --accent: #4f8cff;      /* warna aksen / tombol */
+      --radius: 16px;         /* ukuran lengkung sudut */
+    }
+
+    /* --- Reset dasar --- */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+      gap: 20px;
+    }
+
+    /* --- Kotak utama dengan border rounded --- */
+    .card {
+      width: 100%;
+      max-width: 640px;              /* GANTI lebar maksimal kalau perlu */
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+
+    /* --- Header / judul --- */
+    header h1 {
+      font-size: 1.6rem;
+      margin-bottom: 4px;
+    }
+    header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* --- Navigasi --- */
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;          /* bentuk pill */
+      transition: 0.2s;
+    }
+    nav a:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* --- Tombol utama (opsional) --- */
+    .btn {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 10px 20px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .btn:hover { opacity: 0.85; }
+
+    /* --- Disclaimer --- */
+    .disclaimer {
+      font-size: 0.8rem;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      width: 100%;
+      max-width: 640px;
+      text-align: center;
+    }
+
+    /* --- Footer --- */
+    footer {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+      padding-bottom: 12px;
+    }
+  </style>
 </head>
+
 <body>
-<canvas id="matrix"></canvas>
-<div class="scanline"></div>
-<div class="phone-wrap">
- <div class="phone" id="phone">
-  <header class="topbar">
-   <div class="logo">RYANX<span>.MY.ID</span></div>
-   <div class="status"><span class="dot"></span> SYSTEM ONLINE • BALIKPAPAN</div>
-   <button id="menuBtn">☰</button>
+
+  <!-- ============================================= -->
+  <!-- HEADER: judul & deskripsi website             -->
+  <!-- GANTI teks di dalam h1 dan p                 -->
+  <!-- ============================================= -->
+  <header class="card">
+    <h1>RyanX</h1>
+    <p>Selamat datang di website pribadi saya.</p>
+
+    <!-- NAVIGASI: tambah/hapus link sesuai kebutuhan -->
+    <nav>
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/blog">Blog</a>
+      <a href="/contact">Contact</a>
+    </nav>
   </header>
 
-  <section class="hero">
-   <div class="eyebrow">⚡ FOREX ALGO • MATRIX CODE • V3.4</div>
-   <h1 id="heroTitle"></h1>
-   <div class="orb-wrap" id="orbWrap">
-    <div class="orb" id="orb">
-     <div class="orb-core">
-      <div class="pair">EUR/USD</div>
-      <div class="price" id="orbPrice">1.08472</div>
-      <div class="change">+0.24% MATRIX LONG</div>
-     </div>
-    </div>
-   </div>
-   <div class="ctaRow">
-    <button class="holoBtn primary" id="scanBtn">INITIATE SCAN_</button>
-    <button class="holoBtn">WHITE PAPER</button>
-   </div>
-  </section>
+  <!-- ============================================= -->
+  <!-- KONTEN UTAMA: isi konten di sini              -->
+  <!-- Bisa ditambah banyak <section class="card">   -->
+  <!-- ============================================= -->
+  <main class="card">
+    <h2>Tentang</h2>
+    <p style="color: var(--muted); margin-top: 8px;">
+      Ini contoh paragraf. Ganti teks ini dengan konten kamu sendiri.
+      Kamu bisa menambahkan gambar, list, atau elemen lain di sini.
+    </p>
 
-  <div class="ticker"><div class="tickerTrack" id="tickerTrack"></div></div>
+    <!-- Contoh tombol — hapus kalau tidak perlu -->
+    <a href="#" class="btn">Selengkapnya</a>
+  </main>
 
-  <section class="card">
-   <div class="cardHead"><span>TERMINAL / XAUUSD • M15</span><span class="live">LIVE</span></div>
-   <canvas id="chart" height="220"></canvas>
-   <div class="buySell">
-    <button class="buy">BUY • LONG</button>
-    <button class="sell">SELL • SHORT</button>
-   </div>
-  </section>
+  <!-- ============================================= -->
+  <!-- DISCLAIMER: jangan dihapus kalau memang wajib -->
+  <!-- GANTI teks sesuai kebutuhan                   -->
+  <!-- ============================================= -->
+  <div class="disclaimer">
+    <strong>Disclaimer:</strong> Semua konten di website ini disediakan
+    hanya untuk tujuan informasi. Penulis tidak bertanggung jawab atas
+    segala kerugian yang timbul dari penggunaan informasi di situs ini.
+  </div>
 
-  <section class="card codeCard">
-   <div class="cardHead"><span>matrix_algo.py</span><button id="runBtn">▶ RUN</button></div>
-   <pre id="codeBlock"></pre>
-  </section>
+  <!-- ============================================= -->
+  <!-- FOOTER: copyright & tahun                     -->
+  <!-- ============================================= -->
+  <footer>
+    &copy; <span id="year"></span> RyanX. All rights reserved.
+  </footer>
 
-  <section class="ctaBox">
-   <h2>ENTER<br>THE<br><span>MATRIX</span></h2>
-   <p>Join 2,341 traders decoding markets with neural hologram.</p>
-   <button class="holoBtn primary full">JOIN MATRIX • $49/MO</button>
-  </section>
+  <!-- Script kecil: otomatis isi tahun berjalan -->
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
 
-  <nav class="bottomNav">
-   <button class="active"><i>◈</i>HOME</button>
-   <button><i>◎</i>MARKETS</button>
-   <button><i>⬣</i>TERMINAL</button>
-   <button><i>◍</i>PROFILE</button>
-  </nav>
- </div>
-</div>
-<script src="script.js"></script>
 </body>
 </html>
