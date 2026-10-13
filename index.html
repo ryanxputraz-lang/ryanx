@@ -1,374 +1,94 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
- <head>
-  <!-- ============================================
-       PANDUAN CEPAT:
-       1. Ganti JUDUL & DESKRIPSI di <title> dan <meta>
-       2. Tambah/ubah TOOLS di bagian <div class="grid"> bawah
-       3. Ubah WARNA UTAMA di :root (--accent)
-       ============================================ -->
+<head>
   <meta charset="UTF-8" />
+  <!-- Viewport wajib untuk tampilan mobile yang rapi -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RyanX — Tools & Utilities</title>
-  <meta
-   name="description"
-   content="Kumpulan tools web client-side: sinyal trading, kalkulator, dan lainnya."
-  />
+  
+  <!-- GANTI: judul tab browser -->
+  <title>Ryan X - Home</title>
+  <meta name="description" content="Website pribadi Ryan X" />
 
-  <style>
-   /* ============================================
-       VARIABEL WARNA — ubah di sini biar konsisten
-       ============================================ */
-   :root {
-    --bg: #0f1115;
-    --card: #171a21;
-    --card-hover: #1e2229;
-    --border: #262b34;
-    --text: #e6e8ec;
-    --muted: #8b94a3;
-    --accent: #4f8cff; /* warna utama (biru) */
-    --radius: 14px; /* radius sudut card */
-   }
+  <!-- Hubungkan file CSS eksternal (jangan taruh CSS di sini) -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
 
-   /* Light mode otomatis (opsional) */
-   @media (prefers-color-scheme: light) {
-    :root {
-     --bg: #f5f6f8;
-     --card: #ffffff;
-     --card-hover: #f0f2f5;
-     --border: #e2e5ea;
-     --text: #1a1d23;
-     --muted: #6b7280;
-    }
-   }
+  <!-- ============ HEADER / NAVBAR ============ -->
+  <header class="navbar">
+    <!-- GANTI: nama brand/logo kamu -->
+    <div class="brand">ryanx<span>.my.id</span></div>
 
-   * {
-    box-sizing: border-box;
-   }
+    <!-- Tombol hamburger untuk menu mobile -->
+    <button id="menuBtn" class="menu-btn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
 
-   body {
-    margin: 0;
-    min-height: 100vh;
-    background: var(--bg);
-    color: var(--text);
-    font-family:
-     system-ui,
-     -apple-system,
-     "Segoe UI",
-     Roboto,
-     sans-serif;
-    display: flex;
-    justify-content: center;
-    padding: 28px 16px;
-   }
+  <!-- Menu navigasi (muncul saat hamburger diklik) -->
+  <nav id="navMenu" class="nav-menu">
+    <!-- GANTI: link dan teks menu sesuai kebutuhan -->
+    <a href="#home">Home</a>
+    <a href="#about">Tentang</a>
+    <a href="#services">Layanan</a>
+    <a href="#contact">Kontak</a>
+  </nav>
 
-   .container {
-    width: 100%;
-    max-width: 780px;
-   }
+  <!-- ============ HERO SECTION ============ -->
+  <section id="home" class="hero">
+    <!-- GANTI: sapaan dan deskripsi -->
+    <h1>Halo, saya <span>Ryan</span> 👋</h1>
+    <p>Selamat datang di website pribadi saya. Saya suka membuat sesuatu yang simpel dan berguna.</p>
+    <button id="ctaBtn" class="btn-primary">Klik Saya</button>
+    <!-- Pesan interaktif akan muncul di sini -->
+    <p id="ctaMessage" class="cta-message"></p>
+  </section>
 
-   /* ===== HEADER ===== */
-   header {
-    margin-bottom: 16px;
-   }
-   header h1 {
-    margin: 0 0 6px;
-    font-size: 1.6rem;
-    letter-spacing: -0.02em;
-   }
-   header h1 span {
-    color: var(--accent);
-   }
-   header p {
-    margin: 0;
-    color: var(--muted);
-    font-size: 0.92rem;
-   }
+  <!-- ============ ABOUT SECTION ============ -->
+  <section id="about" class="section">
+    <h2>Tentang</h2>
+    <p>
+      <!-- GANTI: deskripsi tentang kamu -->
+      Saya seorang developer yang senang belajar hal baru. Website ini dibuat
+      sebagai template dasar yang mudah diedit.
+    </p>
+  </section>
 
-   /* ===== DISCLAIMER BANNER ===== */
-   .notice {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    margin: 16px 0;
-    padding: 12px 14px;
-    font-size: 0.85rem;
-    line-height: 1.45;
-    color: var(--text);
-    background: color-mix(in srgb, var(--accent) 12%, transparent);
-    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
-    border-radius: var(--radius);
-   }
-   .notice .dot {
-    flex-shrink: 0;
-    width: 8px;
-    height: 8px;
-    margin-top: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    animation: pulse 1.8s ease-in-out infinite;
-   }
-   @keyframes pulse {
-    0%,
-    100% {
-     opacity: 1;
-     transform: scale(1);
-    }
-    50% {
-     opacity: 0.4;
-     transform: scale(0.7);
-    }
-   }
+  <!-- ============ SERVICES / KARTU ============ -->
+  <section id="services" class="section">
+    <h2>Layanan</h2>
+    <div class="cards">
+      <!-- GANTI: tambah/hapus kartu sesuai kebutuhan -->
+      <div class="card">
+        <h3>Web Design</h3>
+        <p>Desain website modern & responsif.</p>
+      </div>
+      <div class="card">
+        <h3>Development</h3>
+        <p>Pembuatan website cepat & rapi.</p>
+      </div>
+      <div class="card">
+        <h3>Konsultasi</h3>
+        <p>Diskusi santai soal teknologi.</p>
+      </div>
+    </div>
+  </section>
 
-   /* ===== SEARCH (interaktif) ===== */
-   .search {
-    width: 100%;
-    margin-bottom: 14px;
-    padding: 11px 14px;
-    font-size: 0.9rem;
-    color: var(--text);
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    outline: none;
-    transition:
-     border-color 0.2s,
-     box-shadow 0.2s;
-   }
-   .search:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
-   }
+  <!-- ============ CONTACT ============ -->
+  <section id="contact" class="section">
+    <h2>Kontak</h2>
+    <!-- GANTI: email atau link sosial media -->
+    <p>Email: <a href="mailto:hello@ryanx.my.id">hello@ryanx.my.id</a></p>
+    <p>Website: <a href="https://ryanx.my.id">ryanx.my.id</a></p>
+  </section>
 
-   /* ===== GRID CARD — gap rapat ===== */
-   .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
-    gap: 10px; /* <-- ubah angka ini kalau mau lebih rapat/renggang */
-   }
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <!-- GANTI: tahun bisa otomatis pakai JS, atau tulis manual -->
+    <p>&copy; <span id="year"></span> Ryan X. All rights reserved.</p>
+  </footer>
 
-   /* ===== CARD ===== */
-   .card {
-    position: relative;
-    display: block;
-    padding: 14px 15px;
-    text-decoration: none;
-    color: var(--text);
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    transition:
-     transform 0.18s ease,
-     background 0.18s ease,
-     border-color 0.18s ease;
-   }
-   .card:hover {
-    background: var(--card-hover);
-    border-color: var(--accent);
-    transform: translateY(-3px);
-   }
-   .card:active {
-    transform: translateY(-1px) scale(0.99);
-   }
-
-   .card .icon {
-    font-size: 1.25rem;
-    margin-bottom: 6px;
-    display: block;
-   }
-   .card .title {
-    font-size: 0.95rem;
-    font-weight: 600;
-    margin: 0 0 3px;
-   }
-   .card .desc {
-    font-size: 0.8rem;
-    color: var(--muted);
-    margin: 0;
-    line-height: 1.4;
-   }
-
-   /* badge "Soon" untuk tools yang belum jadi */
-   .card .badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    padding: 3px 7px;
-    color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 15%, transparent);
-    border-radius: 999px;
-   }
-
-   /* ===== FOOTER ===== */
-   footer {
-    margin-top: 22px;
-    text-align: center;
-    font-size: 0.78rem;
-    color: var(--muted);
-   }
-   footer a {
-    color: var(--accent);
-    text-decoration: none;
-   }
-   footer a:hover {
-    text-decoration: underline;
-   }
-  </style>
- </head>
-
- <body>
-  <div class="container">
-   <!-- ============================================
-         HEADER — ganti nama & tagline di sini
-         ============================================ -->
-   <header>
-    <h1>Ryan<span>X</span></h1>
-    <p>Kumpulan tools web ringan — semua diproses di sisi klien.</p>
-   </header>
-
-   <!-- ============================================
-         DISCLAIMER — hapus/hilangkan kalau web sudah live
-         ============================================ -->
-   <div class="notice">
-    <span class="dot"></span>
-    <span>
-     <strong>Website masih dalam pengembangan.</strong>
-     Beberapa tools mungkin belum berfungsi atau masih tahap uji coba. Konten
-     dapat berubah sewaktu-waktu.
-    </span>
-   </div>
-
-   <!-- ============================================
-         SEARCH BOX — filter card otomatis (JS di bawah)
-         ============================================ -->
-   <input
-    type="text"
-    class="search"
-    id="searchInput"
-    placeholder="Cari tools..."
-    autocomplete="off"
-   />
-
-   <!-- ============================================
-         DAFTAR TOOLS
-         Cara nambah tool baru: copy 1 blok <a class="card">...</a>
-         Lalu ubah: href, icon, title, desc.
-         - icon: pakai emoji apa saja
-         - badge "Soon": hapus <span class="badge"> kalau sudah jadi
-         ============================================ -->
-   <div class="grid" id="toolGrid">
-    <!-- Tool 1 -->
-    <a class="card" href="/sinyal">
-     <span class="icon">📈</span>
-     <p class="title">Sinyal Trading</p>
-     <p class="desc">Sinyal entry/exit sederhana berbasis indikator.</p>
-     <span class="badge">Soon</span>
-    </a>
-
-    <!-- Tool 2 -->
-    <a class="card" href="/kalkulator">
-     <span class="icon">🧮</span>
-     <p class="title">Kalkulator Lot</p>
-     <p class="desc">Hitung ukuran posisi & risiko dengan cepat.</p>
-     <span class="badge">Soon</span>
-    </a>
-
-    <!-- Tool 3 -->
-    <a class="card" href="/konverter">
-     <span class="icon">🔄</span>
-     <p class="title">Konverter</p>
-     <p class="desc">Konversi angka, satuan, dan format data.</p>
-    </a>
-
-    <!-- Tool 4 -->
-    <a class="card" href="/generator">
-     <span class="icon">🎲</span>
-     <p class="title">Generator</p>
-     <p class="desc">Generate password, token, dan string acak.</p>
-     <span class="badge">Soon</span>
-    </a>
-
-    <!--
-        TAMBAH TOOL BARU DI SINI:
-        <a class="card" href="/nama-tool">
-          <span class="icon">🚀</span>
-          <p class="title">Nama Tool</p>
-          <p class="desc">Deskripsi singkat tool kamu.</p>
-        </a>
-      -->
-   </div>
-
-   <!-- ============================================
-         FOOTER
-         ============================================ -->
-   <footer>
-    © <span id="year"></span> RyanX.my.id — Semua proses berjalan di browser
-    kamu.
-   </footer>
-  </div>
-
-  <script>
-   // ============================================
-   // 1. Tahun otomatis di footer
-   // ============================================
-   document.getElementById("year").textContent = new Date().getFullYear();
-
-   // ============================================
-   // 2. Filter card berdasarkan pencarian
-   // ============================================
-   const searchInput = document.getElementById("searchInput");
-   const cards = document.querySelectorAll("#toolGrid .card");
-
-   searchInput.addEventListener("input", (e) => {
-    const keyword = e.target.value.toLowerCase().trim();
-
-    cards.forEach((card) => {
-     const text = card.textContent.toLowerCase();
-     const cocok = text.includes(keyword);
-     card.style.display = cocok ? "" : "none";
-    });
-   });
-
-   // ============================================
-   // 3. Efek ripple saat card diklik (interaktif)
-   // ============================================
-   cards.forEach((card) => {
-    card.addEventListener("click", (e) => {
-     const ripple = document.createElement("span");
-     const rect = card.getBoundingClientRect();
-
-     ripple.style.cssText = `
-          position:absolute;
-          left:${e.clientX - rect.left}px;
-          top:${e.clientY - rect.top}px;
-          width:0; height:0;
-          border-radius:50%;
-          background:color-mix(in srgb, var(--accent) 40%, transparent);
-          transform:translate(-50%,-50%);
-          pointer-events:none;
-          animation:ripple .5s ease-out forwards;
-        `;
-
-     card.appendChild(ripple);
-     setTimeout(() => ripple.remove(), 500);
-    });
-   });
-  </script>
-
-  <!-- animasi ripple (dipindah ke CSS global) -->
-  <style>
-   @keyframes ripple {
-    to {
-     width: 260px;
-     height: 260px;
-     opacity: 0;
-    }
-   }
-  </style>
- </body>
+  <!-- Hubungkan file JavaScript di paling bawah agar HTML selesai dimuat dulu -->
+  <script src="script.js"></script>
+</body>
 </html>
