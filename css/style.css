@@ -47,7 +47,6 @@ body {
 .eyebrow {
   margin: 0 0 12px; /* Mengatur jarak bawah label */
   color: var(--accent); /* Memberi warna aksen pada label */
-  font-family: monospace; /* Menggunakan jenis huruf monospace bergaya kode */
 }
 
 /* Mengatur judul utama */
