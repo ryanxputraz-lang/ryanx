@@ -47,14 +47,14 @@ body {
 }
 
 /* Mengatur judul utama */
-.header h1 {
+.header h1 { text-align: center;
   margin: 0; /* Menghapus margin bawaan judul */
   font-size: clamp(1.8rem, 7vw, 2.5rem); /* Menyesuaikan ukuran judul dengan lebar layar */
   letter-spacing: -0.04em; /* Merapatkan sedikit jarak antarhuruf */
 }
 
 /* Mengatur deskripsi header */
-.header-description {
+.header-description { text-align: center;
   margin: 10px 0 0; /* Memberi jarak di atas deskripsi */
   color: var(--muted); /* Menggunakan warna teks sekunder */
   line-height: 1.6; /* Membuat jarak baris lebih nyaman dibaca */
