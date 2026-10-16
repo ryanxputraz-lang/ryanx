@@ -46,58 +46,6 @@ body {
   background: var(--surface); /* Memberi latar belakang gelap pada header */
 }
 
-/* Mengatur label dekoratif di header */
-/* Tambahkan ini di css/style.css - Eyebrow WIB */
-.eyebrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  padding: 8px 16px;
-  background: rgba(0,0,0,0.04);
-  border-bottom: 1px solid rgba(0,0,0,0.08);
-  color: #6b7280;
-}
-
-.eyebrow #wib-clock {
-  font-weight: 700;
-  color: #111827;
-  letter-spacing: 0.02em;
-}
-
-.eyebrow #wib-dot {
-  width: 3px;
-  height: 3px;
-  border-radius: 999px;
-  background: #111827;
-  opacity: 0.3;
-}
-
-.eyebrow #wib-date {
-  text-transform: capitalize;
-}
-
-/* Dark mode support jika ada */
-@media (prefers-color-scheme: dark) {
-  .eyebrow {
-    background: rgba(255,255,255,0.04);
-    border-bottom-color: rgba(255,255,255,0.08);
-    color: #9ca3af;
-  }
-  .eyebrow #wib-clock {
-    color: #f9fafb;
-  }
-  .eyebrow #wib-dot {
-    background: #f9fafb;
-  }
-}
-
-
 /* Mengatur judul utama */
 .header h1 {
   margin: 0; /* Menghapus margin bawaan judul */
