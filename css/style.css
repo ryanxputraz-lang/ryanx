@@ -47,7 +47,7 @@ body {
 
 /* Mengatur judul utama */
 .header h1 {
-  margin: 0; /* Menghapus margin bawaan judul */
+  margin: 2px; /* Menghapus margin bawaan judul */
   font-size: clamp(1.8rem, 7vw, 2.5rem); /* Menyesuaikan ukuran judul dengan lebar layar */
   letter-spacing: -0.04em; /* Merapatkan sedikit jarak antarhuruf */
 };
