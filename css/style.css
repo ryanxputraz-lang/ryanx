@@ -11,9 +11,8 @@
 
 .icon { color: #60afef; font-size: 45px; }
 
-/* Mengatur perhitungan ukuran elemen agar lebih mudah dikendalikan */
 * {
-  box-sizing: border-box; /* Memasukkan padding dan border ke dalam ukuran elemen */
+  box-sizing: border-box;
 }
 
 /* Mengatur tampilan dasar halaman */
@@ -39,19 +38,19 @@ body {
 }
 
 /* Mengatur tampilan header */
-.header {
+.header { text-align: center;
   padding: 28px; /* Memberi ruang di dalam header */
   border: 1px solid var(--border); /* Menambahkan garis tepi */
-  border-radius: 22px; /* Membuat sudut header membulat */
-  background: var(--surface); /* Memberi latar belakang gelap pada header */
+  border-radius: 22px;
+  background: var(--surface);
 }
 
 /* Mengatur judul utama */
-.header h1 { text-align: center;
+.header h1 {
   margin: 0; /* Menghapus margin bawaan judul */
   font-size: clamp(1.8rem, 7vw, 2.5rem); /* Menyesuaikan ukuran judul dengan lebar layar */
   letter-spacing: -0.04em; /* Merapatkan sedikit jarak antarhuruf */
-}
+};
 
 /* Mengatur deskripsi header */
 .header-description { text-align: center;
