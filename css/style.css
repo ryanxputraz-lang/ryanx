@@ -19,8 +19,9 @@ body {
   min-height: 100vh; /* Memastikan halaman setidaknya memenuhi tinggi layar */
   margin: 0; /* Menghapus margin bawaan browser */
   padding: 24px; /* Memberi jarak antara isi halaman dan tepi layar */
-  display: grid; /* Menggunakan grid untuk menempatkan pembungkus halaman */
-  place-items: start center; /* Memusatkan pembungkus secara horizontal dan vertikal */
+  display: flex; /* Menggunakan grid untuk menempatkan pembungkus halaman */
+  align-items: flex-start;/* Memusatkan pembungkus secara horizontal dan vertikal */
+  justify-content: center;
   background: var(--background); /* Menggunakan warna latar belakang gelap */
   color: var(--text); /* Menggunakan warna teks utama */
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; /* Mengatur jenis huruf */
