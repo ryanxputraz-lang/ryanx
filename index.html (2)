@@ -1,0 +1,74 @@
+<!DOCTYPE html><html lang="id">
+ <head>
+ 
+ <!-- Meta Dasar Halaman Web -->
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width,
+  initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+ 
+ <!-- Title & Link Stylesheet -->
+ <title>RyanXputraZ</title>
+ <link rel="stylesheet" href="css/all.min.css">
+ <link rel="stylesheet" href="css/style.css">
+ <link rel="stylesheet" href="css/antivirus.css">
+
+ </head>
+ 
+ <!-- Konten Utama Pada Halaman Ini -->
+<body class="body">
+
+<div class="card"> 
+ <!-- Header Utama Pada Halaman Ini -->
+ <div class="header">
+ <i class="fa-solid fa-magnifying-glass icon"></i>
+ <i class="fa-solid fa-code icon"></i>
+ <i class="fa-solid fa-gears icon"></i>
+ <i class="fa-solid fa-dove icon"></i>
+  
+ <p class="title"><b>RyanXputraZ</b></p>
+  
+ <p class="subtitle">Proyek Sederhana Sumber Terbuka!</p> 
+  
+ <p class="navbar">
+   <a class="linx">
+    <i class="fa-solid fa-house-chimney"></i> Home </a>|
+   <a href="menu.php" class="link">
+    <i class="fa-solid fa-list"></i> Menu </a>|
+   <a href="tools.php" class="link">
+    <i class="fa-solid fa-screwdriver-wrench"></i> Tools </a>|
+   <a href="about.php" class="link">
+    <i class="fa-solid fa-circle-info"></i> About </a>
+ </p>
+</div>
+ 
+ <!-- Isi Konten Pada Halaman Ini -->
+ <div class="divcontent"> <b style="font-size: 16px;">Halo, Selamat Datang! 👋</b><br>
+  <b>D</b>isini adalah ruang digital pribadi saya. Tempatnya saya mendokumentasikan berbagai hal yang saya pelajari. Sesuai dengan namanya, ini adalah proyek sederhana sumber terbuka (open source) yang saya bangun sendiri.
+
+Di sini, kamu bisa menemukan tiga topik utama yang saya bahas:
+
+· 💻 Dunia Programming: Catatan, tutorial, dan artikel seputar dasar-dasar web development (HTML, PHP, CSS, JavaScript).
+  
+· 📈 Trading Forex & CFD: Pembahasan santai mengenai teknik analisa teknikal dasar. Cocok buat kamu yang baru mau mulai belajar trading.
+  
+· ⚡ Catatan Kelistrikan: Kumpulan informasi dan dasar-dasar kelistrikan, mulai dari Voltase, Ampere, hingga Resistance.
+
+  <b>S</b>ilakan jelajahi menu di atas. Semoga apa yang saya tulis di sini bisa bermanfaat buat kamu. Silakan eksplorasi, ambil ilmunya, dan semoga bermanfaat! 💡
+ <div class="adminarea">
+ <div class="adminbutton" onclick="window.location.href='admin/login.php'">Ruang Admin</div></div></div>
+  
+ <!-- Footer halaman -->
+ <div class="footer">
+ Powered by <a href="https://instagram.com/ryanxputraz" class="link">RyanXputraZ</a><br>
+ © 2026 RyanXputraZ. All rights reserved.</div>
+ 
+ <!-- Tombol Reload Mengambang -->
+ <div class="reloadbutton" onclick="location.reload()">
+  <i class="fa-solid fa-rotate-right"></i>
+ </div>
+
+</div>
+
+<script src="js/script.js"></script>
+ </body> </html>
