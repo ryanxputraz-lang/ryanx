@@ -28,6 +28,8 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; /* Mengatur jenis huruf */
 }
 
+a { text-decoration: none;}
+
 /* Mengatur lebar dan susunan utama halaman */
 .page {
   width: 100%; /* Memenuhi lebar ruang yang tersedia */
@@ -38,7 +40,7 @@ body {
 }
 
 /* Mengatur tampilan header */
-.header { text-align: center;
+.header {
   padding: 28px; /* Memberi ruang di dalam header */
   border: 1px solid var(--border); /* Menambahkan garis tepi */
   border-radius: 22px;

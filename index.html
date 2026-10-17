@@ -12,32 +12,54 @@
   
 <body>
   <div class="page">
-    <header class="header">
+    <header class="header" style="text-align: center;">
       <h1>
         <i class="fa-solid fa-magnifying-glass"></i>
         <i class="fa-solid fa-code"></i>
-      <b class="neon">RyanX</b>
+    <b>RyanX</b>
         <i class="fa-solid fa-gears"></i>
         <i class="fa-solid fa-dove"></i>
       </h1>
       <p class="header-description">Ruang Informasi & Catatan Pribadi</p><br>
-      http://RyanX.my.id/
+      &lt;<a href="https://ryanx.my.id">http://RyanX.my.id/</a>&gt;
     </header>
 
     <main class="divcontent">
       <section class="content-card">
         <p class="card-label">SELAMAT DATANG</p>
-        <h2>Silahkan Masuk :</h2>
+        <h2>Registrasi :</h2>
         <p cl(ass="content-description">
 
-         <form>
-           <input type="text">
-          <input type="submit">
-        </p>
+<form id="registerForm" class="p-4 flex flex-col gap-3 max-w-sm mx-auto">
+  <input id="username" type="text" placeholder="Username" class="p-2 rounded bg-gray-800" required />
+  <input id="email" type="email" placeholder="Email" class="p-2 rounded bg-gray-800" required />
+  <input id="password" type="password" placeholder="Password" class="p-2 rounded bg-gray-800" required /><br>
+  <button type="submit" class="bg-cyan-400 text-black p-2 rounded font-bold">Daftar</button>
+  <button type="submit" class="bg-cyan-400 text-black p-2 rounded font-bold">Login</button>
+  <p id="msg" class="text-sm"></p>
+</form>
 
-        <pre class="code-block"><code>// ide bagus dimulai dari sini
-const langkah = "mulai";
-console.log(langkah);</code></pre> <!-- Contoh blok kode bergaya developer -->
+<script>
+  document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('msg');
+    msg.textContent = "Loading...";
+    
+    const res = await fetch('/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: document.getElementById('username').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value
+      })
+    });
+    const data = await res.json();
+    msg.textContent = data.success ? data.message : data.error;
+    if(data.success) e.target.reset();
+  });
+</script>     
+      </p>
       </section> <!-- Menutup kartu konten -->
     </main> <!-- Menutup area konten utama -->
 
