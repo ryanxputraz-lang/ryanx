@@ -1,130 +1,87 @@
-/* Mengatur warna tema dan nilai dasar yang digunakan di seluruh halaman */
-:root {
-  color-scheme: dark; /* Memberi tahu browser bahwa halaman menggunakan tema gelap */
-  --background: #0b1120; /* Warna latar belakang halaman */
-  --surface: #111a2e; /* Warna permukaan kartu */
-  --border: #25324a; /* Warna garis tepi */
-  --text: #e5edf8; /* Warna teks utama */
-  --muted: #91a0b8; /* Warna teks sekunder */
-  --accent: #63e6be; /* Warna aksen */
-}
-
-.icon { color: #60afef; font-size: 45px; }
-
+/* ===== RESET DASAR ===== */
+/* Menghilangkan margin/padding default browser */
 * {
-  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Ukuran elemen termasuk padding & border */
 }
 
-/* Mengatur tampilan dasar halaman */
+/* ===== VARIABEL WARNA ===== */
+/* Memudahkan ganti tema di satu tempat */
+:root {
+  --bg-dark: #050a14;        /* latar belakang gelap kebiruan */
+  --blue-light: #4fc3f7;     /* biru terang */
+  --blue-glow: rgba(0, 168, 255, 0.6); /* efek cahaya */
+  --text: #e6f1ff;           /* teks terang */
+  --text-muted: #8aa0b8;     /* teks sekunder */
+}
+
+/* ===== BODY ===== */
 body {
-  min-height: 100vh; /* Memastikan halaman setidaknya memenuhi tinggi layar */
-  margin: 0; /* Menghapus margin bawaan browser */
-  padding: 24px; /* Memberi jarak antara isi halaman dan tepi layar */
-  display: flex; /* Menggunakan grid untuk menempatkan pembungkus halaman */
-  align-items: flex-start;/* Memusatkan pembungkus secara horizontal dan vertikal */
-  justify-content: center;
-  background: var(--background); /* Menggunakan warna latar belakang gelap */
-  color: var(--text); /* Menggunakan warna teks utama */
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; /* Mengatur jenis huruf */
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg-dark);
+  color: var(--text);
+  min-height: 100vh;         /* Minimal setinggi layar */
+  display: flex;             /* Flexbox agar footer nempel bawah */
+  flex-direction: column;
+  /* Efek gradient cahaya biru di background */
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(0, 168, 255, 0.15), transparent 40%),
+    radial-gradient(circle at 80% 60%, rgba(79, 195, 247, 0.1), transparent 45%);
 }
 
-a { text-decoration: none;}
-
-/* Mengatur lebar dan susunan utama halaman */
-.page {
-  width: 100%; /* Memenuhi lebar ruang yang tersedia */
-  max-width: 680px; /* Membatasi lebar maksimum agar nyaman dibaca */
-  display: flex; /* Menyusun header, konten, dan footer secara fleksibel */
-  flex-direction: column; /* Menyusun elemen dari atas ke bawah */
-  gap: 20px; /* Memberi jarak antarbagian */
+/* ===== CONTAINER ===== */
+/* Pembungkus agar konten tidak terlalu lebar di layar besar */
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
-/* Mengatur tampilan header */
-.header {
-  padding: 28px; /* Memberi ruang di dalam header */
-  border: 1px solid var(--border); /* Menambahkan garis tepi */
-  border-radius: 22px;
-  background: var(--surface);
+/* ===== HEADER ===== */
+.site-header {
+  position: sticky;          /* Menempel di atas saat scroll */
+  top: 0;
+  background: rgba(5, 10, 20, 0.85); /* semi transparan */
+  backdrop-filter: blur(8px);        /* efek kaca */
+  border-bottom: 1px solid rgba(0, 168, 255, 0.25);
+  padding: 16px 0;
+  z-index: 10;
 }
 
-/* Mengatur judul utama */
-.header h1 {
-  margin: 2px; /* Menghapus margin bawaan judul */
-  font-size: clamp(1.8rem, 7vw, 2.5rem); /* Menyesuaikan ukuran judul dengan lebar layar */
-  letter-spacing: -0.04em; /* Merapatkan sedikit jarak antarhuruf */
-};
-
-/* Mengatur deskripsi header */
-.header-description { text-align: center;
-  margin: 10px 0 0; /* Memberi jarak di atas deskripsi */
-  color: var(--muted); /* Menggunakan warna teks sekunder */
-  line-height: 1.6; /* Membuat jarak baris lebih nyaman dibaca */
+/* Logo / nama situs di header */
+.logo {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--blue-light);
+  /* Efek cahaya biru pada teks */
+  text-shadow: 0 0 10px var(--blue-glow);
+}
+.logo span {
+  color: var(--text-muted);
+  font-weight: 400;
 }
 
-/* Mengatur area konten utama */
-.divcontent {
-  width: 100%; /* Memenuhi lebar pembungkus */
+/* ===== MAIN ===== */
+.site-main {
+  flex: 1; /* Dorong footer ke bawah */
+  padding: 60px 0;
+  color: var(--text-muted);
 }
 
-/* Mengatur tampilan kartu konten */
-.content-card {
-  padding: 28px; /* Memberi ruang di dalam kartu */
-  border: 1px solid var(--border); /* Menambahkan garis tepi kartu */
-  border-radius: 22px; /* Membuat sudut kartu membulat */
-  background: var(--surface); /* Memberi latar belakang gelap pada kartu */
+/* ===== FOOTER ===== */
+.site-footer {
+  border-top: 1px solid rgba(0, 168, 255, 0.25);
+  background: rgba(5, 10, 20, 0.85);
+  padding: 20px 0;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
 }
 
-/* Mengatur label kecil di dalam kartu */
-.card-label {
-  margin: 0 0 12px; /* Mengatur jarak bawah label */
-  color: var(--accent); /* Menggunakan warna aksen */
-  font-size: 0.75rem; /* Membuat label lebih kecil dari teks utama */
-  font-weight: 700; /* Menebalkan label */
-  letter-spacing: 0.12em; /* Memberi jarak antarhuruf */
-}
-
-/* Mengatur judul kartu */
-.content-card h2 {
-  margin: 0; /* Menghapus margin bawaan judul */
-  font-size: clamp(1.35rem, 5vw, 1.8rem); /* Menyesuaikan ukuran judul pada layar kecil */
-}
-
-/* Mengatur paragraf konten */
-.content-description {
-  margin: 12px 0 22px; /* Mengatur jarak paragraf */
-  color: var(--muted); /* Menggunakan warna teks sekunder */
-  line-height: 1.7; /* Membuat teks lebih mudah dibaca */
-}
-
-/* Mengatur blok contoh kode */
-.code-block {
-  overflow-x: auto; /* Memungkinkan blok kode digeser jika terlalu lebar */
-  margin: 0; /* Menghapus margin bawaan blok kode */
-  padding: 18px; /* Memberi ruang di sekitar teks kode */
-  border: 1px solid var(--border); /* Menambahkan garis tepi blok kode */
-  border-radius: 14px; /* Membuat sudut blok kode membulat */
-  background: #090e19; /* Memberi latar kode yang lebih gelap */
-  color: var(--accent); /* Memberi warna aksen pada teks kode */
-  font-size: 0.9rem; /* Mengatur ukuran teks kode */
-  line-height: 1.7; /* Mengatur jarak antarbaris kode */
-}
-
-/* Mengatur tampilan footer */
-.footer {
-  padding: 4px 8px; /* Memberi sedikit ruang pada footer */
-  color: var(--muted); /* Menggunakan warna teks sekunder */
-  font-size: 0.85rem; /* Membuat teks footer lebih kecil */
-  text-align: center; /* Memusatkan teks footer */
-}
-
-/* Menyesuaikan padding untuk layar yang lebih kecil */
-@media (max-width: 480px) {
-  body {
-    padding: 16px; /* Mengurangi jarak tepi pada layar ponsel */
-  }
-
-  .header,
-  .content-card {
-    padding: 22px; /* Mengurangi ruang dalam header dan kartu pada layar ponsel */
-  }
+/* ===== RESPONSIF (MOBILE) ===== */
+@media (max-width: 600px) {
+  .logo { font-size: 1.2rem; }
+  .site-main { padding: 40px 0; }
 }
