@@ -4,24 +4,43 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login - ryanx.my.id</title>
-  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="./css/style.css" />
 </head>
 <body>
   <div class="container">
-    <div class="card">
-      <h1>ryanz.my.id</h1>
+    <div class="card" id="loginCard" style="display:none">
+      <h1>ryanx.my.id</h1>
       <p class="sub">Masuk ke database ryanx-db</p>
       <div id="msg" class="alert"></div>
       <form onsubmit="handleLogin(event)">
         <label>Email</label>
-        <input id="email" type="email" placeholder="ryan@ryanz.my.id" required />
+        <input id="email" type="email" placeholder="admin@ryanx.my.id" required />
         <label>Password</label>
         <input id="password" type="password" placeholder="••••••••" required />
         <button type="submit">Masuk</button>
       </form>
-      <div class="link">Belum punya akun? <a href="/register.html">Daftar</a></div>
+      <div class="link">Belum punya akun? <a href="./register.html">Daftar</a></div>
     </div>
+    <div id="checking" style="text-align:center;color:#888;font-size:14px">Mengecek sesi...</div>
   </div>
-  <script src="/js/script.js"></script>
+  <script src="./js/script.js"></script>
+  <script>
+    // FIX: cek udah login belum pas buka index
+    (async () => {
+      try {
+        const res = await fetch('/api/me');
+        if (res.ok) {
+          const me = await res.json();
+          // udah login, langsung lempar
+          if (me.role === 'admin') location.href = '/admin.html';
+          else location.href = '/dashboard.html';
+          return;
+        }
+      } catch(e) {}
+      // belum login, baru tampilin form
+      document.getElementById('checking').style.display = 'none';
+      document.getElementById('loginCard').style.display = 'block';
+    })();
+  </script>
 </body>
 </html>
