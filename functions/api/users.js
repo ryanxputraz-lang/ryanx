@@ -1,15 +1,18 @@
-// functions/api/users.js - hanya admin
 export async function onRequestGet(context) {
-  const { request, env } = context;
-  const cookie = request.headers.get('Cookie') || '';
-  const match = cookie.match(/ryanx_session=([^;]+)/);
-  if (!match) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+  const db = context.env['ryanx-db'] || context.env.DB || context.env.RYANX_DB;
+  if (!db) {
+    return new Response(JSON.stringify({ error: 'D1 binding tidak ketemu' }), {
+      status: 500, headers: { 'Content-Type': 'application/json' }
+    });
+  }
   try {
-    const sess = JSON.parse(atob(match[1]));
-    if (sess.role !== 'admin') return Response.json({ error: 'Forbidden - admin only' }, { status: 403 });
-    const { results } = await env.DB.prepare('SELECT id, username, email, role, created_at FROM users ORDER BY id DESC').all();
-    return Response.json(results);
+    const { results } = await db.prepare(`SELECT id, username, email, role, created_at FROM users ORDER BY id DESC`).all();
+    return new Response(JSON.stringify(results), {
+      headers: { 'Content-Type': 'application/json' }
+    });
   } catch (e) {
-    return Response.json({ error: e.message }, { status: 500 });
+    return new Response(JSON.stringify({ error: e.message }), {
+      status: 500, headers: { 'Content-Type': 'application/json' }
+    });
   }
 }
