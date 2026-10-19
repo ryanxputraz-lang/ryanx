@@ -6,14 +6,19 @@
   box-sizing: border-box; /* Ukuran elemen termasuk padding & border */
 }
 
-/* ===== VARIABEL WARNA ===== */
+/* ===== VARIABEL WARNA & RADIUS ===== */
 /* Memudahkan ganti tema di satu tempat */
 :root {
-  --bg-dark: #050a14;        /* latar belakang gelap kebiruan */
-  --blue-light: #4fc3f7;     /* biru terang */
+  --bg-dark: #050a14;          /* latar belakang gelap kebiruan */
+  --bg-card: rgba(10, 20, 36, 0.75); /* latar panel semi transparan */
+  --blue: #00a8ff;             /* biru utama */
+  --blue-light: #4fc3f7;       /* biru terang */
   --blue-glow: rgba(0, 168, 255, 0.6); /* efek cahaya */
-  --text: #e6f1ff;           /* teks terang */
-  --text-muted: #8aa0b8;     /* teks sekunder */
+  --border-blue: rgba(0, 168, 255, 0.3); /* warna border biru tipis */
+  --text: #e6f1ff;             /* teks terang */
+  --text-muted: #8aa0b8;       /* teks sekunder */
+  --radius: 16px;              /* radius utama (sudut membulat) */
+  --radius-sm: 10px;           /* radius kecil */
 }
 
 /* ===== BODY ===== */
@@ -21,13 +26,17 @@ body {
   font-family: "Segoe UI", Roboto, Arial, sans-serif;
   background: var(--bg-dark);
   color: var(--text);
-  min-height: 100vh;         /* Minimal setinggi layar */
-  display: flex;             /* Flexbox agar footer nempel bawah */
+  min-height: 100vh;           /* Minimal setinggi layar */
+  display: flex;               /* Flexbox agar footer nempel bawah */
   flex-direction: column;
+  /* Jarak antar elemen utama */
+  gap: 20px;
+  padding: 20px;
   /* Efek gradient cahaya biru di background */
   background-image:
-    radial-gradient(circle at 20% 20%, rgba(0, 168, 255, 0.15), transparent 40%),
-    radial-gradient(circle at 80% 60%, rgba(79, 195, 247, 0.1), transparent 45%);
+    radial-gradient(circle at 20% 20%, rgba(0, 168, 255, 0.18), transparent 45%),
+    radial-gradient(circle at 80% 70%, rgba(79, 195, 247, 0.12), transparent 50%);
+  background-attachment: fixed; /* Gradient tidak ikut scroll */
 }
 
 /* ===== CONTAINER ===== */
@@ -40,14 +49,19 @@ body {
 }
 
 /* ===== HEADER ===== */
+/* Header dengan border radius, border biru, dan efek glow */
 .site-header {
-  position: sticky;          /* Menempel di atas saat scroll */
-  top: 0;
-  background: rgba(5, 10, 20, 0.85); /* semi transparan */
-  backdrop-filter: blur(8px);        /* efek kaca */
-  border-bottom: 1px solid rgba(0, 168, 255, 0.25);
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  background: var(--bg-card);              /* latar semi transparan */
+  backdrop-filter: blur(10px);             /* efek kaca */
+  border: 1px solid var(--border-blue);    /* border biru tipis */
+  border-radius: var(--radius);            /* sudut membulat */
   padding: 16px 0;
-  z-index: 10;
+  /* Efek cahaya biru lembut di sekitar panel */
+  box-shadow: 0 0 20px rgba(0, 168, 255, 0.15),
+              inset 0 0 20px rgba(0, 168, 255, 0.05);
 }
 
 /* Logo / nama situs di header */
@@ -64,24 +78,45 @@ body {
 }
 
 /* ===== MAIN ===== */
+/* Panel utama dengan border radius */
 .site-main {
-  flex: 1; /* Dorong footer ke bawah */
-  padding: 60px 0;
+  flex: 1;                                 /* Dorong footer ke bawah */
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  background: var(--bg-card);              /* latar semi transparan */
+  backdrop-filter: blur(10px);             /* efek kaca */
+  border: 1px solid var(--border-blue);    /* border biru tipis */
+  border-radius: var(--radius);            /* sudut membulat */
+  padding: 40px 0;
   color: var(--text-muted);
+  /* Efek cahaya biru lembut */
+  box-shadow: 0 0 20px rgba(0, 168, 255, 0.15),
+              inset 0 0 20px rgba(0, 168, 255, 0.05);
 }
 
 /* ===== FOOTER ===== */
+/* Footer dengan border radius lebih kecil */
 .site-footer {
-  border-top: 1px solid rgba(0, 168, 255, 0.25);
-  background: rgba(5, 10, 20, 0.85);
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  background: var(--bg-card);              /* latar semi transparan */
+  backdrop-filter: blur(10px);             /* efek kaca */
+  border: 1px solid var(--border-blue);    /* border biru tipis */
+  border-radius: var(--radius-sm);         /* sudut membulat */
   padding: 20px 0;
   text-align: center;
   color: var(--text-muted);
   font-size: 0.9rem;
+  /* Efek cahaya biru lembut */
+  box-shadow: 0 0 15px rgba(0, 168, 255, 0.12);
 }
 
 /* ===== RESPONSIF (MOBILE) ===== */
 @media (max-width: 600px) {
+  body { padding: 12px; gap: 14px; }       /* Padding lebih kecil di HP */
   .logo { font-size: 1.2rem; }
-  .site-main { padding: 40px 0; }
+  .site-main { padding: 28px 0; }
+  :root { --radius: 12px; --radius-sm: 8px; } /* Radius lebih kecil di HP */
 }

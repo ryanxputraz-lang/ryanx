@@ -1,0 +1,87 @@
+/* ===== RESET DASAR ===== */
+/* Menghilangkan margin/padding default browser */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Ukuran elemen termasuk padding & border */
+}
+
+/* ===== VARIABEL WARNA ===== */
+/* Memudahkan ganti tema di satu tempat */
+:root {
+  --bg-dark: #050a14;        /* latar belakang gelap kebiruan */
+  --blue-light: #4fc3f7;     /* biru terang */
+  --blue-glow: rgba(0, 168, 255, 0.6); /* efek cahaya */
+  --text: #e6f1ff;           /* teks terang */
+  --text-muted: #8aa0b8;     /* teks sekunder */
+}
+
+/* ===== BODY ===== */
+body {
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg-dark);
+  color: var(--text);
+  min-height: 100vh;         /* Minimal setinggi layar */
+  display: flex;             /* Flexbox agar footer nempel bawah */
+  flex-direction: column;
+  /* Efek gradient cahaya biru di background */
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(0, 168, 255, 0.15), transparent 40%),
+    radial-gradient(circle at 80% 60%, rgba(79, 195, 247, 0.1), transparent 45%);
+}
+
+/* ===== CONTAINER ===== */
+/* Pembungkus agar konten tidak terlalu lebar di layar besar */
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ===== HEADER ===== */
+.site-header {
+  position: sticky;          /* Menempel di atas saat scroll */
+  top: 0;
+  background: rgba(5, 10, 20, 0.85); /* semi transparan */
+  backdrop-filter: blur(8px);        /* efek kaca */
+  border-bottom: 1px solid rgba(0, 168, 255, 0.25);
+  padding: 16px 0;
+  z-index: 10;
+}
+
+/* Logo / nama situs di header */
+.logo {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--blue-light);
+  /* Efek cahaya biru pada teks */
+  text-shadow: 0 0 10px var(--blue-glow);
+}
+.logo span {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* ===== MAIN ===== */
+.site-main {
+  flex: 1; /* Dorong footer ke bawah */
+  padding: 60px 0;
+  color: var(--text-muted);
+}
+
+/* ===== FOOTER ===== */
+.site-footer {
+  border-top: 1px solid rgba(0, 168, 255, 0.25);
+  background: rgba(5, 10, 20, 0.85);
+  padding: 20px 0;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* ===== RESPONSIF (MOBILE) ===== */
+@media (max-width: 600px) {
+  .logo { font-size: 1.2rem; }
+  .site-main { padding: 40px 0; }
+}
