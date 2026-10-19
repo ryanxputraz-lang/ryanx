@@ -21,18 +21,30 @@ button.small { padding:6px 10px; font-size:12px; }
 .badge.user { background:#e5e7eb; color:#111; }
 
 /* FIX UTAMA: tabel gak tembus kotak */
-.table-wrap { overflow-x:auto; border-radius:16px; border:1px solid #eee; -webkit-overflow-scrolling:touch; margin-top:12px; }
+.table-wrap { overflow-x:auto; border-radius:16px; border:1px solid #eee; -webkit-overflow-scrolling:touch; margin-top:12px; width:100%; }
 table { width:100%; min-width:680px; border-collapse:collapse; }
 th, td { text-align:left; padding:12px 14px; font-size:13px; border-bottom:1px solid #f0f0f0; white-space:nowrap; }
 th { background:#fafafa; font-weight:600; color:#555; position:sticky; top:0; }
 td { background:white; }
 .actions { display:flex; gap:6px; }
 
-/* Modal edit */
-.modal-bg { position:fixed; inset:0; background:rgba(0,0,0,0.4); backdrop-filter:blur(4px); display:none; align-items:center; justify-content:center; z-index:100; padding:20px; }
+/* Modal edit - FIXED VERSION */
+.modal-bg { position:fixed; inset:0; background:rgba(0,0,0,0.4); backdrop-filter:blur(4px); display:none; align-items:center; justify-content:center; z-index:9999; padding:16px; }
 .modal-bg.open { display:flex; }
-.modal { background:white; width:100%; max-width:420px; border-radius:20px; padding:24px; box-shadow:0 20px 50px rgba(0,0,0,0.2); }
+.modal { background:white; width:100%; max-width:420px; border-radius:20px; padding:24px; box-shadow:0 20px 50px rgba(0,0,0,0.2); max-height:90vh; overflow-y:auto; margin:auto; }
 .modal h3 { font-size:18px; margin-bottom:4px; }
-.modal p { font-size:12px; color:#777; margin-bottom:16px; }
+.modal p { font-size:12px; color:#777; margin-bottom:16px; line-height:1.4; }
 .modal .row { display:flex; gap:10px; margin-top:18px; }
 .modal .row button { flex:1; }
+
+/* FIX INPUT DI DALAM MODAL BIAR GAK KEPOTONG */
+.modal label { margin-top:14px; }
+.modal input, .modal select { width:100%; }
+
+@media (max-width: 480px) {
+  body { padding:12px; padding-top:20px; }
+  .card { padding:16px; border-radius:18px; }
+  .modal-bg { padding:12px; }
+  .modal { max-width:92%; padding:20px; border-radius:18px; }
+  th, td { padding:10px 12px; font-size:12px; }
+}
