@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - ryanx.my.id</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    body { align-items:flex-start; padding:40px 20px; }
+    .container { max-width:900px; }
+    .card { border-radius:24px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div>
+        <h1 style="margin:0">Dashboard Admin</h1>
+        <p class="sub" style="margin:4px 0 0">Login sebagai <span id="adminName">...</span> · ryanx-db</p>
+      </div>
+      <button onclick="logout()" style="width:auto; padding:10px 16px; border-radius:12px;">Logout</button>
+    </div>
+    <div class="card">
+      <h3 style="margin-bottom:10px">Table D1 - users</h3>
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Created</th></tr>
+        </thead>
+        <tbody id="usersBody"><tr><td colspan="5">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  <script src="/js/script.js"></script>
+  <script>loadAdmin()</script>
+</body>
+</html>
