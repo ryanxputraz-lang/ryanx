@@ -1,54 +1,144 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ryanx.my.id</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ryanx.my.id - Zona Trader</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#18191A;--card:#242526;--card2:#3A3B3C;--gold:#D9BD7E;--blue:#6CA9E0;--text:#E4E6EB;--muted:#B0B3B8}
+*{box-sizing:border-box;font-family:Inter,sans-serif}
+body{margin:0;background:var(--bg);color:var(--text)}
+header{position:sticky;top:0;z-index:10;background:var(--card);border-bottom:1px solid #333;display:flex;align-items:center;justify-content:space-between;padding:10px 16px}
+.logo{font-weight:800;font-size:26px}
+.logo b{color:var(--gold)} .logo span{color:var(--blue)}
+.btn{background:var(--gold);color:#111;border:none;padding:11px 18px;border-radius:10px;font-weight:700;cursor:pointer}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-ghost{background:var(--card2);color:var(--text)}
+input,textarea{width:100%;background:var(--card2);border:1px solid #444;color:var(--text);padding:12px;border-radius:10px;margin:6px 0;outline:none}
+input:focus,textarea:focus{border-color:var(--gold)}
+.container{max-width:680px;margin:0 auto;padding:12px}
+.card{background:var(--card);border-radius:14px;padding:14px;margin:12px 0;box-shadow:0 1px 3px rgba(0,0,0,.4)}
+.post-img{width:100%;border-radius:12px;margin-top:10px;max-height:500px;object-fit:cover}
+.actions{display:flex;gap:16px;margin-top:10px;color:var(--muted);font-size:14px}
+.badge{font-size:11px;padding:2px 8px;border-radius:20px;background:#333;border:1px solid var(--gold);color:var(--gold);margin-left:6px}
+.avatar{width:36px;height:36px;border-radius:50%;object-fit:cover;background:#333}
+.tabs{display:flex;gap:8px}
+.tab{padding:8px 14px;border-radius:20px;background:var(--card2);cursor:pointer;font-size:14px}
+.tab.active{background:var(--blue);color:#fff}
+.hidden{display:none}
+small{color:var(--muted)}
+</style>
 </head>
-<body class="bg-[#07080b] text-white flex items-center justify-center min-h-screen">
-<div class="text-center">
-  <div class="animate-pulse text-sm text-white/40">Checking session...</div>
+<body>
+<header>
+<div class="logo"><span>&lt;</span> <b>R</b> <span>&gt;</span> <small style="font-size:13px;color:#B0B3B8;margin-left:8px">ryanx.my.id</small></div>
+<div id="nav" class="hidden"><div class="tabs"><div class="tab active" onclick="switchTab('feed',this)">Beranda</div><div class="tab" onclick="switchTab('profile',this)">Profil</div><div class="tab" onclick="logout()">Keluar</div></div></div>
+</header>
+
+<div class="container">
+<div id="authBox">
+<div class="card">
+<h2 style="margin:0">Masuk ke Zona Trader</h2><small>Komunitas trader, broker, IB & pemula - real database</small>
+<div id="loginForm" style="margin-top:14px">
+<input id="l_user" placeholder="Username">
+<input id="l_pass" type="password" placeholder="Password">
+<button class="btn" style="width:100%;margin-top:8px" onclick="doLogin()">Login</button>
+<p style="text-align:center"><small>Belum punya akun? <a href="#" onclick="showReg()" style="color:#6CA9E0">Daftar</a></small></p>
+</div>
+<div id="regForm" class="hidden">
+<input id="r_user" placeholder="Username unik">
+<input id="r_email" placeholder="Email aktif untuk OTP">
+<input id="r_pass" type="password" placeholder="Password">
+<div style="display:flex;gap:8px"><input id="r_otp" placeholder="Kode OTP 6 digit" style="flex:1"><button class="btn btn-ghost" onclick="sendOTP()">Kirim OTP</button></div>
+<button class="btn btn-blue" style="width:100%;margin-top:8px" onclick="doVerify()">Verifikasi & Daftar</button>
+<p><small><a href="#" onclick="showLogin()" style="color:#6CA9E0">Sudah punya akun? Login</a></small></p>
+</div>
+<div id="authMsg" style="margin-top:8px"></div>
+</div>
+</div>
+
+<div id="dashBox" class="hidden">
+<div class="card">
+<div style="display:flex;gap:10px"><img id="myAvatar" class="avatar" src="https://i.pravatar.cc/100"><textarea id="postContent" rows="3" placeholder="Share analisa XAUUSD, review broker, atau tanya trading..."></textarea></div>
+<input type="file" id="postImage" accept="image/*">
+<button class="btn" style="width:100%;margin-top:8px" onclick="createPost()">Posting ke Zona</button>
+</div>
+<div id="feed"></div>
+</div>
+
+<div id="profileBox" class="hidden">
+<div class="card" style="text-align:center">
+<img id="pAvatar" class="avatar" style="width:90px;height:90px" src="https://i.pravatar.cc/200">
+<h3 id="pName"></h3><small id="pRole"></small>
+<hr style="border:none;border-top:1px solid #333;margin:12px 0">
+<input id="pBio" placeholder="Bio: misal Trader Gold / IB Exness">
+<input type="file" id="pAvatarFile" accept="image/*">
+<button class="btn" onclick="updateProfile()" style="width:100%">Simpan Profil</button>
+</div>
+</div>
 </div>
 
 <script>
-(async function(){
-  const token = localStorage.getItem('ryanx_token');
-  const role = localStorage.getItem('ryanx_role');
-
-  // belum login sama sekali -> ke login
-  if(!token || !role){
-    location.replace('/login.html');
-    return;
-  }
-
-  // coba validasi token ke server biar gak pakai token palsu
-  try{
-    const res = await fetch('/api/me', {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
-    // kalau token expired / tidak valid
-    if(!res.ok) throw new Error('invalid');
-    const data = await res.json();
-    
-    // token valid, cek role dari server (lebih aman)
-    if(data.role === 'admin' || role === 'admin'){
-      location.replace('/admin.html');
-    } else {
-      location.replace('/dashboard.html');
-    }
-  }catch(e){
-    // kalau gagal validasi, coba pakai role lokal aja (biar gak logout terus)
-    if(role === 'admin'){
-      location.replace('/admin.html');
-    } else if(role === 'user'){
-      location.replace('/dashboard.html');
-    } else {
-      localStorage.clear();
-      location.replace('/login.html');
-    }
-  }
-})();
+let ME=null;
+function showReg(){document.getElementById('loginForm').classList.add('hidden');document.getElementById('regForm').classList.remove('hidden')}
+function showLogin(){document.getElementById('regForm').classList.add('hidden');document.getElementById('loginForm').classList.remove('hidden')}
+function switchTab(t,el){
+ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); if(el) el.classList.add('active');
+ if(t==='feed'){dashBox.classList.remove('hidden');profileBox.classList.add('hidden');loadFeed()}
+ else{profileBox.classList.remove('hidden');dashBox.classList.add('hidden')}
+}
+async function sendOTP(){
+ const username=r_user.value, email=r_email.value, password=r_pass.value;
+ if(!username||!email||!password) return authMsg.innerHTML='<small style=color:#ff6b6b>Lengkapi username email password dulu</small>';
+ authMsg.innerHTML='<small>Mengirim OTP ke '+email+'...</small>';
+ const r=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,email,password})});
+ const j=await r.json(); authMsg.innerHTML=j.error?`<small style=color:#ff6b6b>${j.error}</small>`:`<small style=color:#6CA9E0>${j.message}</small>`;
+}
+async function doVerify(){
+ const username=r_user.value,email=r_email.value,password=r_pass.value,otp=r_otp.value;
+ if(!otp) return authMsg.innerHTML='<small style=color:#ff6b6b>Masukkan OTP</small>';
+ const r=await fetch('/api/verify-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,email,password,otp})});
+ const j=await r.json(); if(j.error) authMsg.innerHTML=`<small style=color:#ff6b6b>${j.error}</small>`; else{authMsg.innerHTML=`<small style=color:#2ecc71>${j.message}</small>`; showLogin();}
+}
+async function doLogin(){
+ const username=l_user.value,password=l_pass.value;
+ const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
+ const j=await r.json(); if(j.error) return authMsg.innerHTML=`<small style=color:#ff6b6b>${j.error}</small>`;
+ localStorage.setItem('token',j.token); localStorage.setItem('user',JSON.stringify(j.user)); init();
+}
+function init(){
+ const t=localStorage.getItem('token'); if(!t) return;
+ ME=JSON.parse(localStorage.getItem('user')); authBox.classList.add('hidden'); dashBox.classList.remove('hidden'); nav.classList.remove('hidden');
+ pName.textContent=ME.username; pRole.textContent=ME.role; myAvatar.src=ME.avatar||'https://i.pravatar.cc/100?u='+ME.username; pAvatar.src=myAvatar.src; loadFeed();
+}
+async function loadFeed(){
+ const r=await fetch('/api/posts'); const posts=await r.json();
+ feed.innerHTML=posts.map(p=>`
+  <div class="card">
+   <div style="display:flex;gap:10px;align-items:center"><img class="avatar" src="${p.avatar||'https://i.pravatar.cc/100?u='+p.username}"><div><b>${p.username}</b><span class="badge">${p.role}</span><br><small>${new Date(p.created_at).toLocaleString('id-ID')}</small></div></div>
+   <p style="margin:10px 0;white-space:pre-wrap">${p.content}</p>
+   ${p.image_url?`<img class="post-img" src="${p.image_url}">`:''}
+   <div class="actions"><span>👍 Suka</span><span>💬 Komentar</span><span>↗️ Share</span></div>
+  </div>`).join('') || '<div class=card><small>Belum ada postingan. Jadilah yang pertama share di Zona Trader!</small></div>';
+}
+async function createPost(){
+ const content=postContent.value; if(!content) return alert('Tulis dulu');
+ let image_url=''; if(postImage.files[0]) image_url=await toBase64(postImage.files[0]);
+ const token=localStorage.getItem('token');
+ const r=await fetch('/api/posts',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({content,image_url})});
+ const j=await r.json(); if(j.error) return alert(j.error);
+ postContent.value=''; postImage.value=''; loadFeed();
+}
+function toBase64(file){return new Promise((res,rej)=>{const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=rej; fr.readAsDataURL(file);})}
+async function updateProfile(){
+ let avatar=''; if(pAvatarFile.files[0]) avatar=await toBase64(pAvatarFile.files[0]);
+ const token=localStorage.getItem('token');
+ const r=await fetch('/api/profile',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({bio:pBio.value,avatar})});
+ const j=await r.json(); alert('Profil disimpan'); if(avatar) pAvatar.src=avatar;
+}
+function logout(){localStorage.clear(); location.reload()}
+init();
 </script>
 </body>
 </html>

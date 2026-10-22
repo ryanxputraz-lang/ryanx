@@ -1,59 +1,18 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin - RyanX</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Admin ryanx.my.id</title>
+<style>body{background:#1A1A1D;color:#fff;font-family:Inter;padding:20px} .card{background:#242528;padding:15px;border-radius:12px;margin:10px 0;border-left:4px solid #D9BD7E} button{background:#D9BD7E;color:#000;padding:8px 14px;border:none;border-radius:8px;font-weight:700}</style>
+</head><body>
+<h2><span style="color:#6CA9E0"><</span> <span style="color:#D9BD7E">R</span> <span style="color:#6CA9E0">></span> Admin Panel</h2>
+<div id="loginBox"><input id="u" placeholder="username"><input id="p" type="password" placeholder="password"><button onclick="login()">Login</button></div>
+<div id="panel" style="display:none"><h3>Member Trader</h3><div id="list"></div></div>
 <script>
-(function(){
-  const t = localStorage.getItem('ryanx_token');
-  const u = JSON.parse(localStorage.getItem('ryanx_user')||'{}');
-  if(!t){ location.replace('/login.html'); }
-  // Hanya admin ryanx yang bisa masuk
-  if(u.username && u.username.toLowerCase() !== 'ryanx'){
-    alert('Akses ditolak: bukan admin');
-    location.replace('/dashboard.html');
-  }
-})();
-document.documentElement.style.visibility='hidden';
-</script>
-</head>
-<body class="bg-[#07080b] text-white min-h-screen">
-<header class="h-[64px] flex items-center justify-between px-6 border-b border-white/10">
-  <div class="flex items-center gap-3"><div class="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center font-black">A</div><b>ADMIN PANEL</b><span class="text-xs bg-yellow-400 text-black px-2 py-1 rounded font-black">RYANX</span></div>
-  <div class="flex gap-2"><a href="/dashboard.html" class="text-xs bg-white/10 px-4 py-2 rounded-xl">Dashboard</a><button onclick="logout()" class="text-xs bg-white text-black font-black px-4 py-2 rounded-xl">Logout</button></div>
-</header>
-<main class="max-w-5xl mx-auto p-6">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-black">Member <span class="text-yellow-400">Scalper Squad</span></h1>
-    <button onclick="loadUsers()" class="text-xs bg-white/10 px-4 py-2 rounded-xl">Refresh</button>
-  </div>
-  <div id="stats" class="grid grid-cols-3 gap-3 mb-6">
-    <div class="bg-white/[0.05] border border-white/10 rounded-2xl p-4"><p class="text-[10px] text-white/40">TOTAL MEMBER</p><p id="total" class="text-2xl font-black">-</p></div>
-    <div class="bg-white/[0.05] border border-white/10 rounded-2xl p-4"><p class="text-[10px] text-white/40">VERIFIED</p><p id="verified" class="text-2xl font-black text-green-400">-</p></div>
-    <div class="bg-white/[0.05] border border-white/10 rounded-2xl p-4"><p class="text-[10px] text-white/40">PENDING</p><p id="pending" class="text-2xl font-black text-yellow-400">-</p></div>
-  </div>
-  <div class="bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden">
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm">
-        <thead class="bg-white/[0.05] text-[11px] text-white/40"><tr><th class="p-3 text-left">ID</th><th class="p-3 text-left">Username</th><th class="p-3 text-left">Email</th><th class="p-3 text-left">Status</th><th class="p-3 text-left">Action</th></tr></thead>
-        <tbody id="tbody" class="text-xs"><tr><td colspan="5" class="p-6 text-center text-white/30">Loading...</td></tr></tbody>
-      </table>
-    </div>
-  </div>
-</main>
-<script>
-async function loadUsers(){
-  const token = localStorage.getItem('ryanx_token');
-  const r = await fetch('/api/admin/users',{headers:{'Authorization':'Bearer '+token}});
-  const j = await r.json();
-  if(!r.ok){ alert(j.error); return; }
-  document.getElementById('total').textContent = j.users.length;
-  document.getElementById('verified').textContent = j.users.filter(u=>u.verified).length;
-  document.getElementById('pending').textContent = j.users.filter(u=>!u.verified).length;
-  document.getElementById('tbody').innerHTML = j.users.map(u=>`
-    <tr class="border-t border-white/5">
-      <td class="p-3">#${u.id}</td>
-      <td class="p-3 font-bold">${u.username}</td>
-      <td class="p-3 text-white/60">${u.email}</td>
-      <td class="p-3">${u.verified ? '
+async function login(){
+  const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u.value,password:p.value})});
+  const j=await r.json(); if(j.error) return alert(j.error);
+  if(j.user.role!=='admin' || j.user.username!=='ryanx') return alert('Bukan admin');
+  localStorage.setItem('admin_token', j.token); loginBox.style.display='none'; panel.style.display='block'; load();
+}
+async function load(){
+  const r=await fetch('/api/posts'); const data=await r.json();
+  list.innerHTML=data.map(p=>`<div class=card><b>${p.username} [${p.role}]</b><p>${p.content}</p><small>${p.created_at}</small></div>`).join('');
+}
+</script></body></html>
