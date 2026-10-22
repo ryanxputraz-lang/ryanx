@@ -3,97 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - ryanx.my.id</title>
+<title>Login - Scalper Squad | ryanx.my.id</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
 <style>body{font-family:'Inter',sans-serif}</style>
 </head>
 <body class="bg-[#07080b] text-white min-h-screen flex items-center justify-center p-4">
-
-<div class="w-full max-w-[360px]">
-  <!-- Ticker REAL -->
-  <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-3 mb-3 flex justify-between text-xs">
-    <div>
-      <div class="text-white/40 text-[10px]">XAUUSD GOLD</div>
-      <div id="xau-price" class="font-bold text-sm">$--.--</div>
-    </div>
-    <div class="text-right">
-      <div class="text-white/40 text-[10px]">BTCUSD</div>
-      <div id="btc-price" class="font-bold text-sm">$--.--</div>
-      <div id="btc-change" class="text-[10px] text-white/40"></div>
-    </div>
+<div class="w-full max-w-[380px]">
+  <div class="text-center mb-6">
+    <div class="w-12 h-12 bg-yellow-400 rounded-xl mx-auto flex items-center justify-center text-black font-black text-xl">R</div>
+    <h1 class="font-black text-2xl mt-3">Login <span class="text-yellow-400">Scalper Squad</span></h1>
+    <p class="text-xs text-white/40">Masuk ke dashboard komunitas</p>
   </div>
 
-  <div class="bg-white/[0.03] border border-white/10 rounded-[24px] p-6">
-    <h1 class="font-black text-2xl leading-none">ryanx.<span class="text-yellow-400">my.id</span></h1>
-    <p class="text-[11px] text-white/40 mt-1 mb-5">REAL TRADING LOGIN</p>
-
-    <div class="space-y-3">
-      <input id="username" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm outline-none focus:border-yellow-500/50" placeholder="Username">
-      <input id="password" type="password" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm outline-none focus:border-yellow-500/50" placeholder="Password">
-      
-      <button onclick="doLogin()" id="btn" class="w-full bg-yellow-500 text-black font-black py-3.5 rounded-xl text-sm">LOGIN → ADMIN</button>
-      
-      <div id="msg" class="text-xs text-center pt-2"></div>
-      <div id="last-update" class="text-[10px] text-center text-white/20"></div>
-    </div>
+  <div class="bg-white/[0.04] border border-white/10 rounded-[24px] p-5 space-y-3">
+    <input id="email" type="email" placeholder="Email" class="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-3.5 text-sm outline-none focus:border-yellow-400">
+    <input id="password" type="password" placeholder="Password" class="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-3.5 text-sm outline-none focus:border-yellow-400">
+    <button onclick="doLogin()" id="btnLogin" class="w-full bg-yellow-400 text-black font-black py-4 rounded-xl text-sm">MASUK DASHBOARD</button>
+    <div id="msg" class="text-xs text-center min-h-[16px] text-red-400"></div>
+    <div class="text-[11px] text-center text-white/30">Belum punya akun? <a href="/register.html" class="text-yellow-400 font-bold">Daftar disini</a></div>
   </div>
-  <div class="text-center text-[10px] text-white/20 mt-3">Logged in as admin will go to /admin.html</div>
 </div>
 
 <script>
-async function loadTicker(){
-  try{
-    const res = await fetch('/api/ticker');
-    const d = await res.json();
-    if(d.xauusd) document.getElementById('xau-price').textContent = `$${d.xauusd.price.toFixed(2)}`;
-    if(d.btcusd){
-      document.getElementById('btc-price').textContent = `$${Number(d.btcusd.price).toLocaleString()}`;
-      document.getElementById('btc-change').textContent = `${d.btcusd.change>=0?'+':''}${(d.btcusd.change||0).toFixed(2)}%`;
-    }
-    document.getElementById('last-update').textContent = `REAL • ${new Date().toLocaleTimeString()}`;
-  }catch(e){}
-}
-loadTicker();
-setInterval(loadTicker, 5000);
-
 async function doLogin(){
-  const btn = document.getElementById('btn');
-  const msg = document.getElementById('msg');
-  const username = document.getElementById('username').value.trim();
-  const password = document.getElementById('password').value.trim();
-  
-  if(!username || !password){ msg.textContent='Isi username & password'; msg.className='text-xs text-center pt-2 text-red-400'; return; }
-  
-  btn.textContent='Checking...'; btn.disabled=true; msg.textContent='';
-  
+  const btn=document.getElementById('btnLogin'), msg=document.getElementById('msg');
+  const email=document.getElementById('email').value.trim();
+  const password=document.getElementById('password').value.trim();
+  if(!email||!password){msg.textContent='Isi email & password!'; return;}
+  btn.textContent='CEK AKUN...'; btn.disabled=true; msg.textContent='';
   try{
-    const res = await fetch('/api/login', {
+    const res = await fetch('/api/login',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ username, password })
+      body:JSON.stringify({email,password})
     });
-    const data = await res.json();
-    if(!res.ok){ throw new Error(data.error || 'Login gagal'); }
+    const j = await res.json();
+    if(!res.ok) throw new Error(j.error||'Login gagal');
     
-    localStorage.setItem('ryanx_token', data.token);
-    localStorage.setItem('ryanx_role', data.user.role);
-    localStorage.setItem('ryanx_user', data.user.username);
+    // INI KUNCINYA BIAR GAK STUCK
+    localStorage.setItem('user', JSON.stringify(j.user));
+    localStorage.setItem('username', j.user.username);
+    // simpan token simpel
+    localStorage.setItem('token', 'logged-in-'+Date.now());
 
-    msg.textContent='Login sukses!'; msg.className='text-xs text-center pt-2 text-green-400';
-
-    // AUTO REDIRECT KE ADMIN KALAU ROLE ADMIN
-    setTimeout(()=>{
-      if(data.user.role === 'admin'){
-        location.href='/admin.html';
-      } else {
-        location.href='/dashboard.html';
-      }
-    }, 500);
-
+    msg.textContent='Berhasil! Masuk dashboard...'; 
+    msg.className='text-xs text-center min-h-[16px] text-green-400';
+    setTimeout(()=>{ window.location.replace('/dashboard.html'); }, 600);
   }catch(err){
-    msg.textContent=err.message; msg.className='text-xs text-center pt-2 text-red-400';
-    btn.textContent='LOGIN → ADMIN'; btn.disabled=false;
+    msg.textContent=err.message;
+    btn.textContent='MASUK DASHBOARD'; btn.disabled=false;
   }
 }
 </script>

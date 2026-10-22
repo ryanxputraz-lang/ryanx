@@ -1,30 +1,8 @@
 export async function onRequestPost({ request, env }) {
-  try {
-    const { username, password } = await request.json();
-    const db = env['ryanx-db'] || env.ryanx_db || env.DB;
-    
-    const user = await db.prepare(
-      "SELECT * FROM users WHERE username = ? AND password = ?"
-    ).bind(username, password).first();
-
-    if (!user) {
-      return Response.json({ error: 'Username atau password salah' }, { status: 401 });
-    }
-
-    // token simpel
-    const token = btoa(`${user.id}:${user.username}:${Date.now()}`);
-
-    return Response.json({
-      token,
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: user.role
-      }
-    });
-
-  } catch (e) {
-    return Response.json({ error: e.message }, { status: 500 });
-  }
+  const db = env['ryanx-db'] || env.ryanx_db || env.DB;
+  const { email, password } = await request.json();
+  const user = await db.prepare("SELECT id, username, email, verified FROM users WHERE email=? AND password=?").bind(email, password).first();
+  if(!user) return Response.json({error:'Email atau password salah'},{status:401});
+  if(!user.verified) return Response.json({error:'Akun belum verifikasi OTP. Cek email!'},{status:403});
+  return Response.json({ success:true, user: { id:user.id, username:user.username, email:user.email } });
 }
