@@ -1,69 +1,59 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - RyanX</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-// PENJAGA SUPER CEPAT - jalan sebelum body ke-load
 (function(){
-  const token = localStorage.getItem('ryanx_token');
-  const role = localStorage.getItem('ryanx_role');
-  if(!token || role !== 'admin'){
-    // langsung tendang, tanpa nunggu body
-    location.replace('/login.html');
+  const t = localStorage.getItem('ryanx_token');
+  const u = JSON.parse(localStorage.getItem('ryanx_user')||'{}');
+  if(!t){ location.replace('/login.html'); }
+  // Hanya admin ryanx yang bisa masuk
+  if(u.username && u.username.toLowerCase() !== 'ryanx'){
+    alert('Akses ditolak: bukan admin');
+    location.replace('/dashboard.html');
   }
 })();
+document.documentElement.style.visibility='hidden';
 </script>
-<style>html{visibility:hidden; opacity:0;} html.ready{visibility:visible; opacity:1; transition:opacity .2s;}</style>
 </head>
-<body class="bg-[#07080b] text-white min-h-screen p-4">
-<script>document.documentElement.classList.add('ready');</script>
-
-<div class="max-w-[480px] mx-auto">
-  <div class="flex justify-between items-center mb-4">
-    <h1 class="font-black">USERS <span class="text-yellow-400">ryanx.my.id</span></h1>
-    <div class="flex gap-2">
-      <button onclick="openAdd()" class="bg-yellow-400 text-black font-bold px-3 py-2 rounded-full text-xs">+ Tambah</button>
-      <button onclick="logout()" class="bg-white/10 px-3 py-2 rounded-full text-xs">Logout</button>
+<body class="bg-[#07080b] text-white min-h-screen">
+<header class="h-[64px] flex items-center justify-between px-6 border-b border-white/10">
+  <div class="flex items-center gap-3"><div class="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center font-black">A</div><b>ADMIN PANEL</b><span class="text-xs bg-yellow-400 text-black px-2 py-1 rounded font-black">RYANX</span></div>
+  <div class="flex gap-2"><a href="/dashboard.html" class="text-xs bg-white/10 px-4 py-2 rounded-xl">Dashboard</a><button onclick="logout()" class="text-xs bg-white text-black font-black px-4 py-2 rounded-xl">Logout</button></div>
+</header>
+<main class="max-w-5xl mx-auto p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-black">Member <span class="text-yellow-400">Scalper Squad</span></h1>
+    <button onclick="loadUsers()" class="text-xs bg-white/10 px-4 py-2 rounded-xl">Refresh</button>
+  </div>
+  <div id="stats" class="grid grid-cols-3 gap-3 mb-6">
+    <div class="bg-white/[0.05] border border-white/10 rounded-2xl p-4"><p class="text-[10px] text-white/40">TOTAL MEMBER</p><p id="total" class="text-2xl font-black">-</p></div>
+    <div class="bg-white/[0.05] border border-white/10 rounded-2xl p-4"><p class="text-[10px] text-white/40">VERIFIED</p><p id="verified" class="text-2xl font-black text-green-400">-</p></div>
+    <div class="bg-white/[0.05] border border-white/10 rounded-2xl p-4"><p class="text-[10px] text-white/40">PENDING</p><p id="pending" class="text-2xl font-black text-yellow-400">-</p></div>
+  </div>
+  <div class="bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-white/[0.05] text-[11px] text-white/40"><tr><th class="p-3 text-left">ID</th><th class="p-3 text-left">Username</th><th class="p-3 text-left">Email</th><th class="p-3 text-left">Status</th><th class="p-3 text-left">Action</th></tr></thead>
+        <tbody id="tbody" class="text-xs"><tr><td colspan="5" class="p-6 text-center text-white/30">Loading...</td></tr></tbody>
+      </table>
     </div>
   </div>
-  <div id="list" class="space-y-2">Loading...</div>
-</div>
-
-<!-- MODAL sama seperti kemarin -->
-<div id="modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-  <div class="bg-[#15161d] border border-white/10 rounded-[20px] p-5 w-full max-w-[360px]">
-    <h3 id="modalTitle" class="font-bold mb-4">Tambah Akun</h3>
-    <input type="hidden" id="fId">
-    <input id="fUsername" placeholder="Username" class="w-full mb-2 bg-black/60 border border-white/10 rounded-xl px-3 py-3 text-sm">
-    <input id="fEmail" placeholder="Email" class="w-full mb-2 bg-black/60 border border-white/10 rounded-xl px-3 py-3 text-sm">
-    <input id="fPassword" placeholder="Password" class="w-full mb-2 bg-black/60 border border-white/10 rounded-xl px-3 py-3 text-sm">
-    <select id="fRole" class="w-full mb-3 bg-black/60 border border-white/10 rounded-xl px-3 py-3 text-sm"><option value="user">user</option><option value="admin">admin</option></select>
-    <div class="flex gap-2"><button onclick="closeModal()" class="flex-1 bg-white/10 py-3 rounded-xl text-xs">Batal</button><button onclick="save()" id="btnSave" class="flex-1 bg-yellow-400 text-black font-bold py-3 rounded-xl text-xs">Simpan</button></div>
-  </div>
-</div>
-
+</main>
 <script>
-const token = localStorage.getItem('ryanx_token');
-async function load(){
-  const res = await fetch('/api/users',{headers:{'Authorization':'Bearer '+token}});
-  if(!res.ok){ localStorage.clear(); location.replace('/login.html'); return; }
-  const data = await res.json();
-  document.getElementById('list').innerHTML = data.map(u=>`
-    <div class="bg-white/[0.05] border border-white/10 rounded-xl p-3 flex justify-between items-center">
-      <div><div class="font-bold text-sm">${u.username} <span class="ml-1 text-[10px] px-2 py-0.5 rounded-full ${u.role==='admin'?'bg-yellow-400 text-black':'bg-white/10'}">${u.role}</span></div><div class="text-[11px] text-white/40">${u.email}</div></div>
-      <div class="flex gap-1"><button onclick="openEdit(${u.id},'${u.username}','${u.email}','${u.role}')" class="bg-white/10 px-3 py-1.5 rounded-full text-xs">Edit</button><button onclick="del(${u.id})" class="bg-red-500/20 text-red-300 px-3 py-1.5 rounded-full text-xs">Hapus</button></div>
-    </div>`).join('');
-}
-load();
-function openAdd(){ document.getElementById('fId').value=''; document.getElementById('fUsername').value=''; document.getElementById('fEmail').value=''; document.getElementById('fPassword').value=''; document.getElementById('modal').classList.remove('hidden'); }
-function openEdit(id,u,e,r){ document.getElementById('fId').value=id; document.getElementById('fUsername').value=u; document.getElementById('fEmail').value=e; document.getElementById('fRole').value=r; document.getElementById('modal').classList.remove('hidden'); }
-function closeModal(){ document.getElementById('modal').classList.add('hidden'); }
-async function save(){ const id=document.getElementById('fId').value; const payload={username:fUsername.value,email:fEmail.value,password:fPassword.value,role:fRole.value}; const method=id?'PUT':'POST'; const body=id?{id,...payload}:payload; if(id&&!payload.password) delete body.password; await fetch('/api/users',{method,headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify(body)}); closeModal(); load(); }
-async function del(id){ if(!confirm('Hapus?'))return; await fetch('/api/users?id='+id,{method:'DELETE',headers:{'Authorization':'Bearer '+token}}); load(); }
-function logout(){ localStorage.clear(); location.replace('/login.html'); }
-</script>
-</body>
-</html>
+async function loadUsers(){
+  const token = localStorage.getItem('ryanx_token');
+  const r = await fetch('/api/admin/users',{headers:{'Authorization':'Bearer '+token}});
+  const j = await r.json();
+  if(!r.ok){ alert(j.error); return; }
+  document.getElementById('total').textContent = j.users.length;
+  document.getElementById('verified').textContent = j.users.filter(u=>u.verified).length;
+  document.getElementById('pending').textContent = j.users.filter(u=>!u.verified).length;
+  document.getElementById('tbody').innerHTML = j.users.map(u=>`
+    <tr class="border-t border-white/5">
+      <td class="p-3">#${u.id}</td>
+      <td class="p-3 font-bold">${u.username}</td>
+      <td class="p-3 text-white/60">${u.email}</td>
+      <td class="p-3">${u.verified ? '
