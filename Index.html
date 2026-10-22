@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Login - RyanX</title>
+<style>
+  /* Container utama dengan border-radius - sesuai request kamu */
+  body { font-family: sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+  .card {
+    background: white;
+    padding: 32px;
+    border-radius: 24px; /* <-- INI BORDER RADIUS YANG KAMU MAU */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    width: 100%; max-width: 380px;
+  }
+  input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 12px; border: 1px solid #ddd; box-sizing: border-box; }
+  button { width: 100%; padding: 12px; border-radius: 12px; border: none; background: #000; color: white; cursor: pointer; margin-top: 10px; }
+  .secondary { background: #e5e7eb; color: #111; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>Login RyanX</h2>
+  <input id="username" placeholder="Username" />
+  <input id="password" type="password" placeholder="Password" />
+  <button onclick="doLogin()">Login</button>
+  <button class="secondary" onclick="location.href='/register.html'">Register</button>
+  <p id="msg"></p>
+</div>
+
+<script>
+// LOGIKA AUTO-REDIRECT: Jika sudah login, jangan tampilkan form lagi
+// Kita cek token di localStorage
+(async () => {
+  const token = localStorage.getItem("token");
+  if (!token) return; // belum login, biarin di halaman ini
+
+  // Cek ke server apakah token masih valid
+  const res = await fetch("/api/me", { headers: { "Authorization": "Bearer " + token } });
+  if (res.ok) {
+    const data = await res.json();
+    // Jika role admin -> ke admin.html, jika user -> user.html
+    if (data.user.role === "admin") location.href = "/admin.html";
+    else location.href = "/user.html";
+  } else {
+    // Token invalid, hapus
+    localStorage.removeItem("token");
+  }
+})();
+
+async function doLogin() {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  const res = await fetch("/api/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password })
+  });
+  const data = await res.json();
+  if (!res.ok) { document.getElementById("msg").innerText = data.error; return; }
+
+  // Simpan token dan redirect sesuai role
+  localStorage.setItem("token", data.token);
+  if (data.role === "admin") location.href = "/admin.html";
+  else location.href = "/user.html";
+}
+</script>
+</body>
+</html>

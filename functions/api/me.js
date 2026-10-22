@@ -1,40 +1,27 @@
-// functions/api/me.js
+// Fungsi untuk CEK STATUS LOGIN
+// Dipanggil oleh index.html untuk auto-redirect kalau sudah login
 
-export async function onRequestGet({ request, env }) {
-  const cookie = request.headers.get('Cookie') || '';
-  const match = cookie.match(/(?:^|;\s*)session=([^;]+)/);
-  if (!match) return Response.json({ loggedIn: false });
+export async function onRequestGet(context) {
+  // Ambil token dari header Authorization atau Cookie
+  const auth = context.request.headers.get("Authorization");
+  let token = null;
 
-  const payload = await verifyToken(match[1], env.SESSION_SECRET || 'change-me-secret');
-  if (!payload) return Response.json({ loggedIn: false });
+  if (auth && auth.startsWith("Bearer ")) {
+    token = auth.replace("Bearer ", "");
+  } else {
+    // Coba dari cookie
+    const cookie = context.request.headers.get("Cookie") || "";
+    const match = cookie.match(/token=([^;]+)/);
+    if (match) token = match[1];
+  }
 
-  return Response.json({
-    loggedIn: true,
-    username: payload.username,
-    role: payload.role
-  });
-}
+  if (!token) return Response.json({ loggedIn: false }, { status: 401 });
 
-async function verifyToken(token, secret) {
   try {
-    const [data, sigB64] = token.split('.');
-    if (!data || !sigB64) return null;
-
-    const key = await crypto.subtle.importKey(
-      'raw', new TextEncoder().encode(secret),
-      { name: 'HMAC', hash: 'SHA-256' }, false, ['verify']
-    );
-
-    const sigBytes = Uint8Array.from(atob(sigB64), c => c.charCodeAt(0));
-    const valid = await crypto.subtle.verify(
-      'HMAC', key, sigBytes, new TextEncoder().encode(data)
-    );
-    if (!valid) return null;
-
-    const payload = JSON.parse(atob(data));
-    if (payload.exp < Date.now()) return null;
-    return payload;
+    // Decode token
+    const data = JSON.parse(atob(token));
+    return Response.json({ loggedIn: true, user: data });
   } catch {
-    return null;
+    return Response.json({ loggedIn: false }, { status: 401 });
   }
 }
