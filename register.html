@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Join Scalper Squad - ryanx.my.id</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#07080b] text-white min-h-screen flex items-center justify-center p-4 font-sans">
+<div class="w-full max-w-[380px]">
+  <div class="text-center mb-6">
+    <div class="w-12 h-12 bg-yellow-400 rounded-xl mx-auto flex items-center justify-center text-black font-black text-xl">R</div>
+    <h1 class="font-black text-2xl mt-3">Join <span class="text-yellow-400">Scalper Squad</span></h1>
+    <p class="text-xs text-white/40">Komunitas trader scalper ryanx.my.id</p>
+  </div>
+
+  <!-- STEP 1: DAFTAR -->
+  <div id="step1" class="bg-white/[0.04] border border-white/10 rounded-[24px] p-5 space-y-3">
+    <input id="username" placeholder="Username trader (contoh: RyanScalper)" class="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-3.5 text-sm outline-none focus:border-yellow-400">
+    <input id="email" type="email" placeholder="Email aktif (untuk OTP)" class="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-3.5 text-sm outline-none focus:border-yellow-400">
+    <input id="password" type="password" placeholder="Password" class="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-3.5 text-sm outline-none focus:border-yellow-400">
+    <button onclick="doRegister()" id="btnReg" class="w-full bg-yellow-400 text-black font-black py-4 rounded-xl text-sm tracking-wide">KIRIM OTP KE EMAIL</button>
+    <div id="msg1" class="text-xs text-center min-h-[16px]"></div>
+    <div class="text-[11px] text-center text-white/30">Sudah punya akun? <a href="/login.html" class="text-yellow-400 font-bold">Login disini</a></div>
+  </div>
+
+  <!-- STEP 2: OTP -->
+  <div id="step2" class="hidden bg-white/[0.04] border border-white/10 rounded-[24px] p-5">
+    <h3 class="font-bold text-[15px]">Cek Email Kamu</h3>
+    <p class="text-[11px] text-white/40 mb-4">Kode 6 digit kami kirim dari <span class="text-white">noreply@ryanx.my.id</span> ke <span id="emailShow" class="text-yellow-400 font-bold"></span></p>
+    <input id="otp" inputmode="numeric" maxlength="6" placeholder="000000" class="w-full bg-black border border-white/10 rounded-xl px-4 py-4 text-center tracking-[12px] text-2xl font-black outline-none focus:border-yellow-400">
+    <button onclick="doVerify()" id="btnVerify" class="mt-4 w-full bg-white text-black font-black py-4 rounded-xl text-sm">AKTIVASI AKUN</button>
+    <button onclick="location.reload()" class="mt-2 w-full text-[11px] text-white/40 py-2">Kirim ulang OTP</button>
+    <div id="msg2" class="text-xs text-center mt-3 min-h-[16px]"></div>
+  </div>
+</div>
+
+<script>
+let currentEmail='';
+async function doRegister(){
+  const btn=document.getElementById('btnReg'), msg=document.getElementById('msg1');
+  const u=document.getElementById('username').value.trim(), e=document.getElementById('email').value.trim(), p=document.getElementById('password').value.trim();
+  if(!u||!e||!p){msg.textContent='Lengkapi semua field!'; msg.className='text-xs text-center text-red-400'; return;}
+  btn.textContent='MENGIRIM...'; btn.disabled=true; msg.textContent='';
+  try{
+    const res=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,email:e,password:p})});
+    const j=await res.json();
+    if(!res.ok) throw new Error(j.error||'Gagal');
+    currentEmail=e; document.getElementById('emailShow').textContent=e;
+    document.getElementById('step1').classList.add('hidden'); document.getElementById('step2').classList.remove('hidden');
+  }catch(err){msg.textContent=err.message; msg.className='text-xs text-center text-red-400'; btn.textContent='KIRIM OTP KE EMAIL'; btn.disabled=false;}
+}
+async function doVerify(){
+  const btn=document.getElementById('btnVerify'), msg=document.getElementById('msg2'), otp=document.getElementById('otp').value.trim();
+  if(otp.length!==6){msg.textContent='OTP harus 6 digit'; return;}
+  btn.textContent='VERIFIKASI...';
+  try{
+    const res=await fetch('/api/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:currentEmail,otp})});
+    const j=await res.json();
+    if(!res.ok) throw new Error(j.error);
+    msg.textContent='Akun aktif! Redirect ke login...'; msg.className='text-xs text-center mt-3 text-green-400';
+    setTimeout(()=>location.href='/login.html',1500);
+  }catch(err){msg.textContent=err.message; msg.className='text-xs text-center mt-3 text-red-400'; btn.textContent='AKTIVASI AKUN';}
+}
+</script>
+</body>
+</html>
