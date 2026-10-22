@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Login - ryanx.my.id | XAUUSD BTCUSD Community</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>body{font-family:'Inter',sans-serif;background:#07080b}</style>
+</head>
+<body class="min-h-screen text-white flex flex-col">
+<!-- REAL TICKER -->
+<div class="sticky top-0 z-50 bg-[#0f0f12]/80 backdrop-blur-xl border-b border-white/5 p-3">
+  <div class="flex justify-between items-center mb-2">
+    <div class="flex items-center gap-2"><div class="w-7 h-7 bg-gradient-to-br from-yellow-400 to-amber-600 rounded-lg flex items-center justify-center font-black text-black text-xs">R</div><span class="font-bold text-sm">ryanx.my.id</span><span class="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full border border-green-500/30">● LIVE REAL</span></div>
+    <div class="text-[10px] text-white/40" id="last-update">Connecting...</div>
+  </div>
+  <div class="grid grid-cols-2 gap-2">
+    <div class="bg-gradient-to-br from-yellow-500/10 to-amber-600/10 border border-yellow-500/20 rounded-xl p-2.5">
+      <div class="flex justify-between"><span class="text-[10px] text-yellow-400 font-semibold">XAUUSD • GOLD SPOT</span><span class="text-[9px] bg-yellow-500/20 text-yellow-300 px-1.5 rounded">REAL</span></div>
+      <div class="font-black text-[16px] mt-1" id="xau-price">$--.--</div>
+      <div class="text-[10px] text-white/50" id="xau-change">Fetching Gold-API...</div>
+    </div>
+    <div class="bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-xl p-2.5">
+      <div class="flex justify-between"><span class="text-[10px] text-orange-400 font-semibold">BTCUSD • BINANCE</span><span class="text-[9px] bg-green-500/20 text-green-300 px-1.5 rounded" id="btc-live-badge">WS LIVE</span></div>
+      <div class="font-black text-[16px] mt-1" id="btc-price">$--,---</div>
+      <div class="text-[10px]" id="btc-change">Fetching Binance...</div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="flex-1 flex flex-col justify-center p-6 max-w-[400px] mx-auto w-full">
+  <h1 class="text-[28px] font-extrabold leading-tight">Welcome Back,<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600">Trader.</span></h1>
+  <p class="text-white/50 text-[13px] mt-2">Masuk untuk akses sinyal real-time & harga live XAUUSD / BTCUSD</p>
+
+  <div class="mt-6 bg-white/[0.04] border border-white/10 rounded-[20px] p-5 backdrop-blur">
+    <div id="alert" class="hidden mb-4 p-3 rounded-xl text-[12px]"></div>
+    <form id="loginForm" class="space-y-4">
+      <div><label class="text-[11px] text-white/60 uppercase font-semibold">Username</label><input id="username" required class="mt-1.5 w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3.5 text-[14px] outline-none focus:border-yellow-500/50" placeholder="username kamu"></div>
+      <div><label class="text-[11px] text-white/60 uppercase font-semibold">Password</label><div class="relative mt-1.5"><input id="password" type="password" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3.5 pr-12 text-[14px] outline-none" placeholder="••••••••"><button type="button" onclick="document.getElementById('password').type=document.getElementById('password').type==='password'?'text':'password'" class="absolute right-3 top-1/2 -translate-y-1/2 text-white/40">👁</button></div></div>
+      <button type="submit" id="btnLogin" class="w-full bg-gradient-to-r from-yellow-400 to-amber-600 text-black font-bold py-3.5 rounded-xl text-[14px]">Masuk ke Dashboard →</button>
+    </form>
+    <div class="mt-5 text-center text-[12px] text-white/40">Belum punya akun? <a href="/register.html" class="text-yellow-400 font-semibold hover:underline">Daftar di sini (OTP Email)</a></div>
+  </div>
+</div>
+
+<script>
+async function loadTicker(){
+  try{
+    const res = await fetch('/api/ticker'); const d = await res.json();
+    if(d.xauusd){ document.getElementById('xau-price').textContent=`$${d.xauusd.price.toFixed(2)}`; document.getElementById('xau-change').textContent=`Gold Spot • ${d.xauusd.source}`; }
+    if(d.btcusd){ document.getElementById('btc-price').textContent=`$${d.btcusd.price.toLocaleString()}`; const ch=document.getElementById('btc-change'); ch.textContent=`${d.btcusd.change>=0?'+':''}${d.btcusd.change.toFixed(2)}% • 24h`; ch.className=`text-[10px] ${d.btcusd.change>=0?'text-green-400':'text-red-400'}`; document.getElementById('last-update').textContent=`Update: ${new Date().toLocaleTimeString()} REAL`; }
+  }catch(e){}
+}
+loadTicker(); setInterval(loadTicker,3000);
+try{ const ws=new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@trade'); ws.onmessage=(ev)=>{ const t=JSON.parse(ev.data); document.getElementById('btc-price').textContent=`$${parseFloat(t.p).toLocaleString()}`; }; }catch{}
+
+document.getElementById('loginForm').addEventListener('submit', async(e)=>{
+  e.preventDefault(); const btn=document.getElementById('btnLogin'); const alertBox=document.getElementById('alert');
+  btn.textContent='Memverifikasi...'; btn.disabled=true;
+  try{
+    const res=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:document.getElementById('username').value,password:document.getElementById('password').value})});
+    const data=await res.json(); if(!res.ok) throw new Error(data.error||'Login gagal');
+    localStorage.setItem('ryanx_token',data.token); location.href='/dashboard.html';
+  }catch(err){ alertBox.className='mb-4 p-3 rounded-xl text-[12px] bg-red-500/10 border border-red-500/20 text-red-300'; alertBox.textContent=err.message; alertBox.classList.remove('hidden'); btn.textContent='Masuk ke Dashboard →'; btn.disabled=false; }
+});
+</script>
+</body>
+</html>
