@@ -1,95 +1,37 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ryanx.my.id - Zona Trader</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#18191A;--card:#242526;--card2:#3A3B3C;--gold:#D9BD7E;--blue:#6CA9E0;--text:#E4E6EB;--muted:#B0B3B8;--border:#3E4042}
-*{box-sizing:border-box;font-family:Inter,sans-serif} body{margin:0;background:var(--bg);color:var(--text)}
-header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;padding:10px 14px;align-items:center}
-.logo{font-weight:800;font-size:24px} .logo b{color:var(--gold)} .logo span{color:var(--blue)}
-.btn{background:var(--gold);color:#111;border:none;padding:10px 16px;border-radius:8px;font-weight:700;cursor:pointer}
-input,textarea{width:100%;background:var(--card2);border:none;color:var(--text);padding:12px;border-radius:20px;margin:5px 0;outline:none}
-.container{max-width:680px;margin:0 auto}
-.card{background:var(--card);border-radius:10px;margin:8px 0;overflow:hidden;border:1px solid var(--border)}
-.card-head{padding:12px;display:flex;gap:10px;align-items:center}
-.avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;background:#333}
-.post-content{padding:0 12px 10px 12px;white-space:pre-wrap;line-height:1.4}
-.post-img{width:100%;max-height:600px;object-fit:cover}
-.post-stats{padding:8px 12px;display:flex;justify-content:space-between;color:var(--muted);font-size:13px;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.post-actions{display:flex} .post-actions button{flex:1;background:none;border:none;color:var(--muted);padding:10px;font-weight:600;cursor:pointer;display:flex;justify-content:center;gap:6px}
-.post-actions button:hover{background:var(--card2)}
-.comment-box{background:#18191A;padding:8px 12px}
-.comment{padding:6px 0;display:flex;gap:8px} .comment-bubble{background:var(--card2);padding:8px 12px;border-radius:18px;flex:1}
-.badge{font-size:10px;padding:2px 6px;border-radius:10px;background:var(--card2);border:1px solid var(--gold);color:var(--gold)}
-.hidden{display:none} .tab{padding:6px 12px;border-radius:20px;background:var(--card2);cursor:pointer;font-size:14px} .tab.active{background:var(--blue);color:#fff}
-</style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RyanX Trader Community</title>
+<link rel="stylesheet" href="/style.css">
 </head>
 <body>
-<header>
-<div class="logo"><span>&lt;</span> <b>R</b> <span>&gt;</span> <small style="font-size:12px;color:var(--muted)"> Zona Trader</small></div>
-<div id="nav" class="hidden" style="display:flex;gap:6px"><div class="tab active" onclick="loadFeed()">Beranda</div><div class="tab" onclick="logout()">Keluar</div></div>
-</header>
-
+<header><h1>RyanX</h1><div id="nav"><a href="/login.html" id="loginBtn">Login</a><a href="/dashboard.html" id="dashBtn" style="display:none">Dashboard</a></div></header>
 <div class="container">
-<div id="authBox" style="padding:12px"><div class="card" style="padding:16px">
-<h3 style="margin:0">Grup Trader ryanx.my.id</h3><small>Tempat trader pemula & pro saling sharing</small>
-<div id="loginForm"><input id="l_user" placeholder="Username"><input id="l_pass" type="password" placeholder="Password"><button class="btn" style="width:100%;margin-top:8px" onclick="doLogin()">Masuk Grup</button><p style="text-align:center"><small><a href="#" onclick="showReg()" style="color:var(--blue)">Belum anggota? Daftar</a></small></p></div>
-<div id="regForm" class="hidden"><input id="r_user" placeholder="Username"><input id="r_email" placeholder="Email"><input id="r_pass" type="password" placeholder="Password"><div style="display:flex;gap:6px"><input id="r_otp" placeholder="OTP"><button class="btn" style="background:var(--card2);color:var(--text)" onclick="sendOTP()">Kirim OTP</button></div><button class="btn" style="background:var(--blue);color:#fff;width:100%;margin-top:6px" onclick="doVerify()">Gabung Grup</button><p><small><a href="#" onclick="showLogin()" style="color:var(--blue)">Sudah anggota? Login</a></small></p></div>
-<div id="authMsg"></div>
-</div></div>
-
-<div id="dashBox" class="hidden">
-<div class="card" style="padding:12px"><div style="display:flex;gap:8px"><img id="myAv" class="avatar" src=""><input id="postContent" placeholder="Apa yang kamu analisa hari ini, trader?" style="border-radius:20px" onclick="this.rows=3"></div><div style="display:flex;gap:8px;margin-top:8px"><input type="file" id="postImage" accept="image/*" style="flex:1"><button class="btn" onclick="createPost()" style="flex:1">Posting</button></div></div>
 <div id="feed"></div>
 </div>
-</div>
-
 <script>
-let ME=null;
-function showReg(){loginForm.classList.add('hidden');regForm.classList.remove('hidden')} function showLogin(){regForm.classList.add('hidden');loginForm.classList.remove('hidden')}
-async function sendOTP(){const u=r_user.value,e=r_email.value,p=r_pass.value; if(!u||!e||!p) return authMsg.innerHTML='Lengkapi dulu'; authMsg.innerHTML='Kirim OTP...'; const r=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,email:e,password:p})}); const j=await r.json(); authMsg.innerHTML=j.error?`<small style=color:red>${j.error}</small>`:`<small style=color:#6CA9E0>${j.message}</small>`}
-async function doVerify(){const u=r_user.value,e=r_email.value,p=r_pass.value,o=r_otp.value; const r=await fetch('/api/verify-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,email:e,password:o,otp:o, email:e, password:p})}); const j=await r.json(); if(j.error) authMsg.innerHTML=`<small style=color:red>${j.error}</small>`; else{authMsg.innerHTML=`<small style=color:green>${j.message}</small>`; showLogin();}}
-async function doLogin(){const u=l_user.value,p=l_pass.value; const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})}); const j=await r.json(); if(j.error) return authMsg.innerHTML=`<small style=color:red>${j.error}</small>`; localStorage.setItem('token',j.token); localStorage.setItem('user',JSON.stringify(j.user)); init();}
-function init(){const t=localStorage.getItem('token'); if(!t) return; ME=JSON.parse(localStorage.getItem('user')); authBox.classList.add('hidden'); dashBox.classList.remove('hidden'); nav.classList.remove('hidden'); document.getElementById('myAv').src=ME.avatar||'https://i.pravatar.cc/100?u='+ME.username; loadFeed();}
+const API='/api';
 async function loadFeed(){
- const r=await fetch('/api/posts'); let posts=await r.json();
- // PENTING: Terbaru di atas, lama tenggelam
- posts = posts.sort((a,b)=> new Date(b.created_at) - new Date(a.created_at));
- feed.innerHTML = posts.map(p=>`
-  <div class="card" id="post-${p.id}">
-   <div class="card-head"><img class="avatar" src="${p.avatar||'https://i.pravatar.cc/100?u='+p.username}"><div><b>${p.username}</b> <span class="badge">${p.role}</span><div><small>${timeAgo(p.created_at)} · <span style="color:var(--blue)">Trader Group</span></small></div></div></div>
-   <div class="post-content">${linkify(p.content)}</div>
-   ${p.image_url?`<img class="post-img" src="${p.image_url}">`:''}
-   <div class="post-stats"><span>👍 ${p.likes||0} Suka</span><span>${p.comment_count||0} Komentar</span></div>
-   <div class="post-actions"><button onclick="likePost(${p.id})">👍 Suka</button><button onclick="document.getElementById('cinput-${p.id}').focus()">💬 Komentar</button><button>↗️ Bagikan</button></div>
-   <div class="comment-box" id="comments-${p.id}"><div class="comments-list" id="clist-${p.id}"></div><div style="display:flex;gap:8px;margin-top:6px"><img class="avatar" style="width:32px;height:32px" src="${ME.avatar||'https://i.pravatar.cc/100?u='+ME.username}"><input id="cinput-${p.id}" placeholder="Tulis komentar..." onkeypress="if(event.key==='Enter') addComment(${p.id})"></div></div>
+ const res=await fetch(API+'/posts');
+ const posts=await res.json();
+ document.getElementById('feed').innerHTML=posts.map(p=>`
+  <div class="post-card">
+    <div class="post-head"><b>${p.username}</b> <span>${p.trade_pair||''} ${p.trade_type||''}</span><small>${new Date(p.created_at).toLocaleString()}</small></div>
+    <div class="post-body">${p.content}<br>${p.profit?`<b>P/L: ${p.profit}</b>`:''}</div>
+    <div class="post-actions"><button onclick="likePost('${p.id}')">❤️ ${p.likes}</button><button onclick="commentPost('${p.id}')">💬 Komen</button></div>
+    <div id="c-${p.id}"></div>
   </div>`).join('');
-  posts.forEach(p=> loadComments(p.id));
 }
-function timeAgo(d){const s=Math.floor((new Date()-new Date(d))/1000); if(s<60) return s+' dtk'; if(s<3600) return Math.floor(s/60)+' mnt'; if(s<86400) return Math.floor(s/3600)+' jam'; return Math.floor(s/86400)+' hari';}
-function linkify(t){return t.replace(/(https?:\/\/\S+)/g,'<a href="$1" target="_blank" style="color:var(--blue)">$1</a>')}
-async function createPost(){
- const content=postContent.value; if(!content.trim()) return;
- let image_url=''; if(postImage.files[0]) image_url=await toBase64(postImage.files[0]);
- const token=localStorage.getItem('token');
- const r=await fetch('/api/posts',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({content,image_url})});
- if(!r.ok){const j=await r.json(); return alert(j.error)} postContent.value=''; postImage.value=''; loadFeed();
+async function likePost(id){
+ const token=localStorage.getItem('token'); if(!token) location.href='/login.html';
+ await fetch(API+'/posts/like',{method:'POST',headers:{'Content-Type':'application/json','Authorization':token},body:JSON.stringify({post_id:id})});
+ loadFeed();
 }
-function toBase64(f){return new Promise((res,rej)=>{const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=rej; fr.readAsDataURL(f);})}
-async function loadComments(postId){
- const r=await fetch(`/api/comments?post_id=${postId}`); const cs=await r.json();
- document.getElementById(`clist-${postId}`).innerHTML=cs.map(c=>`<div class="comment"><img class="avatar" style="width:32px;height:32px" src="${c.avatar||'https://i.pravatar.cc/100?u='+c.username}"><div class="comment-bubble"><b style="font-size:13px">${c.username}</b><div style="font-size:14px">${c.content}</div></div></div>`).join('');
-}
-async function addComment(postId){
- const input=document.getElementById(`cinput-${postId}`); const content=input.value; if(!content.trim()) return;
- const token=localStorage.getItem('token');
- await fetch('/api/comments',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({post_id:postId, content})});
- input.value=''; loadComments(postId);
-}
-function logout(){localStorage.clear(); location.reload()}
-init();
+function commentPost(id){ const t=prompt('Komentar:'); if(t) fetch(API+'/posts/comment',{method:'POST',headers:{'Content-Type':'application/json','Authorization':token},body:JSON.stringify({post_id:id,content:t})}).then(()=>loadFeed()); }
+const token=localStorage.getItem('token');
+if(token){document.getElementById('loginBtn').style.display='none';document.getElementById('dashBtn').style.display='inline';}
+loadFeed();
 </script>
 </body>
 </html>

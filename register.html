@@ -1,0 +1,8 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/style.css"><title>Register - RyanX</title></head>
+<body><div class="auth-box"><h2>Daftar Trader</h2><input id="user" placeholder="Username"><input id="email" placeholder="Email"><input id="pass" type="password" placeholder="Password"><button onclick="reg()">Daftar</button><p id="msg"></p></div>
+<script>
+async function reg(){
+ const res=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:user.value,email:email.value,password:pass.value})});
+ const data=await res.json(); msg.innerText=data.message||data.error; if(data.success) setTimeout(()=>location.href='/login.html',1000);
+}
+</script></body></html>

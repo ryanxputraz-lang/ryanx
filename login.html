@@ -1,0 +1,9 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/style.css"><title>Login - RyanX</title></head>
+<body><div class="auth-box"><h2>Login RyanX</h2><input id="email" placeholder="Email"><input id="pass" type="password" placeholder="Password"><button onclick="login()">Masuk</button><p>Belum punya? <a href="/register.html">Daftar</a></p><p id="msg"></p></div>
+<script>
+async function login(){
+ const res=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.value,password:pass.value})});
+ const data=await res.json();
+ if(data.token){localStorage.setItem('token',data.token); location.href='/dashboard.html';} else msg.innerText=data.error;
+}
+</script></body></html>
