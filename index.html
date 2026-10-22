@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<!-- NO ZOOM -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0a0a0a">
+<title>ryanx.my.id — Sedang Maintenance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&family=Geist+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --fg: #ededed;
+    --muted: #9a9a9a;
+    --border: #222;
+    --accent: #ffffff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Geist', system-ui, -apple-system, sans-serif;
+    overscroll-behavior: none;
+    touch-action: manipulation;
+  }
+  body {
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  /* subtle grid background */
+  body::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 32px 32px;
+    opacity: 0.25;
+    mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+  }
+  .card {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    background: linear-gradient(180deg, #141414 0%, #0f0f0f 100%);
+    padding: 32px 28px;
+    z-index: 1;
+  }
+  @media(min-width: 600px){ .card{ padding: 40px; } }
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+  .logo {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #f59e0b;
+    box-shadow: 0 0 0 6px rgba(245,158,11,0.15);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(245,158,11,0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(245,158,11,0); }
+    100% { box-shadow: 0 0 0 0 rgba(245,158,11,0); }
+  }
+  .badge {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    background: #111;
+  }
+  h1 {
+    font-size: clamp(28px, 6vw, 36px);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .desc {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 28px;
+  }
+  .progress {
+    height: 4px;
+    width: 100%;
+    background: #1a1a1a;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+  .progress-bar {
+    height: 100%;
+    width: 60%;
+    background: linear-gradient(90deg, #fff, #a3a3a3);
+    border-radius: inherit;
+    animation: loading 1.8s ease-in-out infinite;
+  }
+  @keyframes loading {
+    0% { transform: translateX(-100%); }
+    50% { transform: translateX(20%); }
+    100% { transform: translateX(180%); }
+  }
+  .meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .meta-item {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 14px;
+    background: #101010;
+  }
+  .meta-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .meta-value {
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Geist Mono', monospace;
+  }
+  .footer a {
+    color: var(--fg);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .footer a:hover { border-bottom-color: var(--fg); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="top">
+      <div class="logo"><span class="dot"></span> ryanx.my.id</div>
+      <div class="badge">503 Maintenance</div>
+    </div>
+
+    <h1>Sedang dalam perbaikan server.</h1>
+    <p class="desc">
+      Kami sedang melakukan pemeliharaan sistem untuk meningkatkan performa dan keamanan.
+      Website akan kembali online segera. Terima kasih atas pengertiannya.
+    </p>
+
+    <div class="progress"><div class="progress-bar"></div></div>
+
+    <div class="meta">
+      <div class="meta-item">
+        <div class="meta-label">Status</div>
+        <div class="meta-value">Perbaikan Server</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Estimasi</div>
+        <div class="meta-value">Segera Kembali</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>© 2026 ryanx.my.id</span>
+      <span>hubungi: <a href="mailto:ryanx.my.id@gmail.com">ryanx.my.id@gmail.com</a></span>
+    </div>
+  </div>
+
+<script>
+  // Extra: beneran block pinch-zoom & double-tap zoom di iOS
+  document.addEventListener('touchmove', function(e){
+    if(e.touches.length > 1) e.preventDefault();
+  }, { passive: false });
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', function(e){
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300) e.preventDefault();
+    lastTouchEnd = now;
+  }, { passive: false });
+</script>
+</body>
+</html>
