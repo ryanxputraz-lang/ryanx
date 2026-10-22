@@ -3,52 +3,60 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard - Scalper Squad | ryanx.my.id</title>
+<title>Dashboard - RyanX</title>
+<script src="https://cdn.tailwindcss.com"></script>
 <script>
-// === ANTI-FLASH: CEK LOGIN SEBELUM APAPUN DI-RENDER ===
+// GUARD - cek sebelum body muncul biar gak kedip kayak kemarin
 (function(){
-  try {
-    const u = localStorage.getItem('user') || localStorage.getItem('username');
-    if(!u){
-      // ganti halaman sebelum body ke-render, gak bakal kelihatan dashboard sama sekali
-      window.location.replace('/login.html');
-    }
-  } catch(e){
-    window.location.replace('/login.html');
+  const t = localStorage.getItem('ryanx_token');
+  if(!t){
+    location.replace('/login.html');
   }
 })();
+document.documentElement.style.visibility = 'hidden';
 </script>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
-<style>
-  body{font-family:'Inter',sans-serif}
-  /* sembunyiin dulu sampai JS verifikasi selesai */
-  html.loading body { opacity:0; pointer-events:none; }
-  html.ready body { opacity:1; transition: opacity 0.2s ease; }
-</style>
-<script>document.documentElement.className='loading';</script>
 </head>
 <body class="bg-[#07080b] text-white min-h-screen">
-<!-- TOP BAR -->
-<header class="sticky top-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
-  <div class="max-w-[1100px] mx-auto px-4 h-[64px] flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div class="w-9 h-9 bg-yellow-400 rounded-xl flex items-center justify-center text-black font-black">R</div>
-      <div>
-        <p class="font-black text-[13px] leading-none">RYANX.ID</p>
-        <p class="text-[10px] text-white/40 font-bold tracking-widest">SCALPER SQUAD</p>
-      </div>
-    </div>
-    <div class="flex items-center gap-2">
-      <span id="userBadge" class="bg-white/10 px-3 py-1.5 rounded-full text-[11px] font-bold">loading...</span>
-      <button onclick="logout()" class="bg-white text-black hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl text-[11px] font-black transition">LOGOUT</button>
-    </div>
+<header class="h-[64px] flex items-center justify-between px-6 border-b border-white/10 bg-black/50">
+  <div class="flex items-center gap-2">
+    <div class="w-8 h-8 bg-yellow-400 rounded-lg flex items-center justify-center text-black font-black">R</div>
+    <b class="text-sm">RYANX.MY.ID</b>
   </div>
+  <button onclick="logout()" class="text-xs bg-white text-black font-black px-4 py-2 rounded-xl">LOGOUT</button>
 </header>
 
-<main class="max-w-[1100px] mx-auto px-4 py-6 space-y-6">
-  <div class="bg-gradient-to-br from-yellow-400 to-amber-500 text-black rounded-[28px] p-6 md:p-8 relative overflow-hidden">
-    <p class="text-[11px] font-black tracking-[3px] opacity-60">WELCOME BACK, TRADER</p>
-    <h1 id="welcomeName" class="text-[28px] md:text-[36px] font-black leading-none mt-2">Halo, Scalper!</h1>
-    <p class="text-[13px] font-medium mt-2 opacity-80 max-w-[500px]">Komunitas scalper Tanjung - Tabalong. Live scalping jam 8 malam WITA.</p>
+<main class="max-w-4xl mx-auto p-6 space-y-6">
+  <div class="bg-yellow-400 text-black rounded-[24px] p-6">
+    <p class="text-[11px] font-black tracking-widest opacity-60">SCALPER SQUAD TANJUNG</p>
+    <h1 id="welcome" class="text-3xl font-black mt-2">Memuat...</h1>
+    <p class="text-sm mt-2 opacity-80">Ini dashboard real live. Kalau kamu lihat ini berarti auth berhasil.</p>
   </div>
+
+  <div class="grid grid-cols-2 gap-3">
+    <div class="bg-white/[0.05] border border-white/10 rounded-2xl p-4">
+      <p class="text-[10px] text-white/40">STATUS</p><p class="font-black">VERIFIED ✅</p>
+    </div>
+    <div class="bg-white/[0.05] border border-white/10 rounded-2xl p-4">
+      <p class="text-[10px] text-white/40">MEMBER ID</p><p id="memberId" class="font-black">-</p>
+    </div>
+  </div>
+
+  <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-5">
+    <h3 class="font-black text-sm">Live Scalping Room</h3>
+    <p class="text-xs text-white/40 mt-1">Next session 20:00 WITA</p>
+    <div id="debug" class="mt-3 p-3 bg-black rounded-xl text-xs font-mono text-white/60">Validating token...</div>
+    <a href="/admin.html" id="adminLink" class="hidden mt-4 inline-block text-xs bg-red-500 text-white font-black px-4 py-2 rounded-xl">BUKA ADMIN PANEL</a>
+  </div>
+</main>
+
+<script>
+async function checkMe(){
+  try{
+    const token = localStorage.getItem('ryanx_token');
+    const r = await fetch('/api/me',{headers:{'Authorization':'Bearer '+token}});
+    const j = await r.json();
+    if(!r.ok) throw new Error(j.error);
+    document.getElementById('welcome').textContent = 'Halo, ' + j.user.username + '!';
+    document.getElementById('memberId').textContent = '#'+j.user.id;
+    document.getElementById('debug').textContent = 'Token valid untuk: ' + j.user.email;
+   
