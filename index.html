@@ -1,35 +1,30 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ryanx.my.id</title>
-  <script>
-    // Cek login sederhana via localStorage + validasi ke server
-    (async () => {
-      const token = localStorage.getItem('ryanx_token');
-      if (!token) {
-        location.replace('/login.html');
-        return;
-      }
-      try {
-        const res = await fetch('/api/me', {
-          headers: { 'Authorization': 'Bearer ' + token }
-        });
-        if (res.ok) {
-          location.replace('/dashboard.html');
-        } else {
-          localStorage.removeItem('ryanx_token');
-          location.replace('/login.html');
-        }
-      } catch (e) {
-        location.replace('/login.html');
-      }
-    })();
-  </script>
-  <style>body{background:#07080b;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh}</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ryanx.my.id</title>
+<style>
+body{margin:0;background:#07080b;color:#fff;font-family:Inter,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh}
+.loader{width:36px;height:36px;border:3px solid #222;border-top-color:#f5c518;border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+<script>
+(async()=>{
+  const token = localStorage.getItem('ryanx_token');
+  if(!token){ location.replace('/login.html'); return; }
+  try{
+    const r = await fetch('/api/me',{headers:{'Authorization':'Bearer '+token}});
+    if(r.ok){ location.replace('/dashboard.html'); }
+    else { localStorage.removeItem('ryanx_token'); location.replace('/login.html'); }
+  }catch{ location.replace('/login.html'); }
+})();
+</script>
 </head>
 <body>
-  <p>Loading ryanx.my.id...</p>
+<div style="text-align:center">
+<div class="loader" style="margin:0 auto 14px"></div>
+<div style="font-size:13px;color:#aaa">Connecting to ryanx.my.id<br>Checking REAL session...</div>
+</div>
 </body>
 </html>
