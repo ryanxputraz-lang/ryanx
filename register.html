@@ -1,8 +1,232 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/style.css"><title>Register - RyanX</title></head>
-<body><div class="auth-box"><h2>Daftar Trader</h2><input id="user" placeholder="Username"><input id="email" placeholder="Email"><input id="pass" type="password" placeholder="Password"><button onclick="reg()">Daftar</button><p id="msg"></p></div>
-<script>
-async function reg(){
- const res=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:user.value,email:email.value,password:pass.value})});
- const data=await res.json(); msg.innerText=data.message||data.error; if(data.success) setTimeout(()=>location.href='/login.html',1000);
-}
-</script></body></html>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar Akun</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 1rem;
+    }
+    .card {
+      background: #fff;
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 420px;
+    }
+    h1 { font-size: 1.5rem; margin-bottom: 0.5rem; text-align: center; color: #333; }
+    .subtitle { text-align: center; font-size: 0.85rem; color: #777; margin-bottom: 1.5rem; }
+    label { display: block; font-size: 0.85rem; color: #666; margin-bottom: 0.4rem; }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+    }
+    input:focus { outline: none; border-color: #667eea; }
+    button {
+      width: 100%;
+      padding: 0.85rem;
+      background: #667eea;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover { background: #5568d3; }
+    button:disabled { background: #aaa; cursor: not-allowed; }
+    .msg {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      text-align: center;
+      display: none;
+    }
+    .msg.error { background: #fee; color: #c33; display: block; }
+    .msg.success { background: #efe; color: #2a7; display: block; }
+    .msg.info { background: #eef; color: #336; display: block; }
+    .otp-input {
+      letter-spacing: 0.5rem;
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+    .hidden { display: none !important; }
+    .link { text-align: center; margin-top: 1rem; font-size: 0.85rem; }
+    .link a { color: #667eea; text-decoration: none; }
+    .link a:hover { text-decoration: underline; }
+    .resend { text-align: center; font-size: 0.8rem; color: #666; margin-top: 1rem; }
+    .resend button {
+      background: none;
+      color: #667eea;
+      padding: 0;
+      width: auto;
+      font-size: 0.8rem;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <!-- STEP 1: Form Register -->
+    <div id="stepRegister">
+      <h1>📝 Daftar Akun</h1>
+      <p class="subtitle">Buat akun baru dengan verifikasi email</p>
+
+      <form id="registerForm">
+        <label>Username</label>
+        <input type="text" id="username" required minlength="3" autocomplete="username">
+
+        <label>Email</label>
+        <input type="email" id="email" required autocomplete="email" placeholder="nama@email.com">
+
+        <label>Password</label>
+        <input type="password" id="password" required minlength="6" autocomplete="new-password" placeholder="Minimal 6 karakter">
+
+        <button type="submit" id="btnRegister">Kirim Kode OTP</button>
+        <div id="msgRegister" class="msg"></div>
+      </form>
+
+      <div class="link">Sudah punya akun? <a href="/">Login di sini</a></div>
+    </div>
+
+    <!-- STEP 2: Form OTP -->
+    <div id="stepOtp" class="hidden">
+      <h1>📧 Verifikasi Email</h1>
+      <p class="subtitle">Kode OTP 6 digit telah dikirim ke <br><b id="emailTarget"></b></p>
+
+      <form id="otpForm">
+        <label>Kode OTP</label>
+        <input type="text" id="otpCode" class="otp-input" maxlength="6" 
+               pattern="[0-9]{6}" required autocomplete="one-time-code" 
+               inputmode="numeric" placeholder="000000">
+
+        <button type="submit" id="btnVerify">Verifikasi & Daftar</button>
+        <div id="msgOtp" class="msg"></div>
+      </form>
+
+      <div class="resend">
+        Belum terima kode? <button type="button" id="btnResend">Kirim ulang</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    let currentData = null; // Simpan username/email/password sementara
+
+    // === STEP 1: Kirim OTP ===
+    $('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = $('btnRegister');
+      const msg = $('msgRegister');
+      msg.className = 'msg';
+      btn.disabled = true;
+      btn.textContent = 'Mengirim...';
+
+      const data = {
+        username: $('username').value.trim(),
+        email: $('email').value.trim().toLowerCase(),
+        password: $('password').value
+      };
+
+      try {
+        const res = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await res.json();
+        if (!res.ok) throw new Error(result.error || 'Gagal mendaftar');
+
+        // Pindah ke step OTP
+        currentData = data;
+        $('emailTarget').textContent = data.email;
+        $('stepRegister').classList.add('hidden');
+        $('stepOtp').classList.remove('hidden');
+        $('otpCode').focus();
+      } catch (err) {
+        msg.className = 'msg error';
+        msg.textContent = err.message;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Kirim Kode OTP';
+      }
+    });
+
+    // === STEP 2: Verifikasi OTP ===
+    $('otpForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = $('btnVerify');
+      const msg = $('msgOtp');
+      msg.className = 'msg';
+      btn.disabled = true;
+      btn.textContent = 'Memverifikasi...';
+
+      try {
+        const res = await fetch('/api/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: currentData.email,
+            otp: $('otpCode').value.trim()
+          })
+        });
+        const result = await res.json();
+        if (!res.ok) throw new Error(result.error || 'Verifikasi gagal');
+
+        msg.className = 'msg success';
+        msg.textContent = '✅ Akun berhasil dibuat! Mengalihkan ke login...';
+        setTimeout(() => window.location.replace('/'), 1500);
+      } catch (err) {
+        msg.className = 'msg error';
+        msg.textContent = err.message;
+        btn.disabled = false;
+        btn.textContent = 'Verifikasi & Daftar';
+      }
+    });
+
+    // === Kirim Ulang OTP ===
+    $('btnResend').addEventListener('click', async () => {
+      if (!currentData) return;
+      const btn = $('btnResend');
+      btn.disabled = true;
+      btn.textContent = 'mengirim...';
+
+      try {
+        const res = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(currentData)
+        });
+        const result = await res.json();
+        if (!res.ok) throw new Error(result.error);
+
+        $('msgOtp').className = 'msg info';
+        $('msgOtp').textContent = '📨 Kode OTP baru telah dikirim';
+      } catch (err) {
+        $('msgOtp').className = 'msg error';
+        $('msgOtp').textContent = err.message;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Kirim ulang';
+      }
+    });
+  </script>
+</body>
+</html>

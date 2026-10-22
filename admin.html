@@ -1,16 +1,30 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/style.css"><title>Admin - RyanX</title></head>
-<body><header><h1>Admin Panel RyanX</h1></header>
-<div class="container"><h3>Users</h3><div id="users"></div><h3>Posts</h3><div id="posts"></div></div>
-<script>
-const token=localStorage.getItem('token');
-async function loadAdmin(){
- const u=await fetch('/api/admin/users',{headers:{'Authorization':token}}).then(r=>r.json());
- document.getElementById('users').innerHTML=u.map(x=>`<div class="admin-row">${x.username} - ${x.email} - ${x.role} <button onclick="delUser('${x.id}')">Hapus</button> <button onclick="makeAdmin('${x.id}')">Jadikan Admin</button></div>`).join('');
- const p=await fetch('/api/admin/posts',{headers:{'Authorization':token}}).then(r=>r.json());
- document.getElementById('posts').innerHTML=p.map(x=>`<div class="admin-row">${x.content.slice(0,50)} <button onclick="delPost('${x.id}')">Hapus</button></div>`).join('');
-}
-async function delUser(id){ await fetch('/api/admin/users',{method:'DELETE',headers:{'Content-Type':'application/json','Authorization':token},body:JSON.stringify({id})}); loadAdmin(); }
-async function makeAdmin(id){ await fetch('/api/admin/users',{method:'PUT',headers:{'Content-Type':'application/json','Authorization':token},body:JSON.stringify({id,role:'admin'})}); loadAdmin(); }
-async function delPost(id){ await fetch('/api/admin/posts',{method:'DELETE',headers:{'Content-Type':'application/json','Authorization':token},body:JSON.stringify({id})}); loadAdmin(); }
-loadAdmin();
-</script></body></html>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard User</title>
+  <style>
+    body { font-family: system-ui; padding: 2rem; background: #f5f7ff; }
+    .box { max-width: 500px; margin: auto; background: #fff; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    h1 { color: #4b6cb7; }
+    button { margin-top: 1rem; padding: 0.6rem 1.2rem; border: none; background: #e74c3c; color: #fff; border-radius: 6px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>👤 Dashboard Admin/h1>
+    <p>Selamat datang, <b id="who">...</b>!</p>
+    <button onclick="logout()">Logout</button>
+  </div>
+  <script>
+    fetch('/api/me').then(r => r.json()).then(d => {
+      if (!d.loggedIn) location.replace('/');
+      else document.getElementById('who').textContent = d.username;
+    });
+    function logout() {
+      document.cookie = 'session=; Path=/; Max-Age=0';
+      location.replace('/');
+    }
+  </script>
+</body>
+</html>

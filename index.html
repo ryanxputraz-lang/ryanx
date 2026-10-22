@@ -1,37 +1,36 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RyanX Trader Community</title>
-<link rel="stylesheet" href="/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loading…</title>
+  <style>
+    body { display:flex; align-items:center; justify-content:center;
+           height:100vh; margin:0; font-family:system-ui,sans-serif;
+           background:#0f172a; color:#e2e8f0; }
+    .spinner { width:36px; height:36px; border:3px solid #334155;
+               border-top-color:#38bdf8; border-radius:50%;
+               animation:spin .8s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+  </style>
 </head>
 <body>
-<header><h1>RyanX</h1><div id="nav"><a href="/login.html" id="loginBtn">Login</a><a href="/dashboard.html" id="dashBtn" style="display:none">Dashboard</a></div></header>
-<div class="container">
-<div id="feed"></div>
-</div>
-<script>
-const API='/api';
-async function loadFeed(){
- const res=await fetch(API+'/posts');
- const posts=await res.json();
- document.getElementById('feed').innerHTML=posts.map(p=>`
-  <div class="post-card">
-    <div class="post-head"><b>${p.username}</b> <span>${p.trade_pair||''} ${p.trade_type||''}</span><small>${new Date(p.created_at).toLocaleString()}</small></div>
-    <div class="post-body">${p.content}<br>${p.profit?`<b>P/L: ${p.profit}</b>`:''}</div>
-    <div class="post-actions"><button onclick="likePost('${p.id}')">❤️ ${p.likes}</button><button onclick="commentPost('${p.id}')">💬 Komen</button></div>
-    <div id="c-${p.id}"></div>
-  </div>`).join('');
-}
-async function likePost(id){
- const token=localStorage.getItem('token'); if(!token) location.href='/login.html';
- await fetch(API+'/posts/like',{method:'POST',headers:{'Content-Type':'application/json','Authorization':token},body:JSON.stringify({post_id:id})});
- loadFeed();
-}
-function commentPost(id){ const t=prompt('Komentar:'); if(t) fetch(API+'/posts/comment',{method:'POST',headers:{'Content-Type':'application/json','Authorization':token},body:JSON.stringify({post_id:id,content:t})}).then(()=>loadFeed()); }
-const token=localStorage.getItem('token');
-if(token){document.getElementById('loginBtn').style.display='none';document.getElementById('dashBtn').style.display='inline';}
-loadFeed();
-</script>
+  <div class="spinner"></div>
+
+  <script>
+    (async () => {
+      try {
+        const res = await fetch('/api/session', { credentials: 'include' });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.loggedIn) {
+            window.location.replace('/dashboard.html');
+            return;
+          }
+        }
+      } catch (_) { /* gagal fetch → anggap belum login */ }
+      window.location.replace('/login.html');
+    })();
+  </script>
 </body>
 </html>

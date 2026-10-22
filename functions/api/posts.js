@@ -1,3 +1,0 @@
-function auth(req){ try{ const t=req.headers.get('Authorization'); const u=JSON.parse(atob(t)); if(u.role!=='admin') return null; return u; }catch{return null} }
-export async function onRequestGet({request, env}){ if(!auth(request)) return Response.json({error:'Admin only'},{status:403}); const r=await env.DB.prepare('SELECT * FROM posts ORDER BY created_at DESC').all(); return Response.json(r.results); }
-export async function onRequestDelete({request, env}){ if(!auth(request)) return Response.json({error:'Admin only'},{status:403}); const {id}=await request.json(); await env.DB.prepare('DELETE FROM posts WHERE id=?').bind(id).run(); return Response.json({success:true}); }
