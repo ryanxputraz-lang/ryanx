@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard - ryanx.my.id</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<script>
+// GUARD - jangan kasih liat sebelum login
+(function(){
+  const token = localStorage.getItem('ryanx_token');
+  const role = localStorage.getItem('ryanx_role');
+  if(!token){ location.replace('/login.html'); }
+})();
+</script>
+<style>
+  body{font-family:'Inter',sans-serif}
+  html{visibility:hidden; opacity:0}
+  html.ready{visibility:visible; opacity:1; transition:.2s}
+</style>
+</head>
+<body class="bg-[#07080b] text-white min-h-screen">
+<script>document.documentElement.classList.add('ready')</script>
+
+<!-- HEADER -->
+<div class="sticky top-0 z-20 bg-[#07080b]/80 backdrop-blur-xl border-b border-white/5 px-4 py-3 flex justify-between items-center">
+  <div>
+    <div class="font-black leading-none text-[15px]">ryanx.<span class="text-yellow-400">my.id</span></div>
+    <div class="text-[10px] text-white/40 mt-0.5">TRADER DASHBOARD • <span id="userName" class="text-white/70"></span></div>
+  </div>
+  <div class="flex gap-2">
+    <button onclick="location.href='/pricing.html'" class="bg-yellow-400 text-black font-bold px-3 py-1.5 rounded-full text-[11px]">UPGRADE</button>
+    <button onclick="logout()" class="bg-white/10 px-3 py-1.5 rounded-full text-[11px]">Logout</button>
+  </div>
+</div>
+
+<div class="max-w-[480px] mx-auto p-4 space-y-4">
+
+  <!-- TICKER REAL -->
+  <div class="grid grid-cols-2 gap-2">
+    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-3">
+      <div class="text-[10px] text-white/40">XAUUSD • GOLD</div>
+      <div id="xau-price" class="font-black text-lg">$--.--</div>
+      <div id="xau-change" class="text-[11px] text-white/40">Loading...</div>
+    </div>
+    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-3">
+      <div class="text-[10px] text-white/40">BTCUSD</div>
+      <div id="btc-price" class="font-black text-lg">$--.--</div>
+      <div id="btc-change" class="text-[11px] text-white/40">Loading...</div>
+    </div>
+  </
