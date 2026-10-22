@@ -1,80 +1,69 @@
 <!DOCTYPE html>
 <html lang="id">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Admin Users - ryanx.my.id</title><script src="https://cdn.tailwindcss.com"></script></head>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+// PENJAGA SUPER CEPAT - jalan sebelum body ke-load
+(function(){
+  const token = localStorage.getItem('ryanx_token');
+  const role = localStorage.getItem('ryanx_role');
+  if(!token || role !== 'admin'){
+    // langsung tendang, tanpa nunggu body
+    location.replace('/login.html');
+  }
+})();
+</script>
+<style>html{visibility:hidden; opacity:0;} html.ready{visibility:visible; opacity:1; transition:opacity .2s;}</style>
+</head>
 <body class="bg-[#07080b] text-white min-h-screen p-4">
+<script>document.documentElement.classList.add('ready');</script>
+
 <div class="max-w-[480px] mx-auto">
   <div class="flex justify-between items-center mb-4">
     <h1 class="font-black">USERS <span class="text-yellow-400">ryanx.my.id</span></h1>
-    <div class="flex gap-2"><button onclick="openAdd()" class="bg-yellow-400 text-black font-bold px-3 py-2 rounded-full text-xs">+ Tambah Akun</button><button onclick="logout()" class="bg-white/10 px-3 py-2 rounded-full text-xs">Logout</button></div>
+    <div class="flex gap-2">
+      <button onclick="openAdd()" class="bg-yellow-400 text-black font-bold px-3 py-2 rounded-full text-xs">+ Tambah</button>
+      <button onclick="logout()" class="bg-white/10 px-3 py-2 rounded-full text-xs">Logout</button>
+    </div>
   </div>
   <div id="list" class="space-y-2">Loading...</div>
-  <div class="text-[10px] text-white/20 mt-4 text-center">Login sebagai: <span id="me"></span> | role: admin</div>
 </div>
 
-<!-- MODAL ADD/EDIT -->
-<div id="modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+<!-- MODAL sama seperti kemarin -->
+<div id="modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
   <div class="bg-[#15161d] border border-white/10 rounded-[20px] p-5 w-full max-w-[360px]">
     <h3 id="modalTitle" class="font-bold mb-4">Tambah Akun</h3>
     <input type="hidden" id="fId">
-    <div class="space-y-2">
-      <input id="fUsername" placeholder="Username" class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-3 text-sm outline-none">
-      <input id="fEmail" placeholder="Email" class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-3 text-sm outline-none">
-      <input id="fPassword" placeholder="Password" class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-3 text-sm outline-none">
-      <select id="fRole" class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-3 text-sm"><option value="user">user</option><option value="admin">admin</option></select>
-    </div>
-    <div id="modalMsg" class="text-xs mt-3 text-center"></div>
-    <div class="flex gap-2 mt-4"><button onclick="closeModal()" class="flex-1 bg-white/10 py-3 rounded-xl text-xs">Batal</button><button onclick="save()" id="btnSave" class="flex-1 bg-yellow-400 text-black font-bold py-3 rounded-xl text-xs">Simpan</button></div>
+    <input id="fUsername" placeholder="Username" class="w-full mb-2 bg-black/60 border border-white/10 rounded-xl px-3 py-3 text-sm">
+    <input id="fEmail" placeholder="Email" class="w-full mb-2 bg-black/60 border border-white/10 rounded-xl px-3 py-3 text-sm">
+    <input id="fPassword" placeholder="Password" class="w-full mb-2 bg-black/60 border border-white/10 rounded-xl px-3 py-3 text-sm">
+    <select id="fRole" class="w-full mb-3 bg-black/60 border border-white/10 rounded-xl px-3 py-3 text-sm"><option value="user">user</option><option value="admin">admin</option></select>
+    <div class="flex gap-2"><button onclick="closeModal()" class="flex-1 bg-white/10 py-3 rounded-xl text-xs">Batal</button><button onclick="save()" id="btnSave" class="flex-1 bg-yellow-400 text-black font-bold py-3 rounded-xl text-xs">Simpan</button></div>
   </div>
 </div>
 
 <script>
 const token = localStorage.getItem('ryanx_token');
-if(!token) location.href='/login.html';
-document.getElementById('me').textContent = localStorage.getItem('ryanx_user');
-
 async function load(){
   const res = await fetch('/api/users',{headers:{'Authorization':'Bearer '+token}});
+  if(!res.ok){ localStorage.clear(); location.replace('/login.html'); return; }
   const data = await res.json();
   document.getElementById('list').innerHTML = data.map(u=>`
     <div class="bg-white/[0.05] border border-white/10 rounded-xl p-3 flex justify-between items-center">
-      <div><div class="font-bold text-sm">${u.username} <span class="ml-1 text-[10px] px-2 py-0.5 rounded-full ${u.role==='admin'?'bg-yellow-400 text-black':'bg-white/10'}">${u.role}</span></div><div class="text-[11px] text-white/40">${u.email} • id:${u.id}</div></div>
+      <div><div class="font-bold text-sm">${u.username} <span class="ml-1 text-[10px] px-2 py-0.5 rounded-full ${u.role==='admin'?'bg-yellow-400 text-black':'bg-white/10'}">${u.role}</span></div><div class="text-[11px] text-white/40">${u.email}</div></div>
       <div class="flex gap-1"><button onclick="openEdit(${u.id},'${u.username}','${u.email}','${u.role}')" class="bg-white/10 px-3 py-1.5 rounded-full text-xs">Edit</button><button onclick="del(${u.id})" class="bg-red-500/20 text-red-300 px-3 py-1.5 rounded-full text-xs">Hapus</button></div>
-    </div>`).join('') || '<div class="text-xs text-white/30 text-center">Kosong</div>';
+    </div>`).join('');
 }
 load();
-
-function openAdd(){
-  document.getElementById('modalTitle').textContent='Tambah Akun Baru';
-  document.getElementById('fId').value=''; document.getElementById('fUsername').value=''; document.getElementById('fEmail').value=''; document.getElementById('fPassword').value=''; document.getElementById('fRole').value='user';
-  document.getElementById('btnSave').textContent='Buat Akun'; document.getElementById('modal').classList.remove('hidden');
-}
-function openEdit(id,username,email,role){
-  document.getElementById('modalTitle').textContent='Edit Akun';
-  document.getElementById('fId').value=id; document.getElementById('fUsername').value=username; document.getElementById('fEmail').value=email; document.getElementById('fPassword').value=''; document.getElementById('fRole').value=role;
-  document.getElementById('btnSave').textContent='Update'; document.getElementById('modal').classList.remove('hidden');
-}
+function openAdd(){ document.getElementById('fId').value=''; document.getElementById('fUsername').value=''; document.getElementById('fEmail').value=''; document.getElementById('fPassword').value=''; document.getElementById('modal').classList.remove('hidden'); }
+function openEdit(id,u,e,r){ document.getElementById('fId').value=id; document.getElementById('fUsername').value=u; document.getElementById('fEmail').value=e; document.getElementById('fRole').value=r; document.getElementById('modal').classList.remove('hidden'); }
 function closeModal(){ document.getElementById('modal').classList.add('hidden'); }
-
-async function save(){
-  const id=document.getElementById('fId').value;
-  const payload={username:document.getElementById('fUsername').value.trim(), email:document.getElementById('fEmail').value.trim(), password:document.getElementById('fPassword').value.trim(), role:document.getElementById('fRole').value};
-  const msg=document.getElementById('modalMsg');
-  if(!payload.username || (!payload.password && !id)){ msg.textContent='Username & password wajib'; msg.className='text-xs mt-3 text-center text-red-400'; return; }
-  document.getElementById('btnSave').textContent='Menyimpan...';
-  const method=id?'PUT':'POST';
-  const body=id?{id,...payload}:payload;
-  if(id && !payload.password) delete body.password;
-  const res=await fetch('/api/users',{method,headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify(body)});
-  const j=await res.json();
-  if(!res.ok){ msg.textContent=j.error; msg.className='text-xs mt-3 text-center text-red-400'; document.getElementById('btnSave').textContent=id?'Update':'Buat Akun'; return; }
-  closeModal(); load();
-}
-async function del(id){
-  if(!confirm('Hapus akun id '+id+'?')) return;
-  const res=await fetch('/api/users?id='+id,{method:'DELETE',headers:{'Authorization':'Bearer '+token}});
-  const j=await res.json(); if(!res.ok){ alert(j.error); return; } load();
-}
-function logout(){ localStorage.clear(); location.href='/login.html'; }
+async function save(){ const id=document.getElementById('fId').value; const payload={username:fUsername.value,email:fEmail.value,password:fPassword.value,role:fRole.value}; const method=id?'PUT':'POST'; const body=id?{id,...payload}:payload; if(id&&!payload.password) delete body.password; await fetch('/api/users',{method,headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify(body)}); closeModal(); load(); }
+async function del(id){ if(!confirm('Hapus?'))return; await fetch('/api/users?id='+id,{method:'DELETE',headers:{'Authorization':'Bearer '+token}}); load(); }
+function logout(){ localStorage.clear(); location.replace('/login.html'); }
 </script>
 </body>
 </html>
