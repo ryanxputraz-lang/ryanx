@@ -1,30 +1,54 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ryanx.my.id</title>
-<style>
-body{margin:0;background:#07080b;color:#fff;font-family:Inter,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh}
-.loader{width:36px;height:36px;border:3px solid #222;border-top-color:#f5c518;border-radius:50%;animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-</style>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#07080b] text-white flex items-center justify-center min-h-screen">
+<div class="text-center">
+  <div class="animate-pulse text-sm text-white/40">Checking session...</div>
+</div>
+
 <script>
-(async()=>{
+(async function(){
   const token = localStorage.getItem('ryanx_token');
-  if(!token){ location.replace('/login.html'); return; }
+  const role = localStorage.getItem('ryanx_role');
+
+  // belum login sama sekali -> ke login
+  if(!token || !role){
+    location.replace('/login.html');
+    return;
+  }
+
+  // coba validasi token ke server biar gak pakai token palsu
   try{
-    const r = await fetch('/api/me',{headers:{'Authorization':'Bearer '+token}});
-    if(r.ok){ location.replace('/dashboard.html'); }
-    else { localStorage.removeItem('ryanx_token'); location.replace('/login.html'); }
-  }catch{ location.replace('/login.html'); }
+    const res = await fetch('/api/me', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    // kalau token expired / tidak valid
+    if(!res.ok) throw new Error('invalid');
+    const data = await res.json();
+    
+    // token valid, cek role dari server (lebih aman)
+    if(data.role === 'admin' || role === 'admin'){
+      location.replace('/admin.html');
+    } else {
+      location.replace('/dashboard.html');
+    }
+  }catch(e){
+    // kalau gagal validasi, coba pakai role lokal aja (biar gak logout terus)
+    if(role === 'admin'){
+      location.replace('/admin.html');
+    } else if(role === 'user'){
+      location.replace('/dashboard.html');
+    } else {
+      localStorage.clear();
+      location.replace('/login.html');
+    }
+  }
 })();
 </script>
-</head>
-<body>
-<div style="text-align:center">
-<div class="loader" style="margin:0 auto 14px"></div>
-<div style="font-size:13px;color:#aaa">Connecting to ryanx.my.id<br>Checking REAL session...</div>
-</div>
 </body>
 </html>
