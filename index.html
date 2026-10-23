@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage Users - ryanx-db</title>
+<style>
+*{font-family:system-ui;box-sizing:border-box}body{background:#0f0f0f;color:#fff;padding:20px}.container{max-width:1000px;margin:auto}.card{background:#1e1e1e;padding:20px;border-radius:12px;margin-bottom:20px}input{width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #333;background:#111;color:#fff}button{padding:10px 16px;border:none;border-radius:8px;cursor:pointer;font-weight:700}.btn-save{background:#fff;color:#000;width:100%}table{width:100%;border-collapse:collapse}th,td{padding:12px;border-bottom:1px solid #2a2a2a;text-align:left}th{color:#888;font-size:11px;text-transform:uppercase}.action{padding:6px 10px;border-radius:6px;font-size:13px;border:none;cursor:pointer}.edit{background:#2a2a2a;color:#fff}.delete{background:#ff3b3b;color:#fff}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>DB1 ryanx-db / users [Pages.dev + D1]</h2>
+<div class="card">
+<h3 id="formTitle">Tambah User</h3>
+<input type="hidden" id="id">
+<input type="text" id="name" placeholder="Nama">
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password">
+<button class="btn-save" onclick="saveUser()">Simpan</button>
+<button onclick="resetForm()" style="background:transparent;color:#888;margin-top:8px;width:100%">Batal / Reset</button>
+</div>
+<div class="card">
+<h3>Data Users</h3>
+<table><thead><tr><th>ID</th><th>Nama</th><th>Email</th><th>Aksi</th></tr></thead><tbody id="tbody"></tbody></table>
+</div>
+</div>
+
+<script>
+const API = "/api/users";
+
+async function loadUsers(){
+  const res = await fetch(API);
+  const data = await res.json();
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = "";
+  data.forEach(u=>{
+    tbody.innerHTML += `<tr>
+      <td>${u.id}</td>
+      <td>${u.name}</td>
+      <td>${u.email}</td>
+      <td>
+        <button class="action edit" onclick="editUser(${u.id},'${u.name}','${u.email}')">Edit</button>
+        <button class="action delete" onclick="deleteUser(${u.id})">Hapus</button>
+      </td>
+    </tr>`;
+  });
+}
+
+async function saveUser(){
+  const id = document.getElementById('id').value;
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  if(!name || !email) return alert('Nama & Email wajib');
+
+  const method = id ? "PUT" : "POST";
+  await fetch(API, { method, headers:{"Content-Type":"application/json"}, body: JSON.stringify({id, name, email, password}) });
+  resetForm(); loadUsers();
+}
+
+function editUser(id,name,email){
+  document.getElementById('id').value = id;
+  document.getElementById('name').value = name;
+  document.getElementById('email').value = email;
+  document.getElementById('formTitle').innerText = "Edit User #"+id;
+  document.getElementById('password').placeholder = "Kosongkan jika tidak ganti password";
+}
+
+async function deleteUser(id){
+  if(!confirm('Hapus user #'+id+' ?')) return;
+  await fetch(API+"?id="+id, { method:"DELETE" });
+  loadUsers();
+}
+
+function resetForm(){
+  document.getElementById('id').value = "";
+  document.getElementById('name').value = "";
+  document.getElementById('email').value = "";
+  document.getElementById('password').value = "";
+  document.getElementById('formTitle').innerText = "Tambah User";
+}
+
+loadUsers();
+</script>
+</body>
+</html>
