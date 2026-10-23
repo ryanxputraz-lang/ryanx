@@ -30,21 +30,16 @@
 const API = "/api/users";
 
 async function loadUsers(){
-  const res = await fetch(API);
-  const data = await res.json();
-  const tbody = document.getElementById('tbody');
-  tbody.innerHTML = "";
-  data.forEach(u=>{
-    tbody.innerHTML += `<tr>
-      <td>${u.id}</td>
-      <td>${u.name}</td>
-      <td>${u.email}</td>
-      <td>
-        <button class="action edit" onclick="editUser(${u.id},'${u.name}','${u.email}')">Edit</button>
-        <button class="action delete" onclick="deleteUser(${u.id})">Hapus</button>
-      </td>
-    </tr>`;
-  });
+  try{
+    const res = await fetch(API);
+    const data = await res.json();
+    if(data.error){ alert("API Error: " + data.error); console.error(data); return; }
+    const tbody = document.getElementById('tbody');
+    tbody.innerHTML = "";
+    data.forEach(u=>{
+      tbody.innerHTML += `<tr><td>${u.id}</td><td>${u.name}</td><td>${u.email}</td><td><button class="action edit" onclick="editUser(${u.id},'${u.name}','${u.email}')">Edit</button><button class="action delete" onclick="deleteUser(${u.id})">Hapus</button></td></tr>`;
+    });
+  }catch(err){ alert("Gagal load: " + err.message) }
 }
 
 async function saveUser(){
@@ -52,10 +47,9 @@ async function saveUser(){
   const name = document.getElementById('name').value;
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
-  if(!name || !email) return alert('Nama & Email wajib');
-
-  const method = id ? "PUT" : "POST";
-  await fetch(API, { method, headers:{"Content-Type":"application/json"}, body: JSON.stringify({id, name, email, password}) });
+  const res = await fetch(API, { method: id ? "PUT" : "POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({id, name, email, password}) });
+  const json = await res.json();
+  if(!res.ok){ alert("Gagal simpan: " + (json.error || res.statusText)); return; }
   resetForm(); loadUsers();
 }
 
