@@ -1,0 +1,12 @@
+
+name = "ryanx"
+type = "javascript"
+pages_build_output_dir = "."
+
+[build]
+command = ""
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ryanx-db"
+database_id = "ryanx-db"

@@ -1,81 +1,245 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manage Users - ryanx-db</title>
-<style>
-*{font-family:system-ui;box-sizing:border-box}body{background:#0f0f0f;color:#fff;padding:20px}.container{max-width:1000px;margin:auto}.card{background:#1e1e1e;padding:20px;border-radius:12px;margin-bottom:20px}input{width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #333;background:#111;color:#fff}button{padding:10px 16px;border:none;border-radius:8px;cursor:pointer;font-weight:700}.btn-save{background:#fff;color:#000;width:100%}table{width:100%;border-collapse:collapse}th,td{padding:12px;border-bottom:1px solid #2a2a2a;text-align:left}th{color:#888;font-size:11px;text-transform:uppercase}.action{padding:6px 10px;border-radius:6px;font-size:13px;border:none;cursor:pointer}.edit{background:#2a2a2a;color:#fff}.delete{background:#ff3b3b;color:#fff}
-</style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ryanx — minimalist sosmed</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Space+Grotesk:wght@600&display=swap" rel="stylesheet">
+<style>body{font-family:Inter,sans-serif} .brand{font-family:'Space Grotesk'}</style>
 </head>
-<body>
-<div class="container">
-<h2>DB1 ryanx-db / users [Pages.dev + D1]</h2>
-<div class="card">
-<h3 id="formTitle">Tambah User</h3>
-<input type="hidden" id="id">
-<input type="text" id="name" placeholder="Nama">
-<input type="email" id="email" placeholder="Email">
-<input type="password" id="password" placeholder="Password">
-<button class="btn-save" onclick="saveUser()">Simpan</button>
-<button onclick="resetForm()" style="background:transparent;color:#888;margin-top:8px;width:100%">Batal / Reset</button>
-</div>
-<div class="card">
-<h3>Data Users</h3>
-<table><thead><tr><th>ID</th><th>Nama</th><th>Email</th><th>Aksi</th></tr></thead><tbody id="tbody"></tbody></table>
-</div>
+<body class="bg-[#fafaf8] text-zinc-900 min-h-screen">
+<!-- NAV -->
+<nav class="sticky top-0 z-20 backdrop-blur bg-white/80 border-b">
+  <div class="max-w-[1100px] mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 bg-black text-white grid place-items-center rounded-lg font-bold">r</div>
+      <span class="brand text-xl font-bold">ryanx</span>
+      <span class="text-[11px] bg-zinc-900 text-white px-2 py-0.5 rounded-full ml-2">beta</span>
+    </div>
+    <div id="nav-auth" class="flex gap-2"></div>
+  </div>
+</nav>
+
+<div class="max-w-[1100px] mx-auto px-4 py-6 grid grid-cols-12 gap-5">
+  <!-- LEFT -->
+  <aside class="col-span-12 md:col-span-3 space-y-4">
+    <div class="bg-white border rounded-2xl p-4">
+      <div id="me-card" class="text-sm text-zinc-500">Belum login</div>
+    </div>
+    <div class="bg-white border rounded-2xl p-2">
+      <button onclick="route('feed')" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-zinc-100 font-medium">🏠 Feed</button>
+      <button onclick="route('members')" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-zinc-100 font-medium">👥 Daftar Orang</button>
+      <button onclick="route('profile')" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-zinc-100 font-medium">⚙️ Pengaturan Akun</button>
+      <button id="admin-btn" onclick="route('admin')" class="hidden w-full text-left px-3 py-2.5 rounded-xl hover:bg-zinc-100 font-medium">🛡️ Admin</button>
+    </div>
+    <div class="text-[11px] text-zinc-400 px-2">ryanx.my.id · Tanjung, Kalsel · Minimalist sosmed tanpa pertemanan, semua terhubung.</div>
+  </aside>
+
+  <!-- CENTER -->
+  <main class="col-span-12 md:col-span-6">
+    <div id="app" class="space-y-4"></div>
+  </main>
+
+  <!-- RIGHT -->
+  <aside class="col-span-12 md:col-span-3">
+    <div class="bg-white border rounded-2xl p-4">
+      <h3 class="font-semibold mb-3">Anggota terbaru</h3>
+      <div id="side-members" class="space-y-2 text-sm"></div>
+    </div>
+  </aside>
 </div>
 
 <script>
-const API = "/api/users";
+const API = '';
+let token = localStorage.getItem('ryanx_token');
+let me = JSON.parse(localStorage.getItem('ryanx_me')||'null');
 
-async function loadUsers(){
-  try{
-    const res = await fetch(API);
-    const data = await res.json();
-    if(data.error){ alert("API Error: " + data.error); console.error(data); return; }
-    const tbody = document.getElementById('tbody');
-    tbody.innerHTML = "";
-    data.forEach(u=>{
-      tbody.innerHTML += `<tr><td>${u.id}</td><td>${u.name}</td><td>${u.email}</td><td><button class="action edit" onclick="editUser(${u.id},'${u.name}','${u.email}')">Edit</button><button class="action delete" onclick="deleteUser(${u.id})">Hapus</button></td></tr>`;
-    });
-  }catch(err){ alert("Gagal load: " + err.message) }
+function authHeader(){ return token ? {Authorization:`Bearer ${token}`} : {}; }
+
+async function fetchMe(){
+  if(!token) return null;
+  const r = await fetch('/api/auth/me', {headers: authHeader()});
+  if(!r.ok){ logout(); return null; }
+  me = await r.json();
+  localStorage.setItem('ryanx_me', JSON.stringify(me));
+  return me;
 }
 
-async function saveUser(){
-  const id = document.getElementById('id').value;
-  const name = document.getElementById('name').value;
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  const res = await fetch(API, { method: id ? "PUT" : "POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({id, name, email, password}) });
-  const json = await res.json();
-  if(!res.ok){ alert("Gagal simpan: " + (json.error || res.statusText)); return; }
-  resetForm(); loadUsers();
+function renderNav(){
+  const el = document.getElementById('nav-auth');
+  if(me){
+    el.innerHTML = `<span class="text-sm">@${me.username}</span><button onclick="logout()" class="text-sm border px-3 py-1 rounded-full">Keluar</button>`;
+    document.getElementById('me-card').innerHTML = `
+      <div class="flex gap-3 items-center">
+        <img src="${me.avatar_url}" class="w-10 h-10 rounded-full bg-zinc-100"/>
+        <div><div class="font-semibold text-zinc-900">${me.display_name}</div><div class="text-xs">@${me.username} · ${me.role}</div></div>
+      </div>
+      <div class="mt-3 text-xs">${me.bio||'Belum ada bio'}</div>`;
+    document.getElementById('admin-btn').classList.toggle('hidden', me.role!=='admin');
+  } else {
+    el.innerHTML = `<button onclick="route('login')" class="text-sm border px-3 py-1.5 rounded-full">Masuk</button><button onclick="route('register')" class="text-sm bg-black text-white px-4 py-1.5 rounded-full">Daftar</button>`;
+    document.getElementById('me-card').innerText='Belum login';
+  }
 }
 
-function editUser(id,name,email){
-  document.getElementById('id').value = id;
-  document.getElementById('name').value = name;
-  document.getElementById('email').value = email;
-  document.getElementById('formTitle').innerText = "Edit User #"+id;
-  document.getElementById('password').placeholder = "Kosongkan jika tidak ganti password";
+function route(name){
+  if(!me && !['login','register'].includes(name)) return route('login');
+  if(name==='feed') renderFeed();
+  if(name==='login') renderLogin();
+  if(name==='register') renderRegister();
+  if(name==='members') renderMembers();
+  if(name==='profile') renderProfile();
+  if(name==='admin') renderAdmin();
 }
 
-async function deleteUser(id){
-  if(!confirm('Hapus user #'+id+' ?')) return;
-  await fetch(API+"?id="+id, { method:"DELETE" });
-  loadUsers();
+function renderLogin(){
+  document.getElementById('app').innerHTML = `
+  <div class="bg-white border rounded-[20px] p-6">
+    <h1 class="text-2xl font-bold brand">Masuk ke ryanx</h1>
+    <p class="text-sm text-zinc-500 mt-1">Pakai username atau email yang terdaftar di ryanx.my.id</p>
+    <div class="mt-5 space-y-3">
+      <input id="l-u" placeholder="username / email" class="w-full border rounded-xl px-4 py-3"/>
+      <input id="l-p" type="password" placeholder="password" class="w-full border rounded-xl px-4 py-3"/>
+      <button onclick="doLogin()" class="w-full bg-black text-white rounded-xl py-3 font-semibold">Masuk</button>
+      <div class="text-sm text-center">Belum punya akun? <button onclick="route('register')" class="underline">Daftar</button></div>
+      <div id="l-err" class="text-sm text-red-600"></div>
+    </div>
+  </div>`;
+}
+function renderRegister(){
+  document.getElementById('app').innerHTML = `
+  <div class="bg-white border rounded-[20px] p-6">
+    <h1 class="text-2xl font-bold brand">Daftar di ryanx</h1>
+    <p class="text-sm text-zinc-500">Semua orang yang daftar otomatis terhubung, tanpa minta pertemanan.</p>
+    <div class="mt-5 space-y-3">
+      <input id="r-d" placeholder="Nama tampil (contoh: Ryan Putra)" class="w-full border rounded-xl px-4 py-3"/>
+      <input id="r-u" placeholder="username unik (contoh: ryanx)" class="w-full border rounded-xl px-4 py-3"/>
+      <input id="r-e" placeholder="email" class="w-full border rounded-xl px-4 py-3"/>
+      <input id="r-p" type="password" placeholder="password min 6" class="w-full border rounded-xl px-4 py-3"/>
+      <button onclick="doRegister()" class="w-full bg-black text-white rounded-xl py-3 font-semibold">Buat Akun</button>
+      <div id="r-err" class="text-sm text-red-600"></div>
+    </div>
+  </div>`;
 }
 
-function resetForm(){
-  document.getElementById('id').value = "";
-  document.getElementById('name').value = "";
-  document.getElementById('email').value = "";
-  document.getElementById('password').value = "";
-  document.getElementById('formTitle').innerText = "Tambah User";
+async function doLogin(){
+  const username=document.getElementById('l-u').value, password=document.getElementById('l-p').value;
+  const r=await fetch('/api/auth/login',{method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username,password})});
+  const j=await r.json();
+  if(!r.ok){ document.getElementById('l-err').innerText=j.error; return; }
+  token=j.token; localStorage.setItem('ryanx_token', token); me=j.user; localStorage.setItem('ryanx_me', JSON.stringify(j.user));
+  renderNav(); renderFeed(); loadSideMembers();
+}
+async function doRegister(){
+  const display_name=document.getElementById('r-d').value, username=document.getElementById('r-u').value, email=document.getElementById('r-e').value, password=document.getElementById('r-p').value;
+  const r=await fetch('/api/auth/register',{method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({display_name,username,email,password})});
+  const j=await r.json();
+  if(!r.ok){ document.getElementById('r-err').innerText=j.error; return; }
+  token=j.token; localStorage.setItem('ryanx_token', token); localStorage.setItem('ryanx_me', JSON.stringify(j.user)); me=j.user;
+  renderNav(); renderFeed(); loadSideMembers();
+}
+function logout(){ token=null; me=null; localStorage.clear(); renderNav(); route('login'); }
+
+async function renderFeed(){
+  document.getElementById('app').innerHTML = `
+    <div class="bg-white border rounded-[20px] p-4">
+      <div class="flex gap-3"><img src="${me.avatar_url}" class="w-9 h-9 rounded-full"/><textarea id="post-content" placeholder="Apa yang lagi kamu pikirin, ${me.display_name}?" class="flex-1 border rounded-xl p-3 text-sm min-h-[80px]"></textarea></div>
+      <div class="text-right mt-3"><button onclick="createPost()" class="bg-black text-white px-5 py-2 rounded-full text-sm font-semibold">Bagikan</button></div>
+    </div>
+    <div id="feed-list" class="space-y-3"></div>`;
+  loadFeed();
+}
+async function loadFeed(){
+  const r=await fetch('/api/posts',{headers:authHeader()});
+  const posts=await r.json();
+  document.getElementById('feed-list').innerHTML = posts.map(p=>`
+    <div class="bg-white border rounded-[20px] p-4">
+      <div class="flex gap-3 items-center"><img src="${p.avatar_url}" class="w-8 h-8 rounded-full"/><div><div class="text-sm font-semibold">${p.display_name}</div><div class="text-[11px] text-zinc-500">@${p.username} · ${new Date(p.created_at).toLocaleString('id-ID')}</div></div>
+        <button onclick="deletePost('${p.id}')" class="ml-auto text-[11px] text-zinc-400 hover:text-red-600">${(me.id===p.user_id||me.role==='admin')?'hapus':''}</button>
+      </div>
+      <div class="mt-3 text-[15px] whitespace-pre-wrap leading-relaxed">${escapeHtml(p.content)}</div>
+      <div class="mt-3 flex gap-3 text-xs"><button onclick="likePost('${p.id}')" class="border px-3 py-1 rounded-full">❤ ${p.like_count||0} Suka</button></div>
+    </div>`).join('') || '<div class="text-sm text-zinc-500 text-center py-10">Belum ada postingan, jadi yang pertama!</div>';
+}
+async function createPost(){
+  const c=document.getElementById('post-content').value;
+  if(!c.trim()) return;
+  await fetch('/api/posts',{method:'POST', headers:{...authHeader(),'Content-Type':'application/json'}, body:JSON.stringify({content:c})});
+  document.getElementById('post-content').value=''; loadFeed();
+}
+async function deletePost(id){
+  if(!confirm('Hapus post?')) return;
+  await fetch('/api/posts?id='+id,{method:'DELETE', headers:authHeader()}); loadFeed();
+}
+async function likePost(id){
+  await fetch('/api/posts/like',{method:'POST', headers:{...authHeader(),'Content-Type':'application/json'}, body:JSON.stringify({post_id:id})}); loadFeed();
 }
 
-loadUsers();
+async function renderMembers(){
+  const r=await fetch('/api/users',{headers:authHeader()});
+  const users=await r.json();
+  document.getElementById('app').innerHTML = `
+    <div class="bg-white border rounded-[20px] p-5"><h2 class="font-bold text-lg">Daftar Orang / Anggota</h2><p class="text-sm text-zinc-500">Semua akun yang terdaftar di ryanx.my.id - tanpa pertemanan, semua terhubung.</p>
+    <div class="mt-4 grid grid-cols-1 gap-2">${users.map(u=>`
+      <div class="flex gap-3 items-center border rounded-xl p-3"><img src="${u.avatar_url}" class="w-10 h-10 rounded-full"/><div><div class="font-semibold text-sm">${u.display_name} ${u.role==='admin'?'<span class=text-[10px] bg-black text-white px-1.5 py-0.5 rounded-full>admin</span>':''}</div><div class="text-xs text-zinc-500">@${u.username} · ${u.bio||'tanpa bio'}</div></div></div>`).join('')}</div></div>`;
+}
+
+function renderProfile(){
+  document.getElementById('app').innerHTML = `
+    <div class="bg-white border rounded-[20px] p-6">
+      <h2 class="font-bold text-lg">Pengaturan Akun</h2>
+      <div class="mt-4 space-y-3">
+        <label class="text-xs">Nama Tampil</label><input id="p-d" value="${me.display_name}" class="w-full border rounded-xl px-4 py-3"/>
+        <label class="text-xs">Bio</label><textarea id="p-b" class="w-full border rounded-xl px-4 py-3 min-h-[80px]">${me.bio||''}</textarea>
+        <label class="text-xs">Avatar URL</label><input id="p-a" value="${me.avatar_url}" class="w-full border rounded-xl px-4 py-3"/>
+        <button onclick="saveProfile()" class="bg-black text-white px-5 py-2.5 rounded-full text-sm">Simpan</button>
+        <div id="p-msg" class="text-sm"></div>
+      </div>
+    </div>`;
+}
+async function saveProfile(){
+  const display_name=document.getElementById('p-d').value, bio=document.getElementById('p-b').value, avatar_url=document.getElementById('p-a').value;
+  const r=await fetch('/api/auth/me',{method:'PUT', headers:{...authHeader(),'Content-Type':'application/json'}, body:JSON.stringify({display_name,bio,avatar_url})});
+  if(r.ok){ document.getElementById('p-msg').innerText='Tersimpan!'; fetchMe().then(()=>{renderNav(); loadSideMembers();}); } else { document.getElementById('p-msg').innerText='Gagal'; }
+}
+
+async function renderAdmin(){
+  const r=await fetch('/api/admin/stats',{headers:authHeader()});
+  if(!r.ok){ document.getElementById('app').innerHTML='<div class=text-sm>Butuh role admin</div>'; return; }
+  const s=await r.json();
+  const ru=await fetch('/api/users',{headers:authHeader()}); const users=await ru.json();
+  const rp=await fetch('/api/posts',{headers:authHeader()}); const posts=await rp.json();
+  document.getElementById('app').innerHTML=`
+    <div class="bg-white border rounded-[20px] p-5">
+      <h2 class="font-bold text-lg">Admin - Kelola Crowd DB1</h2>
+      <div class="grid grid-cols-3 gap-3 mt-4 text-center">
+        <div class="border rounded-xl p-3"><div class="text-2xl font-bold">${s.users}</div><div class="text-xs">Users</div></div>
+        <div class="border rounded-xl p-3"><div class="text-2xl font-bold">${s.posts}</div><div class="text-xs">Posts</div></div>
+        <div class="border rounded-xl p-3"><div class="text-2xl font-bold">${s.likes}</div><div class="text-xs">Likes</div></div>
+      </div>
+      <h3 class="font-semibold mt-6 mb-2">Kelola User</h3>
+      <div class="space-y-2">${users.map(u=>`<div class="flex items-center gap-2 border rounded-xl p-2 text-sm"><span class="flex-1">@${u.username} (${u.role})</span>
+        <button onclick="setRole('${u.id}','admin')" class="text-[11px] border px-2 py-1 rounded-full">jadi admin</button>
+        <button onclick="setRole('${u.id}','user')" class="text-[11px] border px-2 py-1 rounded-full">jadi user</button>
+        <button onclick="delUser('${u.id}')" class="text-[11px] bg-red-600 text-white px-2 py-1 rounded-full">hapus</button></div>`).join('')}</div>
+      <h3 class="font-semibold mt-6 mb-2">Kelola Post</h3>
+      <div class="space-y-2">${posts.map(p=>`<div class="flex items-center gap-2 border rounded-xl p-2 text-sm"><span class="flex-1 truncate">${p.content.slice(0,60)}</span><button onclick="deletePostAdmin('${p.id}')" class="text-[11px] bg-red-600 text-white px-2 py-1 rounded-full">hapus</button></div>`).join('')}</div>
+    </div>`;
+}
+async function setRole(id,role){ await fetch('/api/admin/users',{method:'PUT', headers:{...authHeader(),'Content-Type':'application/json'}, body:JSON.stringify({id,role})}); renderAdmin(); }
+async function delUser(id){ if(!confirm('Hapus user?')) return; await fetch('/api/admin/users?id='+id,{method:'DELETE', headers:authHeader()}); renderAdmin(); loadSideMembers(); }
+async function deletePostAdmin(id){ await fetch('/api/posts?id='+id,{method:'DELETE', headers:authHeader()}); renderAdmin(); }
+
+async function loadSideMembers(){
+  if(!me) return;
+  const r=await fetch('/api/users',{headers:authHeader()}); const users=await r.json();
+  document.getElementById('side-members').innerHTML = users.slice(0,8).map(u=>`<div class="flex gap-2 items-center"><img src="${u.avatar_url}" class="w-7 h-7 rounded-full"/><div class="text-xs"><div class="font-medium">${u.display_name}</div><div class="text-zinc-500">@${u.username}</div></div></div>`).join('');
+}
+function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+(async()=>{ if(token){ await fetchMe(); } renderNav(); if(me){ renderFeed(); loadSideMembers(); } else route('login'); })();
 </script>
 </body>
 </html>
