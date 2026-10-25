@@ -1,245 +1,173 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ryanx — minimalist sosmed</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Space+Grotesk:wght@600&display=swap" rel="stylesheet">
-<style>body{font-family:Inter,sans-serif} .brand{font-family:'Space Grotesk'}</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotel Penarung Tanjung - Sewa Kamar Harian | RCS</title>
+<meta name="description" content="Hotel Penarung Tanjung, Tabalong. Kamar bersih, nyaman, AC, TV, Air Panas. Dikelola RCS - Resepsionis & Cleaning Service 24 Jam. Booking langsung via WhatsApp.">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--red:#DC2626;--red-dark:#B91C1C;--bg:#FFF7F7}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif}
+body{background:#fff;color:#1f2937}
+.header{position:sticky;top:0;z-index:50;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.06);padding:12px 5%}
+.nav{display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--red);font-size:20px}
+.logo img{width:42px;height:42px;border-radius:50%;object-fit:cover}
+.btn-wa{background:var(--red);color:#fff;padding:10px 18px;border-radius:999px;text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:8px;transition:.2s}
+.btn-wa:hover{background:var(--red-dark);transform:translateY(-1px)}
+.hero{max-width:1200px;margin:0 auto;padding:50px 5% 30px;display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center}
+.hero h1{font-size:42px;line-height:1.1;font-weight:800}
+.hero h1 span{color:var(--red)}
+.hero p{margin:14px 0 22px;color:#6b7280;font-size:16px}
+.badges{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.badge{background:var(--bg);border:1px solid #fecaca;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:600;color:var(--red)}
+.grid{max-width:1200px;margin:0 auto;padding:20px 5%}
+.section-title{font-size:28px;font-weight:800;margin-bottom:6px}
+.section-sub{color:#6b7280;margin-bottom:22px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.card{border:1.5px solid #f3f4f6;border-radius:20px;overflow:hidden;background:#fff;transition:.2s;position:relative}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(220,38,38,.12);border-color:#fecaca}
+.card-top{padding:16px 18px 0;display:flex;justify-content:space-between;align-items:center}
+.price{background:var(--red);color:#fff;padding:6px 12px;border-radius:999px;font-weight:700;font-size:14px}
+.type{font-size:11px;font-weight:700;letter-spacing:.5px;background:#fef2f2;color:var(--red);padding:5px 10px;border-radius:999px}
+.card-body{padding:14px 18px 18px}
+.card-body h3{font-size:16px;font-weight:700;line-height:1.3}
+.fac{margin:10px 0;display:flex;gap:8px;flex-wrap:wrap}
+.fac span{font-size:11px;background:#f9fafb;border:1px solid #eee;padding:5px 9px;border-radius:999px}
+.no{font-size:12px;color:#6b7280;margin-bottom:14px}
+.btn-book{width:100%;background:#111;color:#fff;border:none;padding:12px;border-radius:12px;font-weight:700;cursor:pointer;display:flex;justify-content:center;align-items:center;gap:8px}
+.btn-book:hover{background:var(--red)}
+.services{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:12px}
+.svc{border:1.5px solid #f3f4f6;border-radius:20px;padding:18px;display:flex;gap:14px;align-items:center}
+.svc img{width:64px;height:64px;border-radius:14px;object-fit:cover;background:#fef2f2}
+.footer{background:#111;color:#fff;margin-top:40px;padding:30px 5%;text-align:center}
+.float-wa{position:fixed;right:18px;bottom:18px;z-index:99;background:#25D366;color:#fff;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(0,0,0,.2);text-decoration:none;font-size:28px}
+@media(max-width:800px){.hero{grid-template-columns:1fr}.hero h1{font-size:32px}.services{grid-template-columns:1fr}}
+</style>
 </head>
-<body class="bg-[#fafaf8] text-zinc-900 min-h-screen">
-<!-- NAV -->
-<nav class="sticky top-0 z-20 backdrop-blur bg-white/80 border-b">
-  <div class="max-w-[1100px] mx-auto px-4 py-3 flex items-center justify-between">
-    <div class="flex items-center gap-2">
-      <div class="w-8 h-8 bg-black text-white grid place-items-center rounded-lg font-bold">r</div>
-      <span class="brand text-xl font-bold">ryanx</span>
-      <span class="text-[11px] bg-zinc-900 text-white px-2 py-0.5 rounded-full ml-2">beta</span>
-    </div>
-    <div id="nav-auth" class="flex gap-2"></div>
-  </div>
-</nav>
+<body>
+<header class="header">
+<div class="nav">
+<div class="logo"><img src="images/logo.png" onerror="this.style.display='none'"> HOTEL PENARUNG <span style="font-weight:400;font-size:12px;color:#6b7280">by RCS</span></div>
+<a class="btn-wa" href="https://wa.me/6281250000000?text=Halo%20Resepsionis%20Hotel%20Penarung%2C%20saya%20mau%20tanya%20kamar" target="_blank">💬 Chat WA</a>
+</div>
+</header>
 
-<div class="max-w-[1100px] mx-auto px-4 py-6 grid grid-cols-12 gap-5">
-  <!-- LEFT -->
-  <aside class="col-span-12 md:col-span-3 space-y-4">
-    <div class="bg-white border rounded-2xl p-4">
-      <div id="me-card" class="text-sm text-zinc-500">Belum login</div>
-    </div>
-    <div class="bg-white border rounded-2xl p-2">
-      <button onclick="route('feed')" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-zinc-100 font-medium">🏠 Feed</button>
-      <button onclick="route('members')" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-zinc-100 font-medium">👥 Daftar Orang</button>
-      <button onclick="route('profile')" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-zinc-100 font-medium">⚙️ Pengaturan Akun</button>
-      <button id="admin-btn" onclick="route('admin')" class="hidden w-full text-left px-3 py-2.5 rounded-xl hover:bg-zinc-100 font-medium">🛡️ Admin</button>
-    </div>
-    <div class="text-[11px] text-zinc-400 px-2">ryanx.my.id · Tanjung, Kalsel · Minimalist sosmed tanpa pertemanan, semua terhubung.</div>
-  </aside>
+<section class="hero">
+<div>
+<div class="badges"><span class="badge">✅ Bersih Terjaga</span><span class="badge">✅ Nyaman Terasa</span><span class="badge">✅ 24 Jam</span></div>
+<h1>Bersih Terjaga,<br><span>Nyaman Terasa</span><br>di Tanjung</h1>
+<p>Dikelola oleh <b>RCS - Resepsionis & Cleaning Service</b>. Kamar siap huni, pelayanan ramah, harga transparan mulai Rp 125.000. Booking langsung via WhatsApp biasa, tanpa aplikasi tambahan.</p>
+<a class="btn-wa" href="#kamar">Lihat Kamar ↓</a>
+</div>
+<div style="background:var(--bg);border-radius:24px;padding:18px;text-align:center;border:1.5px solid #fecaca">
+<img src="images/logo.png" style="width:120px;height:120px;border-radius:50%;margin-bottom:12px">
+<p style="font-weight:700">RCS - resepsionis & cleaning service</p>
+<p style="font-size:13px;color:#6b7280;margin-top:6px">Motto: <b>Senyum Pertama, Kesan Terutama</b></p>
+</div>
+</section>
 
-  <!-- CENTER -->
-  <main class="col-span-12 md:col-span-6">
-    <div id="app" class="space-y-4"></div>
-  </main>
+<section class="grid" id="kamar">
+<h2 class="section-title">Daftar Kamar & Harga</h2>
+<p class="section-sub">Klik Booking, otomatis kirim pesan WhatsApp ke resepsionis. Ganti nomor WA di file index.html ya.</p>
+<div class="cards">
 
-  <!-- RIGHT -->
-  <aside class="col-span-12 md:col-span-3">
-    <div class="bg-white border rounded-2xl p-4">
-      <h3 class="font-semibold mb-3">Anggota terbaru</h3>
-      <div id="side-members" class="space-y-2 text-sm"></div>
-    </div>
-  </aside>
+<div class="card">
+<div class="card-top"><span class="price">Rp 125K / malam</span><span class="type">KIPAS ANGIN</span></div>
+<div class="card-body">
+<h3>Single & Double Bed - Kipas Angin</h3>
+<div class="fac"><span>🛏️ Single/Double</span><span>🌀 Kipas</span></div>
+<div class="no">No Kamar: 21, 22, 23, 27, 28, 29</div>
+<button class="btn-book" onclick="book('Rp 125.000 Single & Double Bed Kipas Angin No 21,22,23,27,28,29')">📲 Booking via WA</button>
+</div>
 </div>
 
+<div class="card">
+<div class="card-top"><span class="price">Rp 175K / malam</span><span class="type">TV + AC</span></div>
+<div class="card-body">
+<h3>Single & Double Bed - TV + AC</h3>
+<div class="fac"><span>🛏️ Single/Double</span><span>📺 TV</span><span>❄️ AC</span></div>
+<div class="no">No Kamar: 03, 04, 08, 09, 10, 11, 30, 31</div>
+<button class="btn-book" onclick="book('Rp 175.000 Single & Double Bed TV AC No 03,04,08,09,10,11,30,31')">📲 Booking via WA</button>
+</div>
+</div>
+
+<div class="card">
+<div class="card-top"><span class="price">Rp 200K / malam</span><span class="type">SINGLE + AIR PANAS</span></div>
+<div class="card-body">
+<h3>Single Bed - TV + AC + Air Panas</h3>
+<div class="fac"><span>🛏️ Single</span><span>📺 TV</span><span>❄️ AC</span><span>🚿 Air Panas</span></div>
+<div class="no">No Kamar: 02, 05</div>
+<button class="btn-book" onclick="book('Rp 200.000 Single Bed TV AC Air Panas No 02,05')">📲 Booking via WA</button>
+</div>
+</div>
+
+<div class="card">
+<div class="card-top"><span class="price">Rp 200K / malam</span><span class="type">DOUBLE</span></div>
+<div class="card-body">
+<h3>Double Bed - TV + AC</h3>
+<div class="fac"><span>🛏️ Double</span><span>📺 TV</span><span>❄️ AC</span></div>
+<div class="no">No Kamar: 07, 26</div>
+<button class="btn-book" onclick="book('Rp 200.000 Double Bed TV AC No 07,26')">📲 Booking via WA</button>
+</div>
+</div>
+
+<div class="card">
+<div class="card-top"><span class="price">Rp 250K / malam</span><span class="type">+ AIR PANAS</span></div>
+<div class="card-body">
+<h3>Single & Double - TV + AC + Air Panas</h3>
+<div class="fac"><span>🛏️ Single/Double</span><span>📺 TV</span><span>❄️ AC</span><span>🚿 Air Panas</span></div>
+<div class="no">No Kamar: 06, 12, 13, 32</div>
+<button class="btn-book" onclick="book('Rp 250.000 Single & Double TV AC Air Panas No 06,12,13,32')">📲 Booking via WA</button>
+</div>
+</div>
+
+<div class="card" style="border-color:#fca5a5">
+<div class="card-top"><span class="price" style="background:#111">Rp 400K / malam</span><span class="type">VIP + SARAPAN</span></div>
+<div class="card-body">
+<h3>Single Bed VIP No 01 - Sarapan</h3>
+<div class="fac"><span>🛏️ Single VIP</span><span>📺 TV</span><span>❄️ AC</span><span>🚿 Air Panas</span><span>🍳 Sarapan</span></div>
+<div class="no">No Kamar: 01</div>
+<button class="btn-book" style="background:var(--red)" onclick="book('Rp 400.000 VIP No 01 Single TV AC Air Panas Sarapan')">📲 Booking VIP via WA</button>
+</div>
+</div>
+
+<div class="card" style="border-color:var(--red);background:#fff7f7">
+<div class="card-top"><span class="price" style="background:var(--red)">Rp 500K / malam</span><span class="type">RUANG UTAMA SUITE</span></div>
+<div class="card-body">
+<h3>Ruang Utama Suite - Ruang Tamu + Sarapan</h3>
+<div class="fac"><span>🛏️ Single Suite</span><span>🛋️ Ruang Tamu</span><span>🍳 Sarapan</span><span>📺 TV</span><span>❄️ AC</span><span>🚿 Air Panas</span></div>
+<div class="no">Ruang Utama - Paling Luas</div>
+<button class="btn-book" style="background:var(--red)" onclick="book('Rp 500.000 Ruang Utama Suite Single TV AC Air Panas Sarapan Ruang Tamu')">📲 Booking Suite via WA</button>
+</div>
+</div>
+
+</div>
+
+<div style="margin-top:30px">
+<h2 class="section-title">Layanan RCS</h2>
+<div class="services">
+<div class="svc"><img src="images/cleaning.png"><div><b>Paket Cleaning Service</b><p style="font-size:12px;color:#6b7280">Motto: Bersih Terjaga, Nyaman Terasa. Tenaga profesional & berpengalaman.</p></div></div>
+<div class="svc"><img src="images/resepsionis.png"><div><b>Paket Resepsionis Hotel</b><p style="font-size:12px;color:#6b7280">Motto: Senyum Pertama, Kesan Terutama. 24/7 Layanan Tersedia.</p></div></div>
+</div>
+</div>
+</section>
+
+<footer class="footer">
+<p><b>Hotel Penarung Tanjung</b> - by RCS Resepsionis & Cleaning Service</p>
+<p style="font-size:12px;color:#9ca3af;margin-top:6px">📍 Tanjung, Tabalong, Kalimantan Selatan | WA: 0812-5000-0000 (ganti di index.html) | hotelpanarung.pages.dev</p>
+</footer>
+
+<a class="float-wa" href="https://wa.me/6281250000000?text=Halo%20Hotel%20Penarung" target="_blank">💬</a>
+
 <script>
-const API = '';
-let token = localStorage.getItem('ryanx_token');
-let me = JSON.parse(localStorage.getItem('ryanx_me')||'null');
-
-function authHeader(){ return token ? {Authorization:`Bearer ${token}`} : {}; }
-
-async function fetchMe(){
-  if(!token) return null;
-  const r = await fetch('/api/auth/me', {headers: authHeader()});
-  if(!r.ok){ logout(); return null; }
-  me = await r.json();
-  localStorage.setItem('ryanx_me', JSON.stringify(me));
-  return me;
+const WA_NUMBER = "6285353185994"; // GANTI NOMOR WA KAMU DISINI, tanpa + dan spasi, contoh 6281234567890
+function book(kamar){
+  const msg = `Halo Resepsionis Hotel Penarung Tanjung 👋%0A%0ASaya mau booking:%0A${encodeURIComponent(kamar)}%0A%0ATolong cek ketersediaannya ya. Terima kasih!`;
+  const url = `https://wa.me/${WA_NUMBER}?text=${msg}`;
+  window.open(url, '_blank');
 }
-
-function renderNav(){
-  const el = document.getElementById('nav-auth');
-  if(me){
-    el.innerHTML = `<span class="text-sm">@${me.username}</span><button onclick="logout()" class="text-sm border px-3 py-1 rounded-full">Keluar</button>`;
-    document.getElementById('me-card').innerHTML = `
-      <div class="flex gap-3 items-center">
-        <img src="${me.avatar_url}" class="w-10 h-10 rounded-full bg-zinc-100"/>
-        <div><div class="font-semibold text-zinc-900">${me.display_name}</div><div class="text-xs">@${me.username} · ${me.role}</div></div>
-      </div>
-      <div class="mt-3 text-xs">${me.bio||'Belum ada bio'}</div>`;
-    document.getElementById('admin-btn').classList.toggle('hidden', me.role!=='admin');
-  } else {
-    el.innerHTML = `<button onclick="route('login')" class="text-sm border px-3 py-1.5 rounded-full">Masuk</button><button onclick="route('register')" class="text-sm bg-black text-white px-4 py-1.5 rounded-full">Daftar</button>`;
-    document.getElementById('me-card').innerText='Belum login';
-  }
-}
-
-function route(name){
-  if(!me && !['login','register'].includes(name)) return route('login');
-  if(name==='feed') renderFeed();
-  if(name==='login') renderLogin();
-  if(name==='register') renderRegister();
-  if(name==='members') renderMembers();
-  if(name==='profile') renderProfile();
-  if(name==='admin') renderAdmin();
-}
-
-function renderLogin(){
-  document.getElementById('app').innerHTML = `
-  <div class="bg-white border rounded-[20px] p-6">
-    <h1 class="text-2xl font-bold brand">Masuk ke ryanx</h1>
-    <p class="text-sm text-zinc-500 mt-1">Pakai username atau email yang terdaftar di ryanx.my.id</p>
-    <div class="mt-5 space-y-3">
-      <input id="l-u" placeholder="username / email" class="w-full border rounded-xl px-4 py-3"/>
-      <input id="l-p" type="password" placeholder="password" class="w-full border rounded-xl px-4 py-3"/>
-      <button onclick="doLogin()" class="w-full bg-black text-white rounded-xl py-3 font-semibold">Masuk</button>
-      <div class="text-sm text-center">Belum punya akun? <button onclick="route('register')" class="underline">Daftar</button></div>
-      <div id="l-err" class="text-sm text-red-600"></div>
-    </div>
-  </div>`;
-}
-function renderRegister(){
-  document.getElementById('app').innerHTML = `
-  <div class="bg-white border rounded-[20px] p-6">
-    <h1 class="text-2xl font-bold brand">Daftar di ryanx</h1>
-    <p class="text-sm text-zinc-500">Semua orang yang daftar otomatis terhubung, tanpa minta pertemanan.</p>
-    <div class="mt-5 space-y-3">
-      <input id="r-d" placeholder="Nama tampil (contoh: Ryan Putra)" class="w-full border rounded-xl px-4 py-3"/>
-      <input id="r-u" placeholder="username unik (contoh: ryanx)" class="w-full border rounded-xl px-4 py-3"/>
-      <input id="r-e" placeholder="email" class="w-full border rounded-xl px-4 py-3"/>
-      <input id="r-p" type="password" placeholder="password min 6" class="w-full border rounded-xl px-4 py-3"/>
-      <button onclick="doRegister()" class="w-full bg-black text-white rounded-xl py-3 font-semibold">Buat Akun</button>
-      <div id="r-err" class="text-sm text-red-600"></div>
-    </div>
-  </div>`;
-}
-
-async function doLogin(){
-  const username=document.getElementById('l-u').value, password=document.getElementById('l-p').value;
-  const r=await fetch('/api/auth/login',{method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username,password})});
-  const j=await r.json();
-  if(!r.ok){ document.getElementById('l-err').innerText=j.error; return; }
-  token=j.token; localStorage.setItem('ryanx_token', token); me=j.user; localStorage.setItem('ryanx_me', JSON.stringify(j.user));
-  renderNav(); renderFeed(); loadSideMembers();
-}
-async function doRegister(){
-  const display_name=document.getElementById('r-d').value, username=document.getElementById('r-u').value, email=document.getElementById('r-e').value, password=document.getElementById('r-p').value;
-  const r=await fetch('/api/auth/register',{method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({display_name,username,email,password})});
-  const j=await r.json();
-  if(!r.ok){ document.getElementById('r-err').innerText=j.error; return; }
-  token=j.token; localStorage.setItem('ryanx_token', token); localStorage.setItem('ryanx_me', JSON.stringify(j.user)); me=j.user;
-  renderNav(); renderFeed(); loadSideMembers();
-}
-function logout(){ token=null; me=null; localStorage.clear(); renderNav(); route('login'); }
-
-async function renderFeed(){
-  document.getElementById('app').innerHTML = `
-    <div class="bg-white border rounded-[20px] p-4">
-      <div class="flex gap-3"><img src="${me.avatar_url}" class="w-9 h-9 rounded-full"/><textarea id="post-content" placeholder="Apa yang lagi kamu pikirin, ${me.display_name}?" class="flex-1 border rounded-xl p-3 text-sm min-h-[80px]"></textarea></div>
-      <div class="text-right mt-3"><button onclick="createPost()" class="bg-black text-white px-5 py-2 rounded-full text-sm font-semibold">Bagikan</button></div>
-    </div>
-    <div id="feed-list" class="space-y-3"></div>`;
-  loadFeed();
-}
-async function loadFeed(){
-  const r=await fetch('/api/posts',{headers:authHeader()});
-  const posts=await r.json();
-  document.getElementById('feed-list').innerHTML = posts.map(p=>`
-    <div class="bg-white border rounded-[20px] p-4">
-      <div class="flex gap-3 items-center"><img src="${p.avatar_url}" class="w-8 h-8 rounded-full"/><div><div class="text-sm font-semibold">${p.display_name}</div><div class="text-[11px] text-zinc-500">@${p.username} · ${new Date(p.created_at).toLocaleString('id-ID')}</div></div>
-        <button onclick="deletePost('${p.id}')" class="ml-auto text-[11px] text-zinc-400 hover:text-red-600">${(me.id===p.user_id||me.role==='admin')?'hapus':''}</button>
-      </div>
-      <div class="mt-3 text-[15px] whitespace-pre-wrap leading-relaxed">${escapeHtml(p.content)}</div>
-      <div class="mt-3 flex gap-3 text-xs"><button onclick="likePost('${p.id}')" class="border px-3 py-1 rounded-full">❤ ${p.like_count||0} Suka</button></div>
-    </div>`).join('') || '<div class="text-sm text-zinc-500 text-center py-10">Belum ada postingan, jadi yang pertama!</div>';
-}
-async function createPost(){
-  const c=document.getElementById('post-content').value;
-  if(!c.trim()) return;
-  await fetch('/api/posts',{method:'POST', headers:{...authHeader(),'Content-Type':'application/json'}, body:JSON.stringify({content:c})});
-  document.getElementById('post-content').value=''; loadFeed();
-}
-async function deletePost(id){
-  if(!confirm('Hapus post?')) return;
-  await fetch('/api/posts?id='+id,{method:'DELETE', headers:authHeader()}); loadFeed();
-}
-async function likePost(id){
-  await fetch('/api/posts/like',{method:'POST', headers:{...authHeader(),'Content-Type':'application/json'}, body:JSON.stringify({post_id:id})}); loadFeed();
-}
-
-async function renderMembers(){
-  const r=await fetch('/api/users',{headers:authHeader()});
-  const users=await r.json();
-  document.getElementById('app').innerHTML = `
-    <div class="bg-white border rounded-[20px] p-5"><h2 class="font-bold text-lg">Daftar Orang / Anggota</h2><p class="text-sm text-zinc-500">Semua akun yang terdaftar di ryanx.my.id - tanpa pertemanan, semua terhubung.</p>
-    <div class="mt-4 grid grid-cols-1 gap-2">${users.map(u=>`
-      <div class="flex gap-3 items-center border rounded-xl p-3"><img src="${u.avatar_url}" class="w-10 h-10 rounded-full"/><div><div class="font-semibold text-sm">${u.display_name} ${u.role==='admin'?'<span class=text-[10px] bg-black text-white px-1.5 py-0.5 rounded-full>admin</span>':''}</div><div class="text-xs text-zinc-500">@${u.username} · ${u.bio||'tanpa bio'}</div></div></div>`).join('')}</div></div>`;
-}
-
-function renderProfile(){
-  document.getElementById('app').innerHTML = `
-    <div class="bg-white border rounded-[20px] p-6">
-      <h2 class="font-bold text-lg">Pengaturan Akun</h2>
-      <div class="mt-4 space-y-3">
-        <label class="text-xs">Nama Tampil</label><input id="p-d" value="${me.display_name}" class="w-full border rounded-xl px-4 py-3"/>
-        <label class="text-xs">Bio</label><textarea id="p-b" class="w-full border rounded-xl px-4 py-3 min-h-[80px]">${me.bio||''}</textarea>
-        <label class="text-xs">Avatar URL</label><input id="p-a" value="${me.avatar_url}" class="w-full border rounded-xl px-4 py-3"/>
-        <button onclick="saveProfile()" class="bg-black text-white px-5 py-2.5 rounded-full text-sm">Simpan</button>
-        <div id="p-msg" class="text-sm"></div>
-      </div>
-    </div>`;
-}
-async function saveProfile(){
-  const display_name=document.getElementById('p-d').value, bio=document.getElementById('p-b').value, avatar_url=document.getElementById('p-a').value;
-  const r=await fetch('/api/auth/me',{method:'PUT', headers:{...authHeader(),'Content-Type':'application/json'}, body:JSON.stringify({display_name,bio,avatar_url})});
-  if(r.ok){ document.getElementById('p-msg').innerText='Tersimpan!'; fetchMe().then(()=>{renderNav(); loadSideMembers();}); } else { document.getElementById('p-msg').innerText='Gagal'; }
-}
-
-async function renderAdmin(){
-  const r=await fetch('/api/admin/stats',{headers:authHeader()});
-  if(!r.ok){ document.getElementById('app').innerHTML='<div class=text-sm>Butuh role admin</div>'; return; }
-  const s=await r.json();
-  const ru=await fetch('/api/users',{headers:authHeader()}); const users=await ru.json();
-  const rp=await fetch('/api/posts',{headers:authHeader()}); const posts=await rp.json();
-  document.getElementById('app').innerHTML=`
-    <div class="bg-white border rounded-[20px] p-5">
-      <h2 class="font-bold text-lg">Admin - Kelola Crowd DB1</h2>
-      <div class="grid grid-cols-3 gap-3 mt-4 text-center">
-        <div class="border rounded-xl p-3"><div class="text-2xl font-bold">${s.users}</div><div class="text-xs">Users</div></div>
-        <div class="border rounded-xl p-3"><div class="text-2xl font-bold">${s.posts}</div><div class="text-xs">Posts</div></div>
-        <div class="border rounded-xl p-3"><div class="text-2xl font-bold">${s.likes}</div><div class="text-xs">Likes</div></div>
-      </div>
-      <h3 class="font-semibold mt-6 mb-2">Kelola User</h3>
-      <div class="space-y-2">${users.map(u=>`<div class="flex items-center gap-2 border rounded-xl p-2 text-sm"><span class="flex-1">@${u.username} (${u.role})</span>
-        <button onclick="setRole('${u.id}','admin')" class="text-[11px] border px-2 py-1 rounded-full">jadi admin</button>
-        <button onclick="setRole('${u.id}','user')" class="text-[11px] border px-2 py-1 rounded-full">jadi user</button>
-        <button onclick="delUser('${u.id}')" class="text-[11px] bg-red-600 text-white px-2 py-1 rounded-full">hapus</button></div>`).join('')}</div>
-      <h3 class="font-semibold mt-6 mb-2">Kelola Post</h3>
-      <div class="space-y-2">${posts.map(p=>`<div class="flex items-center gap-2 border rounded-xl p-2 text-sm"><span class="flex-1 truncate">${p.content.slice(0,60)}</span><button onclick="deletePostAdmin('${p.id}')" class="text-[11px] bg-red-600 text-white px-2 py-1 rounded-full">hapus</button></div>`).join('')}</div>
-    </div>`;
-}
-async function setRole(id,role){ await fetch('/api/admin/users',{method:'PUT', headers:{...authHeader(),'Content-Type':'application/json'}, body:JSON.stringify({id,role})}); renderAdmin(); }
-async function delUser(id){ if(!confirm('Hapus user?')) return; await fetch('/api/admin/users?id='+id,{method:'DELETE', headers:authHeader()}); renderAdmin(); loadSideMembers(); }
-async function deletePostAdmin(id){ await fetch('/api/posts?id='+id,{method:'DELETE', headers:authHeader()}); renderAdmin(); }
-
-async function loadSideMembers(){
-  if(!me) return;
-  const r=await fetch('/api/users',{headers:authHeader()}); const users=await r.json();
-  document.getElementById('side-members').innerHTML = users.slice(0,8).map(u=>`<div class="flex gap-2 items-center"><img src="${u.avatar_url}" class="w-7 h-7 rounded-full"/><div class="text-xs"><div class="font-medium">${u.display_name}</div><div class="text-zinc-500">@${u.username}</div></div></div>`).join('');
-}
-function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-
-(async()=>{ if(token){ await fetchMe(); } renderNav(); if(me){ renderFeed(); loadSideMembers(); } else route('login'); })();
 </script>
 </body>
 </html>
