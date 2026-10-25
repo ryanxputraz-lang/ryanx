@@ -1,0 +1,58 @@
+
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RyanX Blackjack</title>
+<style>
+body{margin:0;background:#064e3b;color:#fff;font-family:system-ui;display:flex;flex-direction:column;min-height:100vh}
+header{display:flex;justify-content:space-between;padding:14px 18px;background:#022c22}
+button{padding:10px 16px;border-radius:10px;border:none;font-weight:700;cursor:pointer}
+.card{background:#fff;color:#000;border-radius:8px;width:66px;height:92px;display:inline-flex;align-items:center;justify-content:center;margin:4px;font-weight:800;font-size:20px}
+.area{padding:20px;text-align:center;flex:1}
+.chips{background:#1e293b;padding:10px;border-radius:12px;display:inline-block;margin:10px}
+.bet{margin:12px} .bet button{margin:4px;background:#fde047}
+#actions button{margin:6px;background:#38bdf8}
+#adminLink{color:#7dd3fc;text-decoration:none;font-size:13px}
+</style>
+</head><body>
+<header>
+<div><b id="userLabel"></b> | <span id="chipLabel"></span> chips</div>
+<div><a id="adminLink" href="/admin.html" style="display:none">Admin</a> <button onclick="logout()">Logout</button></div>
+</header>
+<div class="area">
+<h3 id="dealerLabel">Dealer: </h3>
+<div id="dealerCards"></div>
+<h3 id="playerLabel">You: </h3>
+<div id="playerCards"></div>
+<div class="chips">Taruhan: <b id="betLabel">0</b> | <button onclick="claim()">Klaim Harian 500</button></div>
+<div class="bet">
+<button onclick="setBet(50)">50</button>
+<button onclick="setBet(100)">100</button>
+<button onclick="setBet(250)">250</button>
+<button onclick="setBet(500)">500</button>
+<button onclick="setBet(0)">Clear</button>
+</div>
+<div id="actions">
+<button onclick="deal()">Deal</button>
+<button onclick="hit()">Hit</button>
+<button onclick="stand()">Stand</button>
+</div>
+<p id="status"></p>
+</div>
+<script>
+let user=JSON.parse(localStorage.getItem('user')||'null'); if(!user) location.href='/';
+let chips=user.chips, bet=0, deck=[], pHand=[], dHand=[], playing=false;
+userLabel.textContent=user.username; chipLabel.textContent=chips; if(user.is_admin) adminLink.style.display='inline';
+
+function saveChips(newChips){ fetch('/api/update-chips',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:user.username,chips:newChips})}).then(r=>r.json()).then(d=>{chips=newChips; user.chips=newChips; localStorage.setItem('user',JSON.stringify(user)); chipLabel.textContent=chips;}); }
+
+function setBet(v){ if(playing) return; if(v==0) bet=0; else if(bet+v<=chips) bet+=v; betLabel.textContent=bet; }
+function newDeck(){ const s=['♠','♥','♦','♣'], r=['A','2','3','4','5','6','7','8','9','10','J','Q','K']; let d=[]; for(let i=0;i<6;i++) for(let su of s) for(let ra of r) d.push({r:ra,s:su}); return d.sort(()=>Math.random()-0.5); }
+function val(h){ let tot=0, aces=0; for(let c of h){ if(c.r=='A'){tot+=11;aces++;} else if(['J','Q','K'].includes(c.r)) tot+=10; else tot+=parseInt(c.r);} while(tot>21&&aces){tot-=10;aces--;} return tot; }
+function render(){ dealerCards.innerHTML=dHand.map((c,i)=>`<div class="card" style="${i==1&&playing?'background:#ccc;color:#ccc':''}">${c.r}${c.s}</div>`).join(''); playerCards.innerHTML=pHand.map(c=>`<div class="card">${c.r}${c.s}</div>`).join(''); dealerLabel.textContent='Dealer: '+(playing?'?':val(dHand)); playerLabel.textContent='You: '+val(pHand); }
+function deal(){ if(bet<=0||bet>chips) return status.textContent='Atur taruhan dulu'; deck=newDeck(); pHand=[deck.pop(),deck.pop()]; dHand=[deck.pop(),deck.pop()]; playing=true; render(); status.textContent=''; if(val(pHand)==21) stand(); }
+function hit(){ if(!playing) return; pHand.push(deck.pop()); render(); if(val(pHand)>21){ end(false); } }
+function stand(){ if(!playing) return; playing=false; while(val(dHand)<17) dHand.push(deck.pop()); render(); let pv=val(pHand), dv=val(dHand); if(dv>21||pv>dv) end(true); else if(pv==dv) end(null); else end(false); }
+function end(win){ playing=false; render(); if(win===true){ status.textContent='Menang! +'+bet; saveChips(chips+bet);} else if(win===false){ status.textContent='Kalah! -'+bet; saveChips(chips-bet);} else{ status.textContent='Push (seri)'; } bet=0; betLabel.textContent=0; }
+async function claim(){ let r=await fetch('/api/claim',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:user.username})}); let d=await r.json(); status.textContent=d.message; if(d.ok){ saveChips(d.chips); } }
+function logout(){ localStorage.clear(); location.href='/'; }
+</script></body></html>

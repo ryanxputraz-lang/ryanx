@@ -1,174 +1,40 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hotel Panarung Palangka Raya - Sewa Kamar Harian | RCS</title>
-<meta name="description" content="Hotel Panarung Palangka Raya, Tabalong. Kamar bersih, nyaman, AC, TV, Air Panas. Dikelola RCS - Resepsionis & Cleaning Service 24 Jam. Booking langsung via WhatsApp.">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RyanX - Login</title>
 <style>
-:root{--red:#DC2626;--red-dark:#B91C1C;--bg:#FFF7F7}
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif}
-body{background:#fff;color:#1f2937}
-.header{position:sticky;top:0;z-index:50;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.06);padding:12px 5%}
-.nav{display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto}
-.logo{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--red);font-size:20px}
-.logo img{width:42px;height:42px;border-radius:50%;object-fit:cover}
-.btn-wa{background:var(--red);color:#fff;padding:10px 18px;border-radius:999px;text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:8px;transition:.2s}
-.btn-wa:hover{background:var(--red-dark);transform:translateY(-1px)}
-.hero{max-width:1200px;margin:0 auto;padding:50px 5% 30px;display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center}
-.hero h1{font-size:42px;line-height:1.1;font-weight:800}
-.hero h1 span{color:var(--red)}
-.hero p{margin:14px 0 22px;color:#6b7280;font-size:16px}
-.badges{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
-.badge{background:var(--bg);border:1px solid #fecaca;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:600;color:var(--red)}
-.grid{max-width:1200px;margin:0 auto;padding:20px 5%}
-.section-title{font-size:28px;font-weight:800;margin-bottom:6px}
-.section-sub{color:#6b7280;margin-bottom:22px}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
-.card{border:1.5px solid #f3f4f6;border-radius:20px;overflow:hidden;background:#fff;transition:.2s;position:relative}
-.card:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(220,38,38,.12);border-color:#fecaca}
-.card-top{padding:16px 18px 0;display:flex;justify-content:space-between;align-items:center}
-.price{background:var(--red);color:#fff;padding:6px 12px;border-radius:999px;font-weight:700;font-size:14px}
-.type{font-size:11px;font-weight:700;letter-spacing:.5px;background:#fef2f2;color:var(--red);padding:5px 10px;border-radius:999px}
-.card-body{padding:14px 18px 18px}
-.card-body h3{font-size:16px;font-weight:700;line-height:1.3}
-.fac{margin:10px 0;display:flex;gap:8px;flex-wrap:wrap}
-.fac span{font-size:11px;background:#f9fafb;border:1px solid #eee;padding:5px 9px;border-radius:999px}
-.no{font-size:12px;color:#6b7280;margin-bottom:14px}
-.btn-book{width:100%;background:#111;color:#fff;border:none;padding:12px;border-radius:12px;font-weight:700;cursor:pointer;display:flex;justify-content:center;align-items:center;gap:8px}
-.btn-book:hover{background:var(--red)}
-.services{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:12px}
-.svc{border:1.5px solid #f3f4f6;border-radius:20px;padding:18px;display:flex;gap:14px;align-items:center}
-.svc img{width:64px;height:64px;border-radius:14px;object-fit:cover;background:#fef2f2}
-.footer{background:#111;color:#fff;margin-top:40px;padding:30px 5%;text-align:center}
-.float-wa{position:fixed;right:18px;bottom:18px;z-index:99;background:#25D366;color:#fff;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(0,0,0,.2);text-decoration:none;font-size:28px}
-@media(max-width:800px){.hero{grid-template-columns:1fr}.hero h1{font-size:32px}.services{grid-template-columns:1fr}}
+body{font-family:system-ui;background:#0f172a;color:#fff;display:flex;min-height:100vh;align-items:center;justify-content:center}
+.card{background:#1e293b;padding:28px;border-radius:16px;width:360px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+input,button{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:none}
+input{background:#0f172a;color:#fff;border:1px solid #334155}
+button{background:#38bdf8;color:#000;font-weight:700;cursor:pointer}
+a{color:#7dd3fc;font-size:13px}
+.note{font-size:11px;color:#94a3b8;margin-top:8px}
 </style>
-</head>
-<body>
-<header class="header">
-<div class="nav">
-<div class="logo"><img src="images/logo.png" onerror="this.style.display='none'"> HOTEL Panarung <span style="font-weight:400;font-size:12px;color:#6b7280">by RCS</span></div>
-<a class="btn-wa" href="https://wa.me/6285353185994?text=Halo%20Resepsionis%20Hotel%20Panarung%2C%20saya%20mau%20tanya%20kamar" target="_blank">💬 Chat WA</a>
-</div>
-</header>
-
-<section class="hero">
-<div>
-<div class="badges"><span class="badge">✅ Bersih Terjaga</span><span class="badge">✅ Nyaman Terasa</span><span class="badge">✅ 24 Jam</span></div>
-<h1>Bersih Terjaga,<br><span>Nyaman Terasa</span><br>di Palangka Raya</h1>
-<p>Dikelola oleh <b>RCS - Resepsionis & Cleaning Service</b>. Kamar siap huni, pelayanan ramah, harga transparan mulai Rp 125.000. Booking langsung via WhatsApp biasa, tanpa aplikasi tambahan.</p>
-<a class="btn-wa" href="#kamar">Lihat Kamar ↓</a>
-</div>
-<div style="background:var(--bg);border-radius:24px;padding:18px;text-align:center;border:1.5px solid #fecaca">
-<img src="images/logo.png" style="width:120px;height:120px;border-radius:50%;margin-bottom:12px">
-<p style="font-weight:700">RCS - resepsionis & cleaning service</p>
-<p style="font-size:13px;color:#6b7280;margin-top:6px">Motto: <b>Senyum Pertama, Kesan Terutama</b></p>
-</div>
-</section>
-
-<section class="grid" id="kamar">
-<h2 class="section-title">Daftar Kamar & Harga</h2>
-<p class="section-sub">Klik Booking, otomatis kirim pesan WhatsApp ke resepsionis. Ganti nomor WA di file index.html ya.</p>
-<div class="cards">
-
+</head><body>
 <div class="card">
-<div class="card-top"><span class="price">Rp 125K / malam</span><span class="type">KIPAS ANGIN</span></div>
-<div class="card-body">
-<h3>Single & Double Bed - Kipas Angin</h3>
-<div class="fac"><span>🛏️ Single/Double</span><span>🌀 Kipas</span></div>
-<div class="no">No Kamar: 21, 22, 23, 27, 28, 29</div>
-<button class="btn-book" onclick="book('Rp 125.000 Single & Double Bed Kipas Angin No 21,22,23,27,28,29')">📲 Booking via WA</button>
+<h2>🎰 RyanX Blackjack</h2>
+<p style="font-size:13px;color:#94a3b8">Fun Chips - Tidak bernilai uang</p>
+<input id="u" placeholder="Username">
+<input id="p" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+<button onclick="register()" style="background:#1e293b;color:#fff;border:1px solid #334155">Register</button>
+<div id="msg" class="note"></div>
+<p class="note">Akun admin default: ryanxputraz (setelah buat DB, edit password). Klaim harian gratis 500 chip di game.</p>
 </div>
-</div>
-
-<div class="card">
-<div class="card-top"><span class="price">Rp 175K / malam</span><span class="type">TV + AC</span></div>
-<div class="card-body">
-<h3>Single & Double Bed - TV + AC</h3>
-<div class="fac"><span>🛏️ Single/Double</span><span>📺 TV</span><span>❄️ AC</span></div>
-<div class="no">No Kamar: 03, 04, 08, 09, 10, 11, 30, 31</div>
-<button class="btn-book" onclick="book('Rp 175.000 Single & Double Bed TV AC No 03,04,08,09,10,11,30,31')">📲 Booking via WA</button>
-</div>
-</div>
-
-<div class="card">
-<div class="card-top"><span class="price">Rp 200K / malam</span><span class="type">SINGLE + AIR PANAS</span></div>
-<div class="card-body">
-<h3>Single Bed - TV + AC + Air Panas</h3>
-<div class="fac"><span>🛏️ Single</span><span>📺 TV</span><span>❄️ AC</span><span>🚿 Air Panas</span></div>
-<div class="no">No Kamar: 02, 05</div>
-<button class="btn-book" onclick="book('Rp 200.000 Single Bed TV AC Air Panas No 02,05')">📲 Booking via WA</button>
-</div>
-</div>
-
-<div class="card">
-<div class="card-top"><span class="price">Rp 200K / malam</span><span class="type">DOUBLE</span></div>
-<div class="card-body">
-<h3>Double Bed - TV + AC</h3>
-<div class="fac"><span>🛏️ Double</span><span>📺 TV</span><span>❄️ AC</span></div>
-<div class="no">No Kamar: 07, 26</div>
-<button class="btn-book" onclick="book('Rp 200.000 Double Bed TV AC No 07,26')">📲 Booking via WA</button>
-</div>
-</div>
-
-<div class="card">
-<div class="card-top"><span class="price">Rp 250K / malam</span><span class="type">+ AIR PANAS</span></div>
-<div class="card-body">
-<h3>Single & Double - TV + AC + Air Panas</h3>
-<div class="fac"><span>🛏️ Single/Double</span><span>📺 TV</span><span>❄️ AC</span><span>🚿 Air Panas</span></div>
-<div class="no">No Kamar: 06, 12, 13, 32</div>
-<button class="btn-book" onclick="book('Rp 250.000 Single & Double TV AC Air Panas No 06,12,13,32')">📲 Booking via WA</button>
-</div>
-</div>
-
-<div class="card" style="border-color:#fca5a5">
-<div class="card-top"><span class="price" style="background:#111">Rp 400K / malam</span><span class="type">VIP + SARAPAN</span></div>
-<div class="card-body">
-<h3>Single Bed VIP No 01 - Sarapan</h3>
-<div class="fac"><span>🛏️ Single VIP</span><span>📺 TV</span><span>❄️ AC</span><span>🚿 Air Panas</span><span>🍳 Sarapan</span></div>
-<div class="no">No Kamar: 01</div>
-<button class="btn-book" style="background:var(--red)" onclick="book('Rp 400.000 VIP No 01 Single TV AC Air Panas Sarapan')">📲 Booking VIP via WA</button>
-</div>
-</div>
-
-<div class="card" style="border-color:var(--red);background:#fff7f7">
-<div class="card-top"><span class="price" style="background:var(--red)">Rp 500K / malam</span><span class="type">RUANG UTAMA SUITE</span></div>
-<div class="card-body">
-<h3>Ruang Utama Suite - Ruang Tamu + Sarapan</h3>
-<div class="fac"><span>🛏️ Single Suite</span><span>🛋️ Ruang Tamu</span><span>🍳 Sarapan</span><span>📺 TV</span><span>❄️ AC</span><span>🚿 Air Panas</span></div>
-<div class="no">Ruang Utama - Paling Luas</div>
-<button class="btn-book" style="background:var(--red)" onclick="book('Rp 500.000 Ruang Utama Suite Single TV AC Air Panas Sarapan Ruang Tamu')">📲 Booking Suite via WA</button>
-</div>
-</div>
-
-</div>
-
-<div style="margin-top:30px">
-<h2 class="section-title">Layanan RCS</h2>
-<div class="services">
-<div class="svc"><img src="images/cleaning.png"><div><b>Paket Cleaning Service</b><p style="font-size:12px;color:#6b7280">Motto: Bersih Terjaga, Nyaman Terasa. Tenaga profesional & berpengalaman.</p></div></div>
-<div class="svc"><img src="images/resepsionis.png"><div><b>Paket Resepsionis Hotel</b><p style="font-size:12px;color:#6b7280">Motto: Senyum Pertama, Kesan Terutama. 24/7 Layanan Tersedia.</p></div></div>
-</div>
-</div>
-</section>
-
-<footer class="footer">
-<p><b>Hotel Panarung Palangkaraya</b> - by RCS Resepsionis & Cleaning Service</p>
-<p style="font-size:12px;color:#9ca3af;margin-top:6px">📍JL.
-  DR. Murjani No.51, Pahandut, Kalimantan Tengah | WA: 0853-5318-5994 | ryanx.my.id</p>
-</footer>
-
-<a class="float-wa" href="https://wa.me/6285353185994?text=Halo%20Hotel%20Panarung" target="_blank">💬</a>
-
 <script>
-const WA_NUMBER = "6285353185994"; // GANTI NOMOR WA KAMU DISINI, tanpa + dan spasi, contoh 6281234567890
-function book(kamar){
-  const msg = `Halo Resepsionis Hotel Panarung Palangka Raya 👋%0A%0ASaya mau booking:%0A${encodeURIComponent(kamar)}%0A%0ATolong cek ketersediaannya ya. Terima kasih!`;
-  const url = `https://wa.me/${WA_NUMBER}?text=${msg}`;
-  window.open(url, '_blank');
+async function api(path, body){
+ const r=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+ return r.json();
 }
-</script>
-</body>
-</html>
+async function login(){
+ const res=await api('/api/login',{username:u.value,password:p.value});
+ msg.textContent=res.message;
+ if(res.ok){localStorage.setItem('user',JSON.stringify(res.user)); location.href='/game.html'}
+}
+async function register(){
+ const res=await api('/api/register',{username:u.value,password:p.value});
+ msg.textContent=res.message;
+ if(res.ok){login()}
+}
+</script></body></html>
