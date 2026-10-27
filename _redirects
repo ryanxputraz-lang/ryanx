@@ -1,0 +1,5 @@
+# SPA fallback kalau nanti nambah halaman
+# /app/* /index.html 200
+
+# Force www → non-www (opsional, sesuaikan)
+# https://www.ryanx.my.id/* https://ryanx.my.id/:splat 301!
