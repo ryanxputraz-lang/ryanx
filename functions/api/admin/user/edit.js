@@ -1,8 +1,0 @@
-
-import {verifyToken} from '../../utils.js';
-export async function onRequestPost({request, env}){
-  const auth = await verifyToken(request, env); if(!auth||auth.role!=='admin') return Response.json({error:'Admin only'},{status:403});
-  const {id,xpoin}=await request.json();
-  await env.DB.prepare("UPDATE users SET xpoin=? WHERE id=?").bind(xpoin,id).run();
-  return Response.json({ok:true});
-}

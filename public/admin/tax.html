@@ -1,4 +1,0 @@
-
-<!DOCTYPE html><html><head><meta charset="utf-8"/><link rel="stylesheet" href="/css/style.css"/><title>Pajak - RyanX</title></head>
-<body><div class="nav"><a href="/admin.html">← Admin</a><b>Pajak Transfer & Game</b></div><div class="container"><div class="card"><h3>Monitoring Pajak Anti-Inflasi</h3><table id="tb" style="width:100%"><tr><th>Waktu</th><th>User</th><th>Tipe</th><th>Jumlah</th><th>Pajak</th></tr></table></div></div>
-<script type="module">import {api} from '/js/api.js'; (async()=>{const logs=await api('/admin/tax'); const tb=document.getElementById('tb'); logs.forEach(l=>{const tr=document.createElement('tr'); tr.innerHTML='<td>'+new Date(l.created_at*1000).toLocaleString()+'</td><td>'+l.user_id+'</td><td>'+l.type+'</td><td>'+l.amount+'</td><td>'+l.tax+'</td>'; tb.appendChild(tr)})})()</script></body></html>
