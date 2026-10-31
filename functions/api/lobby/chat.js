@@ -1,5 +1,5 @@
 
-import {verifyToken} from '../_middleware.js';
+import {verifyToken} from '../utils.js';
 // Simpan chat di xpoin_log tipe lobby_chat untuk simple
 export async function onRequestPost({request, env}){
   const auth = await verifyToken(request, env); if(!auth) return Response.json({error:'Unauthorized'},{status:401});

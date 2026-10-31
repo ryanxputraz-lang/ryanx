@@ -1,5 +1,5 @@
 
-import {verifyToken} from '../../_middleware.js';
+import {verifyToken} from '../../utils.js';
 export async function onRequestPost({request, env}){
   const auth = await verifyToken(request, env); if(!auth) return Response.json({error:'Unauthorized'},{status:401});
   const cfg = await env.DB.prepare("SELECT value FROM config WHERE key='snake_reward_per_mouse'").first();

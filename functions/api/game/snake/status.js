@@ -1,5 +1,5 @@
 
-import {verifyToken} from '../../_middleware.js';
+import {verifyToken} from '../../utils.js';
 export async function onRequestGet({request, env}){
   const auth = await verifyToken(request, env); if(!auth) return Response.json({error:'Unauthorized'},{status:401});
   const user = await env.DB.prepare("SELECT last_snake_game FROM users WHERE id=?").bind(auth.id).first();
