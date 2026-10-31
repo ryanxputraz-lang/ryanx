@@ -1,0 +1,4 @@
+
+<!DOCTYPE html><html><head><meta charset="utf-8"/><link rel="stylesheet" href="/css/style.css"/><title>Leaderboard - RyanX</title></head>
+<body><div class="nav"><a href="/">←</a><b>Leaderboard</b></div><div class="container"><div class="card"><h2>Top Xpoin</h2><table id="tb" style="width:100%"><tr><th>Rank</th><th>User</th><th>Xpoin</th></tr></table></div></div>
+<script type="module">import {api} from '/js/api.js'; (async()=>{const data=await api('/leaderboard'); const tb=document.getElementById('tb'); data.forEach((u,i)=>{const tr=document.createElement('tr'); tr.innerHTML='<td>'+(i+1)+'</td><td>'+u.username+'</td><td>'+u.xpoin+'</td>'; tb.appendChild(tr)})})()</script></body></html>

@@ -1,23 +1,26 @@
-# ⚡ Builder Pro — ryanx.my.id
 
-HTML/CSS/JS Builder full flexible. Single-page, no build step, mobile-first.
+# RyanX - ryanx.my.id
 
-## 🚀 Deploy ke Cloudflare Pages
+Stack: Cloudflare Pages (pages.dev) + D1 + Functions
 
-### Cara 1 — Auto deploy dari GitHub (rekomendasi)
-1. Push repo ini ke GitHub.
-2. Buka [Cloudflare Dashboard](https://dash.cloudflare.com) → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
-3. Pilih repo `ryanx-builder`.
-4. Build settings:
-   - **Framework preset**: None
-   - **Build command**: *(kosongkan)*
-   - **Build output directory**: `/`
-5. **Save and Deploy**.
-6. Setelah live, buka **Custom domains** → **Set up a custom domain** → masukkan `ryanx.my.id`.
-7. Pastikan DNS `ryanx.my.id` sudah pakai nameserver Cloudflare. CNAME akan dibuat otomatis.
+## Deploy
+1. Paste schema.txt ke D1 Console (Cloudflare Dashboard > D1 > Console)
+2. Buat user admin manual: UPDATE users SET role='admin' WHERE username='ryanxputraz'
+3. Push folder ini ke github.com/ryanxputraz-lang/ryanx
+   - Build output dir: public
+   - Functions dir: functions
+   - Bind D1 as DB
 
-### Cara 2 — Direct Upload
-1. Drag folder `ryanx-builder/` ke Cloudflare Pages → Upload assets.
-2. Set custom domain sama seperti di atas.
+## Fitur
+- Auth JWT simple, new user 1000 XP (configurable)
+- Blackjack bet min 50
+- Snake reward per tikus + cooldown anti spam (server side last_snake_game)
+- Lobby auto room 1/2/3, offline status, afk tetap terlihat
+- Forum biaya 2000 XP + gambar/link
+- Mall 3 kategori headgear/outfit/other + inventory
+- Admin panel croud user, config anti inflasi, shop, announcement
+- Transfer XP pajak 10% -> admin/tax.html
+- Trading CFD candle 1m/5m
+- Dadu besar/kecil/angka/ganjil/genap
 
-## 📁 Struktur
+Footer: RyanX with Meta AI

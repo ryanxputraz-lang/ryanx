@@ -1,0 +1,6 @@
+
+<!DOCTYPE html><html><head><meta charset="utf-8"/><link rel="stylesheet" href="/css/style.css"/><title>Transfer - RyanX</title></head>
+<body><div class="nav"><a href="/">←</a><b>Transfer XP</b><span id="xp"></span></div><div class="container"><div class="card"><h3>Transfer Xpoin (ada pajak 10%)</h3><form id="f"><input name="to" placeholder="Username tujuan" required/><input name="amount" type="number" min="10" placeholder="Jumlah" required/><button class="btn">Transfer</button></form><p>Pajak masuk ke admin/pajak.html untuk monitoring anti-inflasi.</p></div></div>
+<script type="module">import {api} from '/js/api.js'; async function r(){const me=await api('/me'); document.getElementById('xp').innerText=me.xpoin+' XP'} r();
+document.getElementById('f').onsubmit=async e=>{e.preventDefault(); const fd=new FormData(e.target); try{const res=await api('/transfer',{method:'POST', body:JSON.stringify({to:fd.get('to'), amount:parseInt(fd.get('amount'))})}); alert('Transfer ok, pajak '+res.tax); r()}catch(err){alert(err.message)}}
+</script></body></html>

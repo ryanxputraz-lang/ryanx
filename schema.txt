@@ -1,0 +1,140 @@
+
+-- RyanX D1 Schema - Paste di Cloudflare D1 Console
+PRAGMA foreign_keys=ON;
+
+-- USERS
+CREATE TABLE IF NOT EXISTS users (
+  id TEXT PRIMARY KEY,
+  username TEXT UNIQUE NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  xpoin INTEGER DEFAULT 1000,
+  role TEXT DEFAULT 'user',
+  avatar TEXT DEFAULT 'default',
+  headgear TEXT DEFAULT 'none',
+  outfit TEXT DEFAULT 'basic',
+  other TEXT DEFAULT 'none',
+  last_snake_game INTEGER DEFAULT 0,
+  created_at INTEGER
+);
+-- CONFIG GLOBAL - anti inflasi
+CREATE TABLE IF NOT EXISTS config (
+  key TEXT PRIMARY KEY,
+  value TEXT
+);
+INSERT OR IGNORE INTO config(key,value) VALUES 
+('new_user_xpoin','1000'),
+('min_bet','50'),
+('snake_reward_per_mouse','10'),
+('snake_cooldown_sec','120'),
+('forum_topic_cost','2000'),
+('transfer_tax_percent','10'),
+('dice_house_edge','2');
+
+-- ITEMS MALL
+CREATE TABLE IF NOT EXISTS shop_items (
+  id TEXT PRIMARY KEY,
+  category TEXT CHECK(category IN ('headgear','outfit','other')),
+  name TEXT,
+  price INTEGER,
+  image TEXT,
+  rarity TEXT,
+  description TEXT
+);
+
+-- INVENTORY
+CREATE TABLE IF NOT EXISTS inventory (
+  user_id TEXT,
+  item_id TEXT,
+  PRIMARY KEY(user_id,item_id)
+);
+
+-- TRANSACTIONS LOG
+CREATE TABLE IF NOT EXISTS xpoin_log (
+  id TEXT PRIMARY KEY,
+  user_id TEXT,
+  type TEXT,
+  amount INTEGER,
+  tax INTEGER DEFAULT 0,
+  note TEXT,
+  created_at INTEGER
+);
+
+-- FORUM
+CREATE TABLE IF NOT EXISTS forum_topics (
+  id TEXT PRIMARY KEY,
+  user_id TEXT,
+  title TEXT,
+  content TEXT,
+  image_url TEXT,
+  link_url TEXT,
+  created_at INTEGER
+);
+CREATE TABLE IF NOT EXISTS forum_comments (
+  id TEXT PRIMARY KEY,
+  topic_id TEXT,
+  user_id TEXT,
+  content TEXT,
+  created_at INTEGER
+);
+
+-- LOBBY STATE (play03)
+CREATE TABLE IF NOT EXISTS lobby_rooms (
+  room_id TEXT PRIMARY KEY,
+  name TEXT,
+  max_users INTEGER DEFAULT 15
+);
+INSERT OR IGNORE INTO lobby_rooms VALUES ('room1','Lobby 1',15),('room2','Lobby 2',15),('room3','Lobby 3',15);
+
+CREATE TABLE IF NOT EXISTS lobby_presence (
+  user_id TEXT PRIMARY KEY,
+  room_id TEXT,
+  x INTEGER,
+  y INTEGER,
+  status TEXT DEFAULT 'online',
+  last_seen INTEGER
+);
+
+-- GAME HISTORY
+CREATE TABLE IF NOT EXISTS game_history (
+  id TEXT PRIMARY KEY,
+  user_id TEXT,
+  game TEXT,
+  bet INTEGER,
+  win INTEGER,
+  result TEXT,
+  created_at INTEGER
+);
+
+-- TRADING CANDLES
+CREATE TABLE IF NOT EXISTS trade_candles (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  timeframe TEXT,
+  open REAL,
+  high REAL,
+  low REAL,
+  close REAL,
+  timestamp INTEGER
+);
+
+-- DICE
+CREATE TABLE IF NOT EXISTS dice_history (
+  id TEXT PRIMARY KEY,
+  user_id TEXT,
+  bet_type TEXT,
+  bet_value TEXT,
+  dice_result TEXT,
+  win INTEGER,
+  created_at INTEGER
+);
+
+-- DEFAULT SHOP ITEMS
+INSERT OR IGNORE INTO shop_items VALUES
+('head_001','headgear','Topi RyanX',500,'','common','Topi starter keren'),
+('head_002','headgear','Tanduk Iblis',15000,'','legendary','Tanduk iblis menyala'),
+('outfit_001','outfit','Jaket Basic',300,'','common','Jaket pemula'),
+('outfit_002','outfit','Armor Malaikat',20000,'','epic','Bersinar suci'),
+('other_001','other','Jam Mewah',8000,'','rare','Rolex KW super'),
+('other_002','other','Tas Berlian',12000,'','epic','Tas blink-blink'),
+('other_003','other','Sayap Malaikat',25000,'','legendary','Bisa terbang di lobi'),
+('other_004','other','Cincin Malaikat',18000,'','legendary','Aura suci');
