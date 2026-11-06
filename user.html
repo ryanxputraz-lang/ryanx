@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RYANX - User Dashboard</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#090d16;color:white;font-family:Arial,sans-serif}
+header{padding:20px;background:#111827;border-bottom:1px solid #26344a;display:flex;justify-content:space-between;align-items:center}
+.logo{color:#e5c477;font-size:25px;font-weight:bold;letter-spacing:3px}
+button{background:#d6b66b;color:#111;border:0;padding:11px 17px;border-radius:8px;font-weight:bold;cursor:pointer}
+main{max-width:900px;margin:35px auto;padding:20px}
+.card{background:#111827;border:1px solid #26344a;border-radius:15px;padding:25px;margin-top:20px}
+h1{color:#e5c477}
+p{color:#94a3b8}
+</style>
+</head>
+<body>
+<header>
+    <div class="logo">RYANX</div>
+    <button id="logoutBtn">LOGOUT</button>
+</header>
+
+<main>
+    <h1>User Dashboard</h1>
+    <p>Selamat datang di akun RYANX.</p>
+
+    <div class="card">
+        <h2>Informasi Akun</h2>
+        <p>Nama: <strong id="userName">Memuat...</strong></p>
+        <p>Username: <strong id="username">Memuat...</strong></p>
+        <p>Role: <strong>USER</strong></p>
+    </div>
+</main>
+
+<script>
+async function loadUser() {
+    try {
+        const response = await fetch("/api/me");
+
+        if (!response.ok) {
+            location.href = "/";
+            return;
+        }
+
+        const data = await response.json();
+
+        if (!data.success || data.user.role !== "user") {
+            location.href = data.user?.role === "admin"
+                ? "/admin.html"
+                : "/";
+            return;
+        }
+
+        document.getElementById("userName").textContent = data.user.name;
+        document.getElementById("username").textContent = data.user.username;
+
+    } catch {
+        location.href = "/";
+    }
+}
+
+document.getElementById("logoutBtn").onclick = async () => {
+    await fetch("/api/logout", {method: "POST"});
+    location.href = "/";
+};
+
+loadUser();
+</script>
+</body>
+</html>
