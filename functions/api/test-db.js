@@ -1,6 +1,4 @@
-
 export async function onRequestGet({ env }) {
-
     const result = await env.DB.prepare(
         "SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%'"
     ).all();
@@ -10,5 +8,4 @@ export async function onRequestGet({ env }) {
         message: "Database RYANX terhubung!",
         tables: result.results
     });
-
 }

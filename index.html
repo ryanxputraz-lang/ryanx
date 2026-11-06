@@ -1,73 +1,214 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RYANX - User Dashboard</title>
+<title>RYANX - Account</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#090d16;color:white;font-family:Arial,sans-serif}
-header{padding:20px;background:#111827;border-bottom:1px solid #26344a;display:flex;justify-content:space-between;align-items:center}
-.logo{color:#e5c477;font-size:25px;font-weight:bold;letter-spacing:3px}
-button{background:#d6b66b;color:#111;border:0;padding:11px 17px;border-radius:8px;font-weight:bold;cursor:pointer}
-main{max-width:900px;margin:35px auto;padding:20px}
-.card{background:#111827;border:1px solid #26344a;border-radius:15px;padding:25px;margin-top:20px}
-h1{color:#e5c477}
-p{color:#94a3b8}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;background:#090d16;color:#fff;font-family:Arial,sans-serif}
+.container{width:100%;max-width:430px;padding:28px;background:#111827;border:1px solid #26344a;border-radius:18px;box-shadow:0 18px 55px #0008}
+.logo{text-align:center;color:#e5c477;font-size:32px;font-weight:800;letter-spacing:5px}
+.subtitle{text-align:center;color:#94a3b8;margin:8px 0 24px}
+.tabs{display:flex;gap:8px;margin-bottom:20px}
+button{border:0;border-radius:9px;padding:13px;font-weight:700;cursor:pointer}
+.tabs button{flex:1;background:#1e293b;color:#94a3b8}
+.tabs button.active{background:#d6b66b;color:#111}
+input{display:block;width:100%;padding:13px;margin:9px 0;border:1px solid #334155;border-radius:9px;background:#0b1220;color:#fff;font-size:15px;outline:none}
+input:focus{border-color:#d6b66b}
+.primary{width:100%;margin-top:12px;background:#d6b66b;color:#111}
+.secondary{width:100%;margin:8px 0;background:#2563eb;color:#fff}
+.hidden{display:none!important}
+.message{min-height:22px;margin-top:15px;text-align:center;color:#e5c477;font-size:14px;overflow-wrap:anywhere}
+.note{text-align:center;color:#64748b;font-size:12px;margin-top:18px}
 </style>
 </head>
 <body>
-<header>
-    <div class="logo">RYANX</div>
-    <button id="logoutBtn">LOGOUT</button>
-</header>
+<main class="container">
+<div class="logo">RYANX</div>
+<div class="subtitle">Account Authentication</div>
+<div class="tabs">
+<button id="loginTab" class="active" type="button">LOGIN</button>
+<button id="registerTab" type="button">REGISTER</button>
+</div>
 
-<main>
-    <h1>User Dashboard</h1>
-    <p>Selamat datang di akun RYANX.</p>
+<form id="loginForm">
+<input name="username" placeholder="Username" autocomplete="username" required>
+<input name="password" type="password" placeholder="Password" autocomplete="current-password" required>
+<button class="primary" type="submit">LOGIN</button>
+</form>
 
-    <div class="card">
-        <h2>Informasi Akun</h2>
-        <p>Nama: <strong id="userName">Memuat...</strong></p>
-        <p>Username: <strong id="username">Memuat...</strong></p>
-        <p>Role: <strong>USER</strong></p>
-    </div>
+<form id="registerForm" class="hidden">
+<input name="name" placeholder="Nama lengkap" maxlength="100" required>
+<input name="username" placeholder="Username (3-20 karakter)" minlength="3" maxlength="20" required>
+<input name="email" type="email" placeholder="Email aktif" required>
+<button class="secondary" id="sendOtp" type="button">KIRIM OTP</button>
+<input id="otp" placeholder="Kode OTP 6 digit" maxlength="6" inputmode="numeric" autocomplete="one-time-code">
+<button class="secondary" id="verifyOtp" type="button">VERIFIKASI EMAIL</button>
+<input name="password" type="password" placeholder="Password (minimal 8 karakter)" minlength="8" maxlength="128" autocomplete="new-password" required>
+<button class="primary" type="submit">BUAT AKUN</button>
+</form>
+
+<div id="message" class="message" role="status"></div>
+<div class="note">RYANX Account System</div>
 </main>
-
 <script>
-async function loadUser() {
+const $ = id => document.getElementById(id);
+const loginForm = $("loginForm");
+const registerForm = $("registerForm");
+const message = $("message");
+let verifiedEmail = "";
+
+function showMessage(text) {
+    message.textContent = text || "";
+}
+
+function switchTab(mode) {
+    const login = mode === "login";
+    loginForm.classList.toggle("hidden", !login);
+    registerForm.classList.toggle("hidden", login);
+    $("loginTab").classList.toggle("active", login);
+    $("registerTab").classList.toggle("active", !login);
+    showMessage("");
+}
+
+$("loginTab").onclick = () => switchTab("login");
+$("registerTab").onclick = () => switchTab("register");
+
+async function checkSession() {
     try {
-        const response = await fetch("/api/me");
-
-        if (!response.ok) {
-            location.href = "/";
-            return;
-        }
-
+        const response = await fetch("/api/me", {
+            method: "GET",
+            credentials: "same-origin",
+            cache: "no-store"
+        });
+        if (!response.ok) return;
         const data = await response.json();
-
-        if (!data.success || data.user.role !== "user") {
-            location.href = data.user?.role === "admin"
-                ? "/admin.html"
-                : "/";
-            return;
+        if (data.success && data.user) {
+            location.replace(data.user.role === "admin" ? "/admin.html" : "/user.html");
         }
-
-        document.getElementById("userName").textContent = data.user.name;
-        document.getElementById("username").textContent = data.user.username;
-
-    } catch {
-        location.href = "/";
+    } catch (error) {
+        showMessage("Tidak dapat memeriksa session. Periksa koneksi.");
     }
 }
 
-document.getElementById("logoutBtn").onclick = async () => {
-    await fetch("/api/logout", {method: "POST"});
-    location.href = "/";
+loginForm.addEventListener("submit", async event => {
+    event.preventDefault();
+    const button = loginForm.querySelector("button[type=submit]");
+    button.disabled = true;
+    showMessage("Memproses login...");
+    const form = new FormData(loginForm);
+    try {
+        const response = await fetch("/api/login", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            credentials: "same-origin",
+            body: JSON.stringify({
+                username: form.get("username"),
+                password: form.get("password")
+            })
+        });
+        const data = await response.json();
+        if (!response.ok || !data.success) {
+            showMessage(data.message || "Login gagal.");
+            return;
+        }
+        location.replace(data.role === "admin" ? "/admin.html" : "/user.html");
+    } catch (error) {
+        showMessage("Tidak dapat menghubungi server.");
+    } finally {
+        button.disabled = false;
+    }
+});
+
+$("sendOtp").onclick = async () => {
+    const email = registerForm.elements.email.value.trim().toLowerCase();
+    if (!email) return showMessage("Masukkan email terlebih dahulu.");
+    const button = $("sendOtp");
+    button.disabled = true;
+    showMessage("Mengirim OTP...");
+    try {
+        const response = await fetch("/api/send-otp", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({email})
+        });
+        const data = await response.json();
+        if (data.success) {
+            verifiedEmail = "";
+            $("otp").value = "";
+        }
+        showMessage(data.message || "Selesai.");
+    } catch (error) {
+        showMessage("Gagal menghubungi server.");
+    } finally {
+        button.disabled = false;
+    }
 };
 
-loadUser();
+$("verifyOtp").onclick = async () => {
+    const email = registerForm.elements.email.value.trim().toLowerCase();
+    const otp = $("otp").value.trim();
+    if (!email || !/^\d{6}$/.test(otp)) {
+        return showMessage("Masukkan email dan OTP 6 digit.");
+    }
+    const button = $("verifyOtp");
+    button.disabled = true;
+    showMessage("Memverifikasi OTP...");
+    try {
+        const response = await fetch("/api/verify-otp", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({email, otp})
+        });
+        const data = await response.json();
+        verifiedEmail = response.ok && data.success ? email : "";
+        showMessage(data.message || "Verifikasi selesai.");
+    } catch (error) {
+        showMessage("Gagal menghubungi server.");
+    } finally {
+        button.disabled = false;
+    }
+};
+
+registerForm.addEventListener("submit", async event => {
+    event.preventDefault();
+    const email = registerForm.elements.email.value.trim().toLowerCase();
+    if (!verifiedEmail || verifiedEmail !== email) {
+        return showMessage("Verifikasi email ini terlebih dahulu.");
+    }
+    const button = registerForm.querySelector("button[type=submit]");
+    button.disabled = true;
+    showMessage("Membuat akun...");
+    const form = new FormData(registerForm);
+    try {
+        const response = await fetch("/api/register", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                name: form.get("name"),
+                username: form.get("username"),
+                email,
+                password: form.get("password")
+            })
+        });
+        const data = await response.json();
+        if (!response.ok || !data.success) {
+            showMessage(data.message || "Registrasi gagal.");
+            return;
+        }
+        registerForm.reset();
+        verifiedEmail = "";
+        switchTab("login");
+        showMessage("Registrasi berhasil. Silakan login.");
+    } catch (error) {
+        showMessage("Gagal menghubungi server.");
+    } finally {
+        button.disabled = false;
+    }
+};
+
+checkSession();
 </script>
 </body>
 </html>
